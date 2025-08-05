@@ -1,49 +1,33 @@
-# 04-08-2025
+# 05-08-2025
 ---
-## Maximum sum Rectangle
+## Palindrome Sentence
 
-Given a 2D matrix mat[][] with dimensions n×m. Find the maximum possible sum of any submatrix within the given matrix.
+Given a single string s, the task is to check if it is a palindrome sentence or not.
+A palindrome sentence is a sequence of characters, such as word, phrase, or series of symbols that reads the same backward as forward after converting all uppercase letters to lowercase and removing all non-alphanumeric characters (including spaces and punctuation).
 
 Examples:
 
-Input: mat[][] = [[1, 2, -1, -4, -20], [-8, -3, 4, 2, 1], [3, 8, 10, 1, 3], [-4, -1, 1, 7, -6]]
-Output: 29
-Explanation: The matrix is as follows and the green rectangle denotes the maximum sum rectangle which is equal to 29.
-
-Input: mat[][] = [[-1, -2], [-3, -4]]
-Output: -1
-Explanation: Taking only the first cell is the optimal choice.
+Input: s = "Too hot to hoot"
+Output: true
+Explanation: If we remove all non-alphanumeric characters and convert all uppercase letters to lowercase, string s will become "toohottohoot" which is a palindrome.
+Input: s = "Abc 012..## 10cbA"
+Output: true
+Explanation: If we remove all non-alphanumeric characters and convert all uppercase letters to lowercase, string s will become "abc01210cba" which is a palindrome.
+Input: s = "ABC $. def01ASDF"
+Output: false
+Explanation: The processed string becomes "abcdef01asdf", which is not a palindrome.
 Constraints:
-1 ≤ n, m ≤ 300
--1000 ≤ mat[i][j] ≤ 1000
+1 ≤ s.length() ≤ 106
+
 
 
 ---
 ```
 class Solution:
-    def maxRectSum(self, mat):
-        # code here
-        n = len(mat)
-        m = len(mat[0])
-        max_sum = float('-inf')
+	def isPalinSent(self, s):
+
+		cleaned = ''.join(c.lower() for c in s if c.isalnum())
     
-        for top in range(n):
-            temp = [0] * m
-            for bottom in range(top, n):
-                for col in range(m):
-                    temp[col] += mat[bottom][col]
-    
-                # Apply 1D Kadane's algorithm on temp[]
-                current_max = self.kadane(temp)
-                max_sum = max(max_sum, current_max)
-    
-        return max_sum
-    
-    def kadane(self, arr):
-        max_end = max_so_far = arr[0]
-        for num in arr[1:]:
-            max_end = max(num, max_end + num)
-            max_so_far = max(max_so_far, max_end)
-        return max_so_far
-            
+        # Check if cleaned string is equal to its reverse
+        return cleaned == cleaned[::-1]
 ```
