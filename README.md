@@ -1,33 +1,50 @@
-# 05-08-2025
+# 06-08-2025
 ---
-## Palindrome Sentence
+## Roman Number to Integer
 
-Given a single string s, the task is to check if it is a palindrome sentence or not.
-A palindrome sentence is a sequence of characters, such as word, phrase, or series of symbols that reads the same backward as forward after converting all uppercase letters to lowercase and removing all non-alphanumeric characters (including spaces and punctuation).
+Given a string s in Roman number format, your task is to convert it to an integer. Various symbols and their values are given below.
+Note: I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000
 
 Examples:
 
-Input: s = "Too hot to hoot"
-Output: true
-Explanation: If we remove all non-alphanumeric characters and convert all uppercase letters to lowercase, string s will become "toohottohoot" which is a palindrome.
-Input: s = "Abc 012..## 10cbA"
-Output: true
-Explanation: If we remove all non-alphanumeric characters and convert all uppercase letters to lowercase, string s will become "abc01210cba" which is a palindrome.
-Input: s = "ABC $. def01ASDF"
-Output: false
-Explanation: The processed string becomes "abcdef01asdf", which is not a palindrome.
+Input: s = "IX"
+Output: 9
+Explanation: IX is a Roman symbol which represents 10 – 1 = 9.
+Input: s = "XL"
+Output: 40
+Explanation: XL is a Roman symbol which represents 50 – 10 = 40.
+Input: s = "MCMIV"
+Output: 1904
+Explanation: M is 1000, CM is 1000 – 100 = 900, and IV is 4. So we have total as 1000 + 900 + 4 = 1904.
 Constraints:
-1 ≤ s.length() ≤ 106
-
+1 ≤ roman number ≤ 3999
+s[i] belongs to [I, V, X, L, C, D, M]
 
 
 ---
 ```
 class Solution:
-	def isPalinSent(self, s):
-
-		cleaned = ''.join(c.lower() for c in s if c.isalnum())
+    def romanToDecimal(self, s): 
+        roman = {
+            'I': 1,
+            'V': 5,
+            'X': 10,
+            'L': 50,
+            'C': 100,
+            'D': 500,
+            'M': 1000
+        }
+        
+        total = 0
+        prev_value = 0
     
-	        # Check if cleaned string is equal to its reverse
-	        return cleaned == cleaned[::-1]
+        for ch in reversed(s):
+            curr_value = roman[ch]
+            if curr_value < prev_value:
+                total -= curr_value
+            else:
+                total += curr_value
+            prev_value = curr_value
+    
+        return total
 ```
