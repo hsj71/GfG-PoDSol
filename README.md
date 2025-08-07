@@ -1,50 +1,40 @@
-# 06-08-2025
+# 07-08-2025
 ---
-## Roman Number to Integer
+## Difference Check
 
-Given a string s in Roman number format, your task is to convert it to an integer. Various symbols and their values are given below.
-Note: I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000
+Given an array arr[] of time strings in 24-hour clock format "HH:MM:SS", return the minimum difference in seconds between any two time strings in the arr[].
+The clock wraps around at midnight, so the time difference between "23:59:59" and "00:00:00" is 1 second.
 
 Examples:
 
-Input: s = "IX"
-Output: 9
-Explanation: IX is a Roman symbol which represents 10 – 1 = 9.
-Input: s = "XL"
-Output: 40
-Explanation: XL is a Roman symbol which represents 50 – 10 = 40.
-Input: s = "MCMIV"
-Output: 1904
-Explanation: M is 1000, CM is 1000 – 100 = 900, and IV is 4. So we have total as 1000 + 900 + 4 = 1904.
+Input: arr[] = ["12:30:15", "12:30:45"]
+Output: 30
+Explanation: The minimum time difference is 30 seconds.
+Input: arr[] = ["00:00:01", "23:59:59", "00:00:05"]
+Output: 2
+Explanation: The time difference is minimum between "00:00:01" and "23:59:59".
 Constraints:
-1 ≤ roman number ≤ 3999
-s[i] belongs to [I, V, X, L, C, D, M]
+2 ≤ arr.size() ≤ 105
+arr[i] is in "HH:MM:SS" format.
 
 
 ---
 ```
 class Solution:
-    def romanToDecimal(self, s): 
-        roman = {
-            'I': 1,
-            'V': 5,
-            'X': 10,
-            'L': 50,
-            'C': 100,
-            'D': 500,
-            'M': 1000
-        }
-        
-        total = 0
-        prev_value = 0
+    def minDifference(self, arr):
+        def time_to_seconds(t):
+            h, m, s = map(int, t.split(':'))
+            return h * 3600 + m * 60 + s
     
-        for ch in reversed(s):
-            curr_value = roman[ch]
-            if curr_value < prev_value:
-                total -= curr_value
-            else:
-                total += curr_value
-            prev_value = curr_value
+        seconds = sorted(time_to_seconds(t) for t in arr)
+        min_diff = float('inf')
+        n = len(seconds)
     
-        return total
+        for i in range(n):
+            curr = seconds[i]
+            nxt = seconds[(i + 1) % n]
+            diff = (nxt - curr) if i < n - 1 else (86400 - curr + seconds[0])
+            min_diff = min(min_diff, diff)
+    
+        return min_diff
 ```
