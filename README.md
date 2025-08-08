@@ -1,40 +1,46 @@
-# 07-08-2025
+# 08-08-2025
 ---
-## Difference Check
+## Longest Prefix Suffix
 
-Given an array arr[] of time strings in 24-hour clock format "HH:MM:SS", return the minimum difference in seconds between any two time strings in the arr[].
-The clock wraps around at midnight, so the time difference between "23:59:59" and "00:00:00" is 1 second.
+Given a string s, of lowercase english alphabets, find the length of the longest proper prefix which is also a suffix.
+Note: Prefix and suffix can be overlapping but they should not be equal to the entire string.
 
-Examples:
+Examples :
 
-Input: arr[] = ["12:30:15", "12:30:45"]
-Output: 30
-Explanation: The minimum time difference is 30 seconds.
-Input: arr[] = ["00:00:01", "23:59:59", "00:00:05"]
+Input: s = "abab"
 Output: 2
-Explanation: The time difference is minimum between "00:00:01" and "23:59:59".
+Explanation: The string "ab" is the longest prefix and suffix. 
+Input: s = "aabcdaabc"
+Output: 4
+Explanation: The string "aabc" is the longest prefix and suffix.
+Input: s = "aaaa"
+Output: 3
+Explanation: "aaa" is the longest prefix and suffix. 
 Constraints:
-2 ≤ arr.size() ≤ 105
-arr[i] is in "HH:MM:SS" format.
+1 ≤ s.size() ≤ 106
+s contains only lowercase English alphabets.
 
 
 ---
 ```
 class Solution:
-    def minDifference(self, arr):
-        def time_to_seconds(t):
-            h, m, s = map(int, t.split(':'))
-            return h * 3600 + m * 60 + s
+	def getLPSLength(self, s):
+		n = len(s)
+        lps = [0] * n
+        length = 0 
+        i = 1
     
-        seconds = sorted(time_to_seconds(t) for t in arr)
-        min_diff = float('inf')
-        n = len(seconds)
+        while i < n:
+            if s[i] == s[length]:
+                length += 1
+                lps[i] = length
+                i += 1
+            else:
+                if length != 0:
+                    length = lps[length - 1]
+                else:
+                    lps[i] = 0
+                    i += 1
     
-        for i in range(n):
-            curr = seconds[i]
-            nxt = seconds[(i + 1) % n]
-            diff = (nxt - curr) if i < n - 1 else (86400 - curr + seconds[0])
-            min_diff = min(min_diff, diff)
-    
-        return min_diff
+        return lps[-1]
 ```
