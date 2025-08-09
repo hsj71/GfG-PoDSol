@@ -1,46 +1,51 @@
-# 08-08-2025
+# 09-08-2025
 ---
-## Longest Prefix Suffix
+## Longest Periodic Proper Prefix
 
-Given a string s, of lowercase english alphabets, find the length of the longest proper prefix which is also a suffix.
-Note: Prefix and suffix can be overlapping but they should not be equal to the entire string.
+Given a string s, find the length of longest periodic proper prefix of s. If no such prefix exists, return -1.
+A periodic proper prefix is a non empty prefix of s (but not the whole string), such that repeating this prefix enough times produces a string that starts with s.
 
-Examples :
+Examples:
 
-Input: s = "abab"
-Output: 2
-Explanation: The string "ab" is the longest prefix and suffix. 
-Input: s = "aabcdaabc"
-Output: 4
-Explanation: The string "aabc" is the longest prefix and suffix.
-Input: s = "aaaa"
+Input: s = "aaaaaa"
+Output: 5
+Explanation: Repeating the proper prefix "aaaaa" forms "aaaaaaaaaa...", which contains "aaaaa" as a prefix. No longer proper prefix satisfies this.
+Input: s = "abcab"
 Output: 3
-Explanation: "aaa" is the longest prefix and suffix. 
+Explanation: Repeating the proper prefix "abc" forms "abcabc., which contains "abcab" as a prefix. No longer proper prefix satisfies this.
+Input: s = "ababd"
+Output: -1
+Explanation: No proper prefix satisfying the given condition.
 Constraints:
-1 ≤ s.size() ≤ 106
-s contains only lowercase English alphabets.
+1 ≤ s.size() ≤ 105
+s consists of lowercase English alphabets
 
 
 ---
+JAVA 
 ```
-class Solution:
-	def getLPSLength(self, s):
-		n = len(s)
-        lps = [0] * n
-        length = 0 
-        i = 1
-    
-        while i < n:
-            if s[i] == s[length]:
-                length += 1
-                lps[i] = length
-                i += 1
-            else:
-                if length != 0:
-                    length = lps[length - 1]
-                else:
-                    lps[i] = 0
-                    i += 1
-    
-        return lps[-1]
+class Solution {
+    int getLongestPrefix(String s) {
+        int n = s.length();
+        int i=0;
+        int j=n-1;
+        int pos = n-1;
+        int ans = 0;
+        while(j<n && pos>0){
+            if(s.charAt(i)==s.charAt(j)){
+                i++;
+                j++;
+                ans++;
+            }
+            else{
+                i=0;
+                pos--;
+                j=pos;
+                ans = 0;
+            }
+        }
+        if(pos==0) return -1;
+        return n-ans;
+    }
+}
 ```
