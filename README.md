@@ -1,51 +1,50 @@
-# 09-08-2025
+# 10-08-2025
 ---
-## Longest Periodic Proper Prefix
+## Palindrome SubStrings
 
-Given a string s, find the length of longest periodic proper prefix of s. If no such prefix exists, return -1.
-A periodic proper prefix is a non empty prefix of s (but not the whole string), such that repeating this prefix enough times produces a string that starts with s.
+Given a string s, count all palindromic sub-strings present in the string. The length of the palindromic sub-string must be greater than or equal to 2.
+
+Note: A substring is palindromic if it reads the same forwards and backwards.
 
 Examples:
 
-Input: s = "aaaaaa"
-Output: 5
-Explanation: Repeating the proper prefix "aaaaa" forms "aaaaaaaaaa...", which contains "aaaaa" as a prefix. No longer proper prefix satisfies this.
-Input: s = "abcab"
+Input: s = "abaab"
 Output: 3
-Explanation: Repeating the proper prefix "abc" forms "abcabc., which contains "abcab" as a prefix. No longer proper prefix satisfies this.
-Input: s = "ababd"
-Output: -1
-Explanation: No proper prefix satisfying the given condition.
+Explanation: All palindromic substrings (of length > 1) are: "aba", "aa", "baab".
+Input: s = "aaa"
+Output: 3
+Explanation: All palindromic substrings (of length > 1) are: "aa", "aa", "aaa".
+Input: s = "abbaeae"
+Output: 4
+Explanation: All palindromic substrings (of length > 1) are: "bb", "abba", "aea", "eae".
 Constraints:
-1 ≤ s.size() ≤ 105
-s consists of lowercase English alphabets
+2 ≤ s.size() ≤ 5 * 103
+s contains only lowercase english characters
 
 
 ---
-JAVA 
+
 ```
-class Solution {
-    int getLongestPrefix(String s) {
-        int n = s.length();
-        int i=0;
-        int j=n-1;
-        int pos = n-1;
-        int ans = 0;
-        while(j<n && pos>0){
-            if(s.charAt(i)==s.charAt(j)){
-                i++;
-                j++;
-                ans++;
-            }
-            else{
-                i=0;
-                pos--;
-                j=pos;
-                ans = 0;
-            }
-        }
-        if(pos==0) return -1;
-        return n-ans;
-    }
-}
+class Solution:
+    def countPS(self, s):
+        # code here
+        n = len(s)
+        count = 0
+    
+        def expand(l, r):
+            nonlocal count
+            while l >= 0 and r < n and s[l] == s[r]:
+                if r - l + 1 >= 2:  # length >= 2
+                    count += 1
+                l -= 1
+                r += 1
+    
+        for i in range(n):
+            # Odd length palindromes
+            expand(i, i)
+            # Even length palindromes
+            expand(i, i + 1)
+    
+        return count
+            
 ```
