@@ -1,69 +1,79 @@
-# 14-08-2025
+# 15-08-2025
 ---
-## Count Reverse Pairs
-
-You are given an array arr[] of positive integers, find the count of reverse pairs. A pair of indices (i, j) is said to be a reverse pair if both the following conditions are met:
+## Insert Interval
+Difficulty: MediumAccuracy: 50.61%Submissions: 52K+Points: 4Average Time: 30m
 <pre>
-0 ≤ i < j < arr.size()
-arr[i] > 2 * arr[j]
-    
+Geek has an array of non-overlapping intervals intervals[][] where intervals[i] = [starti , endi] represent the start and the end of the ith event and intervals is sorted in ascending order by starti . He wants to add a new interval newInterval[] = [newStart, newEnd] where newStart and newEnd represent the start and end of this interval.
+Help Geek to insert newInterval into intervals such that intervals is still sorted in ascending order by starti and intervals still does not have any overlapping intervals (merge overlapping intervals if necessary).
+
 Examples:
-Input: arr[] = [3, 2, 4, 5, 1, 20]
-Output: 3
-Explanation:
-The Reverse pairs are 
-(0, 4), arr[0] = 3, arr[4] = 1, 3 > 2*1 
-(2, 4), arr[2] = 4, arr[4] = 1, 4 > 2*1 
-(3, 4), arr[3] = 5, arr[4] = 1, 5 > 2*1 
-    
-Input: arr[] = [5, 4, 3, 2, 2]
-Output: 2
-Explanation:
-The Reverse pairs are
-(0, 3), arr[0] = 5, arr[3] = 2, 5 > 2*2
-(0, 4), arr[0] = 5, arr[4] = 2, 5 > 2*2
+
+Input: intervals[][] = [[1, 3], [4, 5], [6, 7], [8, 10]], newInterval[] = [5, 6]
+Output: [[1, 3], [4, 7], [8, 10]]
+Explanation: The newInterval [5, 6] overlaps with [4, 5] and [6, 7]. So, they are merged into one interval [4, 7].
+Input: intervals[][] = [[1, 2], [3, 5], [6, 7], [8, 10], [12, 16]], newInterval[] = [4, 9]
+Output: [[1, 2], [3, 10], [12, 16]]
+Explanation: The new interval [4, 9] overlaps with [3, 5], [6, 7] and [8, 10]. So, they are merged into one interval [3, 10].
 Constraints:
-1 ≤ arr.size() ≤ 5*104
-1 ≤ arr[i] ≤ 109
+1 ≤ intervals.size() ≤  105
+0 ≤ starti ≤ endi ≤ 109
+0 ≤ newStart ≤ newEnd ≤ 109
 </pre>
 
 ---
 ```
 class Solution:
-    def countRevPairs(self, arr):
+    def insertInterval(self, intervals, newInterval):
         # Code here
-        def merge_sort(nums, l, r):
-            if l >= r:
-                return 0
-            mid = (l + r) // 2
-            count = merge_sort(nums, l, mid) + merge_sort(nums, mid + 1, r)
-
-            # Count reverse pairs across halves
-            j = mid + 1
-            for i in range(l, mid + 1):
-                while j <= r and nums[i] > 2 * nums[j]:
-                    j += 1
-                count += j - (mid + 1)
-
-            # Merge step
-            temp = []
-            p1, p2 = l, mid + 1
-            while p1 <= mid and p2 <= r:
-                if nums[p1] <= nums[p2]:
-                    temp.append(nums[p1])
-                    p1 += 1
-                else:
-                    temp.append(nums[p2])
-                    p2 += 1
-            temp.extend(nums[p1:mid + 1])
-            temp.extend(nums[p2:r + 1])
-            nums[l:r + 1] = temp
-
-            return count
-
-        return merge_sort(arr, 0, len(arr) - 1)
-
-        return merge_sort(arr, 0, len(arr) - 1)
+        l, r = 0, len(intervals)-1
+        ansl = -1
+        while l<=r:
+            mid = (l+r)//2
+            
+            if intervals[mid][0] <= newInterval[0] <= intervals[mid][1]:
+                ansl = mid
+                break
+            elif intervals[mid][1] < newInterval[0]:
+                l = mid + 1
+            else:
+                r = mid - 1
+        
+        nl, nr = 0, len(intervals)-1
+        ansr = -1
+        while nl<=nr:
+            mid = (nl+nr)//2
+            
+            if intervals[mid][0] <= newInterval[1] <= intervals[mid][1]:
+                ansr = mid
+                break
+            elif intervals[mid][0] < newInterval[1]:
+                nl = mid + 1
+            else:
+                nr = mid - 1
+            #print(nl, nr)
+        
+        
+        if ansl!=-1 and ansr!=-1:
+            res = intervals[:ansl]
+            res.append([intervals[ansl][0], intervals[ansr][1]])
+            res += intervals[ansr+1:]
+            return res
+        #print(ansr, ansl)
+        if ansl==-1:
+            res = intervals[:l]
+            if ansr==-1:
+                res.append(newInterval)
+                res += intervals[nr+1:]
+            else:
+                res.append([newInterval[0], intervals[ansr][1]])
+                res += intervals[ansr+1:]
+            return res
+            
+        res = intervals[:ansl]
+        res.append([intervals[ansl][0], newInterval[1]])
+        res += intervals[nr+1:]
+        return res
         
             
 ```
+---
