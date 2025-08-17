@@ -1,40 +1,31 @@
-# 16-08-2025
+# 17-08-2025
 ---
-## Form the Largest Number
-Difficulty: MediumAccuracy: 37.82%Submissions: 183K+Points: 4
+## Sort by Absolute Difference
+Difficulty: MediumAccuracy: 27.77%Submissions: 59K+Points: 4Average Time: 5m
 <pre>
-Given an array of integers arr[] representing non-negative integers, arrange them so that after concatenating all of them in order, it results in the largest possible number. Since the result may be very large, return it as a string.
+You are given a number x and array arr[]. Your task is to rearrange the elements of the array according to the absolute difference with x, i.e., an element having minimum difference comes first, and so on.
+Note: If two or more elements are at equal distances arrange them in the same sequence as in the given array.
 
 Examples:
 
-Input: arr[] = [3, 30, 34, 5, 9]
-Output: 9534330
-Explanation: Given numbers are [3, 30, 34, 5, 9], the arrangement [9, 5, 34, 3, 30] gives the largest value.
-Input: arr[] = [54, 546, 548, 60]
-Output: 6054854654
-Explanation: Given numbers are [54, 546, 548, 60], the arrangement [60, 548, 546, 54] gives the largest value.
-Input: arr[] = [3, 4, 6, 5, 9]
-Output: 96543
-Explanation: Given numbers are [3, 4, 6, 5, 9], the arrangement [9, 6, 5, 4, 3] gives the largest value.
+Input: x = 7, arr[] = [10, 5, 3, 9, 2]
+Output: [5, 9, 10, 3, 2]
+Explanation: Sorting the numbers according to the absolute difference with 7, we have array elements as 5, 9, 10, 3, 2.
+Input: x = 6, arr[] = [1, 2, 3, 4, 5]
+Output: [5, 4, 3, 2, 1]
+Explanation: Sorting the numbers according to the absolute difference with 6, we have array elements as 5, 4, 3, 2, 1.
 Constraints:
+1 ≤ x ≤ 105
 1 ≤ arr.size() ≤ 105
-0 ≤ arr[i] ≤ 105
+1 ≤ arr[i] ≤ 105
 </pre>
 
 ---
 ```
 class Solution:
-
-	def findLargest(self, arr):
-	    # code here
-	    s=list(map(str,arr))
-        s.sort(key=lambda x : x*10 ,reverse=True)
-        result="".join(s)
-        if result[0]=="0":
-            return 0
-        else:
-            return result
-        
+    def rearrange(self, arr, x):
+        # code here
+        arr.sort(key=lambda item:abs(item-x))
             
 ```
 ---
