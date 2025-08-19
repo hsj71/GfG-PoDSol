@@ -1,54 +1,52 @@
-# 18-08-2025
+# 19-08-2025
 ---
-## Find H-Index
-Difficulty: MediumAccuracy: 53.4%Submissions: 50K+Points: 4
+## Farthest Smaller Right
+Difficulty: MediumAccuracy: 50.08%Submissions: 13K+Points: 4
 <pre>
-You are given an array citations[], where each element citations[i] represents the number of citations received by the ith paper of a researcher. You have to calculate the researcher’s H-index.
-The H-index is defined as the maximum value H, such that the researcher has published at least H papers, and all those papers have citation value greater than or equal to H.
+You are given an array arr[]. For each element at index i (0-based indexing), find the farthest index j to the right (i.e., j > i) such that arr[j] < arr[i]. If no such index exists for a given position, return -1 for that index. Return the resulting array of answers.
 
 Examples:
 
-Input: citations[] = [3, 0, 5, 3, 0]
-Output: 3
-Explanation: There are at least 3 papers with citation counts of 3, 5, and 3, all having citations greater than or equal to 3.
-Input: citations[] = [5, 1, 2, 4, 1]
-Output: 2
-Explanation: There are 3 papers (with citation counts of 5, 2, and 4) that have 2 or more citations. However, the H-Index cannot be 3 because there aren't 3 papers with 3 or more citations.
-Input: citations[] = [0, 0]
-Output: 0
-Explanation: The H-index is 0 because there are no papers with at least 1 citation.
+Input: arr[] = [2, 5, 1, 3, 2]
+Output: [2, 4, -1, 4, -1]
+Explanation: arr[0] = 2: Farthest smaller element to the right is arr[2] = 1.
+arr[1] = 5: Farthest smaller element to the right is arr[4] = 2.
+arr[2] = 1: No smaller element to the right → -1.
+arr[3] = 3: Farthest smaller element to the right is arr[4] = 2.
+arr[4] = 2: No elements to the right → -1.
+Input: arr[] = [2, 3, 5, 4, 1] 
+Output: [4, 4, 4, 4, -1]
+Explanation: arr[4] is the farthest smallest element to the right for arr[0], arr[1], arr[2] and arr[3].
 Constraints:
-1 ≤ citations.size() ≤ 106
-0 ≤ citations[i] ≤ 106
+1 ≤ arr.size() ≤ 106
+1 ≤ arr[i] ≤ 106
 </pre>
 
 ---
 ```
 class Solution:
-    def hIndex(self, citations):
-        #code here
-        def count(val):
-            low = 0
-            high=len(citations)-1
-            while low<=high:
-                mid=(low+high)//2
-                if citations[mid]<val:
-                    low=mid+1
+    def bs(self,arr,l,h,x):
+            while l<=h:
+                mid=(l+h)//2
+                if arr[mid]>=x:
+                    h=mid-1
                 else:
-                    high=mid-1
-            return len(citations)-low 
-        citations.sort()
-        # binary search
-        low = 0
-        high = citations[-1]
-        while low<=high:
-            mid=(low+high)//2
-            val=count(mid)
-            if val>=mid:
-                low = mid+1
+                    l=mid+1
+            return l-1
+    def farMin(self, arr):
+        # Code Here
+        n=len(arr)
+        right=[0]*n
+        right[n-1]=arr[n-1]
+        for i in range(n-2,-1,-1):
+            right[i]=min(arr[i],right[i+1])
+        ans=[None]*n
+        for i in range(n):
+            if i==n-1 or right[i+1]>=arr[i]:
+                ans[i]=-1
             else:
-                high=mid-1
-        return high
+                ans[i]=self.bs(right,i+1,n-1,arr[i])
+        return ans
             
 ```
 ---
