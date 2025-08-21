@@ -1,53 +1,52 @@
-# 20-08-2025
+# 21-08-2025
 ---
-## Search in fully rotated sorted 2D matrix
-Difficulty: MediumAccuracy: 56.77%Submissions: 11K+Points: 4Average Time: 20m
+## Maximize the minimum difference between k elements
+Difficulty: MediumAccuracy: 65.42%Submissions: 10K+Points: 4
 <pre>
-You are given a 2D matrix mat[][] of size n x m that was initially filled in the following manner:
-
-
-Each row is sorted in increasing order from left to right.
-The first element of every row is greater than the last element of the previous row.
-
-This implies that if the matrix is flattened row-wise, it forms a strictly sorted 1D array.
-Later, this sorted 1D array was rotated at some unknown pivot. The rotated array was then written back into the matrix row-wise to form the current matrix.
-
-
-Given such a matrix mat[][] and an integer x, determine whether x exists in the matrix.
-
+Given an array arr[] of integers and an integer k, select k elements from the array such that the minimum absolute difference between any two of the selected elements is maximized. Return this maximum possible minimum difference.
 
 Examples:
 
-Input: x = 3,
-mat[][] = [[7, 8, 9, 10],           
-          [11, 12, 13, 1],
-          [2, 3, 4, 5]] 
-Output: true
-Explanation: 3 is located at the 3rd row and 2nd column.
-Input: x = 10,
-mat[][] = [[6, 7, 8],                         
-          [9, 1, 2],
-          [3, 4, 5]]
-Output: false
-Explanation: The value 10 does not exist in the matrix.
-Constraint:
-1 ≤ n × m ≤ 105
-1 ≤ mat[i][j], x ≤ 106
+Input: arr[] = [2, 6, 2, 5], k = 3
+Output: 1
+Explanation: 3 elements out of 4 elements are to be selected with a minimum difference as large as possible. Selecting 2, 2, 5 will result in minimum difference as 0. Selecting 2, 5, 6 will result in minimum difference as 6 - 5 = 1.
+Input: arr[] = [1, 4, 9, 0, 2, 13, 3], k = 4
+Output: 4
+Explanation: Selecting 0, 4, 9, 13 will result in minimum difference of 4, which is the largest minimum difference possible.
+Constraints:
+1 ≤ arr.size() ≤ 105
+0 ≤ arr[i] ≤ 106
+2 ≤ k ≤ arr.size() 
 </pre>
 
 ---
 ```
 class Solution:
-    def searchMatrix(self, mat, x):
-        # code here
-        for arr in mat:
-            if arr[-1]<arr[0]:
-                if x in arr:
-                    return True
-            elif x>=arr[0] and x<=arr[-1]:
-                if x in arr:
-                    return True
+    def canPlace(self,arr,k,d):
+        n=len(arr)
+        count=1
+        last=arr[0]
+        for i in range(1,n):
+            if arr[i]-last>=d:
+                count+=1
+                last=arr[i]
+            if count>=k:
+                return True
         return False
-            
+    
+    def maxMinDiff(self, arr, k):
+        arr.sort()
+        n=len(arr)
+        l,h=0,arr[-1]-arr[0]
+        ans=0
+        while l<=h:
+            mid=(l+h)//2
+            if self.canPlace(arr,k,mid):
+                ans=mid
+                l=mid+1
+            else:
+                h=mid-1
+        return ans  
+
 ```
 ---
