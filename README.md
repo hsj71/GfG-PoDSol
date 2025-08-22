@@ -1,52 +1,41 @@
-# 21-08-2025
+# 22-08-2025
 ---
-## Maximize the minimum difference between k elements
-Difficulty: MediumAccuracy: 65.42%Submissions: 10K+Points: 4
+## Median in a row-wise sorted Matrix
+Difficulty: HardAccuracy: 55.05%Submissions: 156K+Points: 8
 <pre>
-Given an array arr[] of integers and an integer k, select k elements from the array such that the minimum absolute difference between any two of the selected elements is maximized. Return this maximum possible minimum difference.
+Given a row-wise sorted matrix mat[][] of size n*m, where the number of rows and columns is always odd. Return the median of the matrix.
 
 Examples:
 
-Input: arr[] = [2, 6, 2, 5], k = 3
-Output: 1
-Explanation: 3 elements out of 4 elements are to be selected with a minimum difference as large as possible. Selecting 2, 2, 5 will result in minimum difference as 0. Selecting 2, 5, 6 will result in minimum difference as 6 - 5 = 1.
-Input: arr[] = [1, 4, 9, 0, 2, 13, 3], k = 4
+Input: mat[][] = [[1, 3, 5], 
+                [2, 6, 9], 
+                [3, 6, 9]]
+Output: 5
+Explanation: Sorting matrix elements gives us [1, 2, 3, 3, 5, 6, 6, 9, 9]. Hence, 5 is median.
+Input: mat[][] = [[2, 4, 9],
+                [3, 6, 7],
+                [4, 7, 10]]
+Output: 6
+Explanation: Sorting matrix elements gives us [2, 3, 4, 4, 6, 7, 7, 9, 10]. Hence, 6 is median.
+Input: mat = [[3], [4], [8]]
 Output: 4
-Explanation: Selecting 0, 4, 9, 13 will result in minimum difference of 4, which is the largest minimum difference possible.
+Explanation: Sorting matrix elements gives us [3, 4, 8]. Hence, 4 is median.
 Constraints:
-1 ≤ arr.size() ≤ 105
-0 ≤ arr[i] ≤ 106
-2 ≤ k ≤ arr.size() 
+1 ≤ n, m ≤ 400
+1 ≤ mat[i][j] ≤ 2000
 </pre>
 
 ---
 ```
 class Solution:
-    def canPlace(self,arr,k,d):
-        n=len(arr)
-        count=1
-        last=arr[0]
-        for i in range(1,n):
-            if arr[i]-last>=d:
-                count+=1
-                last=arr[i]
-            if count>=k:
-                return True
-        return False
-    
-    def maxMinDiff(self, arr, k):
+    def median(self, mat):
+    	# code here 
+    	arr = []
+        for i in mat:
+            arr+=i
         arr.sort()
-        n=len(arr)
-        l,h=0,arr[-1]-arr[0]
-        ans=0
-        while l<=h:
-            mid=(l+h)//2
-            if self.canPlace(arr,k,mid):
-                ans=mid
-                l=mid+1
-            else:
-                h=mid-1
-        return ans  
+        mid = arr[len(arr)//2]
+        return mid 
 
 ```
 ---
