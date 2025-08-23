@@ -1,41 +1,61 @@
-# 22-08-2025
+# 23-08-2025
 ---
-## Median in a row-wise sorted Matrix
-Difficulty: HardAccuracy: 55.05%Submissions: 156K+Points: 8
+## Allocate Minimum Pages
+Difficulty: MediumAccuracy: 35.51%Submissions: 322K+Points: 4Average Time: 35m
 <pre>
-Given a row-wise sorted matrix mat[][] of size n*m, where the number of rows and columns is always odd. Return the median of the matrix.
+
+Given an array arr[] of integers, where each element arr[i] represents the number of pages in the i-th book. You also have an integer k representing the number of students. The task is to allocate books to each student such that:
+
+Each student receives atleast one book.
+Each student is assigned a contiguous sequence of books.
+No book is assigned to more than one student.
+The objective is to minimize the maximum number of pages assigned to any student. In other words, out of all possible allocations, find the arrangement where the student who receives the most pages still has the smallest possible maximum.
+
+Note: If it is not possible to allocate books to all students, return -1.
 
 Examples:
 
-Input: mat[][] = [[1, 3, 5], 
-                [2, 6, 9], 
-                [3, 6, 9]]
-Output: 5
-Explanation: Sorting matrix elements gives us [1, 2, 3, 3, 5, 6, 6, 9, 9]. Hence, 5 is median.
-Input: mat[][] = [[2, 4, 9],
-                [3, 6, 7],
-                [4, 7, 10]]
-Output: 6
-Explanation: Sorting matrix elements gives us [2, 3, 4, 4, 6, 7, 7, 9, 10]. Hence, 6 is median.
-Input: mat = [[3], [4], [8]]
-Output: 4
-Explanation: Sorting matrix elements gives us [3, 4, 8]. Hence, 4 is median.
+Input: arr[] = [12, 34, 67, 90], k = 2
+Output: 113
+Explanation: Allocation can be done in following ways:
+=> [12] and [34, 67, 90] Maximum Pages = 191
+=> [12, 34] and [67, 90] Maximum Pages = 157
+=> [12, 34, 67] and [90] Maximum Pages = 113.
+The third combination has the minimum pages assigned to a student which is 113.
+Input: arr[] = [15, 17, 20], k = 5
+Output: -1
+Explanation: Since there are more students than total books, it's impossible to allocate a book to each student.
 Constraints:
-1 ≤ n, m ≤ 400
-1 ≤ mat[i][j] ≤ 2000
+1 ≤ arr.size() ≤ 106
+1 ≤ arr[i], k ≤ 103
 </pre>
 
 ---
 ```
 class Solution:
-    def median(self, mat):
-    	# code here 
-    	arr = []
-        for i in mat:
-            arr+=i
-        arr.sort()
-        mid = arr[len(arr)//2]
-        return mid 
+    def isPossible(self,arr,val,k):
+        count,curr=1,0
+        for pages in arr:
+            curr+=pages
+            if curr>val:
+                curr=pages
+                count+=1
+            if count>k or pages>val:
+                return False
+        return True
+    
+    def findPages(self, arr, k):
+        if len(arr)<k:
+            return -1
+        l,h,ans=0,sum(arr),-1
+        while l<=h:
+            mid=(l+h)//2
+            if self.isPossible(arr,mid,k):
+                ans=mid
+                h=mid-1
+            else:
+                l=mid+1
+        return ans
 
 ```
 ---
