@@ -1,56 +1,58 @@
-# 24-08-2025
+# 25-08-2025
 ---
-## Minimum days to make M bouquets
-Difficulty: MediumAccuracy: 46.85%Submissions: 29K+Points: 4Average Time: 30m
+## Maximize median after doing k addition operation
+Difficulty: MediumAccuracy: 44.57%Submissions: 18K+Points: 4Average Time: 20m
 <pre>
+Given an array arr[] consisting of positive integers and an integer k. You are allowed to perform at most k operations, where in each operation, you can increment any one element of the array by 1. Determine the maximum possible median of the array that can be achieved after performing at most k such operations.
 
-You have a row of flowers, where each flower blooms after a specific day. The array arr[] represents the blooming schedule: arr[i] is the day the flower at position i will bloom. To create a bouquet, you need to collect k adjacent bloomed flowers. Each flower can only be used in one bouquet.
-
-Your goal is to find the minimum number of days required to make exactly m bouquets. If it is not possible to make m bouquets with the given arrangement, return -1.
+Note: The median of an array is defined as the middle element when the array (after sorting) has an odd size, or the average of the two middle elements when the array (after sorting) has an even size.
 
 Examples:
-Input: m = 3, k = 2, arr[] = [3, 4, 2, 7, 13, 8, 5]
-Output: 8
-Explanation: We need 3 bouquets and each bouquet should have 2 flowers. After day 8: [x, x, x, x, _, x, x], we can make first bouquet from the first 2 flowers, second bouquet from the next 2 flowers and the third bouquet from the last 2 flowers.
-Input: m = 2, k = 3, arr[] = [5, 5, 5, 5, 10, 5, 5]
-Output: 10
-Explanation: We need 2 bouquets and each bouquet should have 3 flowers, After day 5: [x, x, x, x, _, x, x], we can make one bouquet of the first three flowers that bloomed, but cannot make another bouquet. After day 10: [x, x, x, x, x, x, x], Now we can make two bouquets, taking 3 adjacent flowers in one bouquet.
-Input: m = 3, k = 2, arr[] = [1, 10, 3, 10, 2]
-Output: -1
-Explanation: As 3 bouquets each having 2 flowers are needed, that means we need 6 flowers. But there are only 5 flowers so it is impossible to get the needed bouquets therefore -1 will be returned.
+
+Input: arr[] = [1, 3, 4, 5], k = 3
+Output: 5
+Explanation: We can add +2 to the second element and +1 to the third element to get the array [1, 5, 5, 5]. After sorting, the array remains [1, 5, 5, 5]. Since the length is even, the median is (5 + 5) / 2 = 5.
+Input: arr[] = [1, 3, 6, 4, 2], k = 10
+Output: 7
+Explanation: After applying operations optimally, we can transform the array to [1, 3, 7, 7, 7] (one possible way). Sorted array becomes [1, 3, 7, 7, 7]. Since the length is odd, the median is the middle element 7.
 Constraints:
-1 ≤ k ≤ arr.size() ≤ 105
-1 ≤ m ≤ 105
-1 ≤ arr[i] ≤ 109
+1 ≤ arr.size() ≤ 105
+0 ≤ arr[i], k ≤ 109
 </pre>
 
 ---
 ```
 class Solution:
-    def canMake(self,arr,k,m,day):
-        bouquets=0
-        flowers=0
-        for time in arr:
-            if time<=day:
-                flowers+=1
-                if flowers==k:
-                    bouquets+=1
-                    flowers=0
+    def maximizeMedian(self, arr, k):
+        # code here
+        arr.sort()
+        n = len(arr)
+        idx = (n - 1) // 2
+
+        def canMake(mid):
+            diff = 0
+            for i in range(idx, n):
+                if mid >= arr[i]:
+                    diff += mid - arr[i]
+                if diff > k:
+                    return False
+            return True
+            
+        l = arr[idx]
+        r = arr[-1] + k
+
+        while l <= r:
+            mid = (l + r) // 2
+            if canMake(mid):
+                l = mid + 1
             else:
-                flowers=0
-        return bouquets>=m
-    
-    def minDaysBloom(self, arr, k, m):
-        if len(arr)<m*k:
-            return -1
-        l,h=min(arr),max(arr)
-        while l<=h:
-            mid=(l+h)//2
-            if self.canMake(arr,k,m,mid):
-                h=mid-1
-            else:
-                l=mid+1
-        return h+1
+                r = mid - 1
+            
+        if n % 2 == 1:
+            return r
+            
+        return (r + max(r, arr[idx + 1])) // 2
+        
 
 ```
 ---
