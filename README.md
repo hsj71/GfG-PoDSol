@@ -1,58 +1,36 @@
-# 25-08-2025
+# 26-08-2025
 ---
-## Maximize median after doing k addition operation
-Difficulty: MediumAccuracy: 44.57%Submissions: 18K+Points: 4Average Time: 20m
+## Check if a String is Subsequence of Other
+Difficulty: EasyAccuracy: 51.68%Submissions: 31K+Points: 2
 <pre>
-Given an array arr[] consisting of positive integers and an integer k. You are allowed to perform at most k operations, where in each operation, you can increment any one element of the array by 1. Determine the maximum possible median of the array that can be achieved after performing at most k such operations.
-
-Note: The median of an array is defined as the middle element when the array (after sorting) has an odd size, or the average of the two middle elements when the array (after sorting) has an even size.
+Given two strings s1 and s2. You have to check that s1 is a subsequence of s2 or not.
+Note: A subsequence is a sequence that can be derived from another sequence by deleting some elements without changing the order of the remaining elements.
 
 Examples:
 
-Input: arr[] = [1, 3, 4, 5], k = 3
-Output: 5
-Explanation: We can add +2 to the second element and +1 to the third element to get the array [1, 5, 5, 5]. After sorting, the array remains [1, 5, 5, 5]. Since the length is even, the median is (5 + 5) / 2 = 5.
-Input: arr[] = [1, 3, 6, 4, 2], k = 10
-Output: 7
-Explanation: After applying operations optimally, we can transform the array to [1, 3, 7, 7, 7] (one possible way). Sorted array becomes [1, 3, 7, 7, 7]. Since the length is odd, the median is the middle element 7.
+Input: s1 = "AXY", s2 = "YADXCP"
+Output: false
+Explanation: s1 is not a subsequence of s2 as 'Y' appears before 'A'.
+Input: s1 = "gksrek", s2 = "geeksforgeeks"
+Output: true
+Explanation: If we combine the bold character of "geeksforgeeks", it equals to s1. So s1 is a subsequence of s2. 
 Constraints:
-1 ≤ arr.size() ≤ 105
-0 ≤ arr[i], k ≤ 109
+1 ≤ s1.size(), s2.size() ≤ 106
 </pre>
 
 ---
 ```
 class Solution:
-    def maximizeMedian(self, arr, k):
+    def isSubSeq(self, s1, s2):
         # code here
-        arr.sort()
-        n = len(arr)
-        idx = (n - 1) // 2
-
-        def canMake(mid):
-            diff = 0
-            for i in range(idx, n):
-                if mid >= arr[i]:
-                    diff += mid - arr[i]
-                if diff > k:
-                    return False
-            return True
-            
-        l = arr[idx]
-        r = arr[-1] + k
-
-        while l <= r:
-            mid = (l + r) // 2
-            if canMake(mid):
-                l = mid + 1
-            else:
-                r = mid - 1
-            
-        if n % 2 == 1:
-            return r
-            
-        return (r + max(r, arr[idx + 1])) // 2
+        l = len(s1)
+        mi = 0
         
+        for ch in s2:
+            if mi < l and s1[mi] == ch:
+                mi += 1
+     
+        return mi == l
 
 ```
 ---
