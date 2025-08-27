@@ -1,36 +1,47 @@
-# 26-08-2025
+# 27-08-2025
 ---
-## Check if a String is Subsequence of Other
-Difficulty: EasyAccuracy: 51.68%Submissions: 31K+Points: 2
+## Count the number of possible triangles
+Difficulty: MediumAccuracy: 28.53%Submissions: 149K+Points: 4Average Time: 15m
 <pre>
-Given two strings s1 and s2. You have to check that s1 is a subsequence of s2 or not.
-Note: A subsequence is a sequence that can be derived from another sequence by deleting some elements without changing the order of the remaining elements.
+Given an integer array arr[]. Find the number of triangles that can be formed with three different array elements as lengths of three sides of the triangle. A triangle with three given sides is only possible if sum of any two sides is always greater than the third side.
 
 Examples:
 
-Input: s1 = "AXY", s2 = "YADXCP"
-Output: false
-Explanation: s1 is not a subsequence of s2 as 'Y' appears before 'A'.
-Input: s1 = "gksrek", s2 = "geeksforgeeks"
-Output: true
-Explanation: If we combine the bold character of "geeksforgeeks", it equals to s1. So s1 is a subsequence of s2. 
+Input: arr[] = [4, 6, 3, 7]
+Output: 3
+Explanation: There are three triangles possible [3, 4, 6], [4, 6, 7] and [3, 6, 7]. Note that [3, 4, 7] is not a possible triangle.  
+Input: arr[] = [10, 21, 22, 100, 101, 200, 300]
+Output: 6
+Explanation: There can be 6 possible triangles: [10, 21, 22], [21, 100, 101], [22, 100, 101], [10, 100, 101], [100, 101, 200] and [101, 200, 300].
+Input: arr[] = [1, 2, 3]
+Output: 0
+Explanation: No triangles are possible.
 Constraints:
-1 ≤ s1.size(), s2.size() ≤ 106
+1 ≤ arr.size() ≤ 103
+0 ≤ arr[i] ≤ 105
 </pre>
 
 ---
 ```
 class Solution:
-    def isSubSeq(self, s1, s2):
+    def countTriangles(self, arr):
         # code here
-        l = len(s1)
-        mi = 0
-        
-        for ch in s2:
-            if mi < l and s1[mi] == ch:
-                mi += 1
-     
-        return mi == l
+        n=len(arr)
+        if n<3:
+            return 0
+        arr.sort()
+        ans=0
+        for i in range(n):
+            r=i-1
+            l=0
+            while l<r:
+                if arr[l]+arr[r]>arr[i]:
+                    ans+=r-l
+                    r-=1
+                else:
+                    l+=1
+        return ans
+ 
 
 ```
 ---
