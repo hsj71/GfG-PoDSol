@@ -1,45 +1,59 @@
-# 28-08-2025
+# 29-08-2025
 ---
-## Maximize Number of 1's
-Difficulty: MediumAccuracy: 39.46%Submissions: 67K+Points: 4Average Time: 20m
+## Smallest window containing all characters
+Difficulty: HardAccuracy: 30.19%Submissions: 184K+Points: 8Average Time: 30m
 <pre>
-Given a binary array arr[] containing only 0s and 1s and an integer k, you are allowed to flip at most k 0s to 1s. Find the maximum number of consecutive 1's that can be obtained in the array after performing the operation at most k times.
+Given two strings s and p. Find the smallest substring in s consisting of all the characters (including duplicates) of the string p. Return empty string in case no such substring is present.
+If there are multiple such substring of the same length found, return the one with the least starting index.
 
 Examples:
 
-Input: arr[] = [1, 0, 1], k = 1
-Output: 3
-Explanation: By flipping the zero at index 1, we get the longest subarray from index 0 to 2 containing all 1’s.
-Input: arr[] = [1, 0, 0, 1, 0, 1, 0, 1], k = 2
-Output: 5
-Explanation: By flipping the zeroes at indices 4 and 6, we get the longest subarray from index 3 to 7 containing all 1’s.
-Input: arr[] = [1, 1], k = 2
-Output: 2
-Explanation: Since the array is already having the max consecutive 1's, hence we dont need to perform any operation. Hence the answer is 2.
-Constraints:
-1 ≤ arr.size() ≤ 105
-0 ≤ k ≤ arr.size()
-0 ≤ arr[i] ≤ 1
+Input: s = "timetopractice", p = "toc"
+Output: "toprac"
+Explanation: "toprac" is the smallest substring in which "toc" can be found.
+Input: s = "zoomlazapzo", p = "oza"
+Output: "apzo"
+Explanation: "apzo" is the smallest substring in which "oza" can be found.
+Input: s = "zoom", p = "zooe"
+Output: ""
+Explanation: No substring is present containing all characters of p.
+Constraints: 
+1 ≤ s.length(), p.length() ≤ 106
+s, p consists of lowercase english letters
 </pre>
 
 ---
 ```
 class Solution:
-    def maxOnes(self, arr, k):
+    def smallestWindow(self, s, p):
         # code here
-        m=0
-        left=0
-        kk=k
-        for right,ve in enumerate(arr):
-            if ve==0:
-                kk-=1
-            if kk<0:
-                if arr[left]==0:
-                    kk+=1
-                left+=1
-            if kk>=0:
-                m=max(m,right-left+1)
-        return m
+        from collections import Counter
+        
+        pct = Counter(p)
+        counter = 0  
+        left = 0
+        ans = None
+        sct = Counter()
+        
+        for r, e in enumerate(s):
+            if e not in p: 
+                continue
+            
+            sct[e] += 1
+            if sct[e] <= pct[e]:  
+                counter += 1
+            
+            while left <= r and counter >= len(p):
+                if ans is None or len(ans) > r-left+1:
+                    ans = s[left:r+1]
+                leftc = s[left]
+                if leftc in sct:
+                    sct[leftc] -= 1
+                    if sct[leftc] < pct[leftc]:
+                        counter -= 1
+                left += 1
+            
+        return "" if not ans else ans
  
 
 ```
