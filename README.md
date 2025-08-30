@@ -1,60 +1,47 @@
-# 29-08-2025
+# 30-08-2025
 ---
-## Smallest window containing all characters
-Difficulty: HardAccuracy: 30.19%Submissions: 184K+Points: 8Average Time: 30m
+## The Celebrity Problem
+Difficulty: MediumAccuracy: 38.33%Submissions: 341K+Points: 4Average Time: 30m
 <pre>
-Given two strings s and p. Find the smallest substring in s consisting of all the characters (including duplicates) of the string p. Return empty string in case no such substring is present.
-If there are multiple such substring of the same length found, return the one with the least starting index.
+A celebrity is a person who is known to all but does not know anyone at a party. A party is being organized by some people. A square matrix mat[][] of size n*n is used to represent people at the party such that if an element of row i and column j is set to 1 it means ith person knows jth person. You need to return the index of the celebrity in the party, if the celebrity does not exist, return -1.
+
+Note: Follow 0-based indexing.
 
 Examples:
 
-Input: s = "timetopractice", p = "toc"
-Output: "toprac"
-Explanation: "toprac" is the smallest substring in which "toc" can be found.
-Input: s = "zoomlazapzo", p = "oza"
-Output: "apzo"
-Explanation: "apzo" is the smallest substring in which "oza" can be found.
-Input: s = "zoom", p = "zooe"
-Output: ""
-Explanation: No substring is present containing all characters of p.
-Constraints: 
-1 ≤ s.length(), p.length() ≤ 106
-s, p consists of lowercase english letters
+Input: mat[][] = [[1, 1, 0],
+                [0, 1, 0],
+                [0, 1, 1]]
+Output: 1
+Explanation: 0th and 2nd person both know 1st person and 1st person does not know anyone. Therefore, 1 is the celebrity person.
+Input: mat[][] = [[1, 1], 
+                [1, 1]]
+Output: -1
+Explanation: Since both the people at the party know each other. Hence none of them is a celebrity person.
+Input: mat[][] = [[1]]
+Output: 0
+Constraints:
+1 ≤ mat.size() ≤ 1000
+0 ≤ mat[i][j] ≤ 1
+mat[i][i] = 1
 </pre>
 
 ---
 ```
 class Solution:
-    def smallestWindow(self, s, p):
+    def celebrity(self, mat):
         # code here
-        from collections import Counter
-        
-        pct = Counter(p)
-        counter = 0  
-        left = 0
-        ans = None
-        sct = Counter()
-        
-        for r, e in enumerate(s):
-            if e not in p: 
-                continue
-            
-            sct[e] += 1
-            if sct[e] <= pct[e]:  
-                counter += 1
-            
-            while left <= r and counter >= len(p):
-                if ans is None or len(ans) > r-left+1:
-                    ans = s[left:r+1]
-                leftc = s[left]
-                if leftc in sct:
-                    sct[leftc] -= 1
-                    if sct[leftc] < pct[leftc]:
-                        counter -= 1
-                left += 1
-            
-        return "" if not ans else ans
- 
+        n=len(mat)
+        a,b=0,n-1
+        while a<b:
+            if mat[a][b]:
+                a+=1
+            else:
+                b-=1
+        for i in range(n):
+            if a!=i and mat[a][i] or not mat[i][a]:
+                return -1
+        return a
 
 ```
 ---
