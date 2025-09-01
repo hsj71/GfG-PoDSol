@@ -1,44 +1,47 @@
-# 31-08-2025
+# 01-09-2025
 ---
-## Container With Most Water
-Difficulty: MediumAccuracy: 53.84%Submissions: 92K+Points: 4Average Time: 30m
+## Sum of Mode
+Difficulty: HardAccuracy: 54.28%Submissions: 11K+Points: 8Average Time: 20m
 <pre>
-Given an array arr[] of non-negative integers, where each element arr[i] represents the height of the vertical lines, find the maximum amount of water that can be contained between any two lines, together with the x-axis.
-
-Note: In the case of a single vertical line it will not be able to hold water.
+Given an array arr[] of positive integers and an integer k. You have to find the sum of the modes of all the subarrays of size k.
+Note: The mode of a subarray is the element that occurs with the highest frequency. If multiple elements have the same highest frequency, the smallest such element is considered the mode.
 
 Examples:
 
-Input: arr[] = [1, 5, 4, 3]
+Input: arr[] = [1, 2, 3, 2, 5, 2, 4, 4], k = 3
+Output: 13
+Explanation: The mode of each k size subarray is [1, 2, 2, 2, 2, 4] and sum of all modes is 13.
+Input: arr[] = [1, 2, 1, 3, 5], k = 2
 Output: 6
-Explanation: 5 and 3 are 2 distance apart. So the size of the base is 2. Height of container = min(5, 3) = 3. So, total area to hold water = 3 * 2 = 6.
-Input: arr[] = [3, 1, 2, 4, 5]
-Output: 12
-Explanation: 5 and 3 are 4 distance apart. So the size of the base is 4. Height of container = min(5, 3) = 3. So, total area to hold water = 4 * 3 = 12.
-Input: arr[] = [2, 1, 8, 6, 4, 6, 5, 5]
-Output: 25 
-Explanation: 8 and 5 are 5 distance apart. So the size of the base is 5. Height of container = min(8, 5) = 5. So, the total area to hold water = 5 * 5 = 25.
+Explanation: The mode of each k size subarray is [1, 1, 1, 3] and sum of all modes is 6.
 Constraints:
-1 ≤ arr.size() ≤ 105
-0 ≤ arr[i] ≤ 104
+1 ≤ k ≤ arr.size() ≤105
+1 ≤ arr[i] ≤ 105
 </pre>
 
 ---
 ```
 class Solution:
-    def maxWater(self, arr):
+    def sumOfModes(self, arr, k):
         # code here
-        left, right, max_area = 0, len(arr) - 1, 0
-        while left < right:
-            if arr[left] < arr[right]:
-                area = arr[left] * (right - left)
-                left += 1
-            else:
-                area = arr[right] * (right - left)
-                right -= 1
-            if area > max_area:
-                max_area = area
-        return max_area
+        from heapq import heappop,heappush
+        from collections import defaultdict
+        d=defaultdict(int)
+        i=0
+        h=[]
+        n=len(arr)
+        ans=0
+        for j in range(n):
+            d[arr[j]]+=1
+            if j>=k:
+                d[arr[j-k]]-=1
+            heappush(h,(-d[arr[j]],arr[j]))
+            
+            while d[h[0][1]]!=-h[0][0]:
+                heappop(h)
+            if j>=k-1:
+                ans+=h[0][1]
+        return ans
 
 ```
 ---
