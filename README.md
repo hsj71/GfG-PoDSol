@@ -1,55 +1,53 @@
-# 04-09-2025
+# 05-09-2025
 ---
-## Linked List Group Reverse
-Difficulty: HardAccuracy: 57.08%Submissions: 261K+Points: 8Average Time: 30m
+## Sort a linked list of 0s, 1s and 2s
+Difficulty: MediumAccuracy: 60.75%Submissions: 271K+Points: 4Average Time: 30m
 <pre>
-You are given the head of a Singly linked list. You have to reverse every k node in the linked list and return the head of the modified list.
-Note: If the number of nodes is not a multiple of k then the left-out nodes at the end, should be considered as a group and must be reversed.
+Given the head of a linked list where nodes can contain values 0s, 1s, and 2s only. Your task is to rearrange the list so that all 0s appear at the beginning, followed by all 1s, and all 2s are placed at the end.
 
 Examples:
 
-Input: k = 2,
+Input: head = 1 → 2 → 2 → 1 → 2 → 0 → 2 → 2
    
-Output: 2 -> 1 -> 4 -> 3 -> 6 -> 5
-Explanation: Linked List is reversed in a group of size k = 2.
+Output: 0 → 1 → 1 → 2 → 2 → 2 → 2 → 2
+Explanation: All the 0s are segregated to the left end of the linked list, 2s to the right end of the list, and 1s in between. The final list will be:
    
-Input: k = 4,
+Input: head = 2 → 2 → 0 → 1
    
-Output: 4 -> 3 -> 2 -> 1 -> 6 -> 5
-Explanation: Linked List is reversed in a group of size k = 4.
+Output: 0 → 1 → 2 → 2
+Explanation: After arranging all the 0s, 1s and 2s in the given format, the output will be:
    
 Constraints:
-1 ≤ size of linked list ≤ 105
-0 ≤ node->data ≤ 106
-1 ≤ k ≤ size of linked list 
+1 ≤ no. of nodes ≤ 106
+0 ≤ node->data ≤ 2
 
 </pre>
 
 ---
 ```
-"""
+'''
 class Node:
     def __init__(self, data):
         self.data = data
         self.next = None
-"""
-
+'''
+	
 class Solution:
-    def reverseKGroup(self, head, k):
-        # Code here
-        if k == 1:
-            return head
-    
-        def rev(head):
-            prev, node = None, head
-            for i in range(k):
-                node.next, node, prev = prev, node.next, node
-                if node is None:
-                    return prev
-            head.next = rev(node)
-            return prev
-        
-        return rev(head)
+    def segregate(self, head):
+        #code here
+        i=[]
+        n=head
+        while n:
+            i.append(n.data)
+            n=n.next
+        i.sort()
+        current=head
+        c=0
+        while current:
+            current.data=i[c]
+            c+=1
+            current=current.next
+        return head
 
 
 ```
