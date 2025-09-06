@@ -1,25 +1,30 @@
-# 05-09-2025
+# 06-09-2025
 ---
-## Sort a linked list of 0s, 1s and 2s
-Difficulty: MediumAccuracy: 60.75%Submissions: 271K+Points: 4Average Time: 30m
+## Find length of Loop
+Difficulty: MediumAccuracy: 44.26%Submissions: 281K+Points: 4Average Time: 30m
 <pre>
-Given the head of a linked list where nodes can contain values 0s, 1s, and 2s only. Your task is to rearrange the list so that all 0s appear at the beginning, followed by all 1s, and all 2s are placed at the end.
+Given the head of a linked list, determine whether the list contains a loop. If a loop is present, return the number of nodes in the loop, otherwise return 0.
+
+Note: Internally, pos(1 based index) is used to denote the position of the node that tail's next pointer is connected to. If pos = 0, it means the last node points to null, indicating there is no loop. Note that pos is not passed as a parameter.
 
 Examples:
 
-Input: head = 1 → 2 → 2 → 1 → 2 → 0 → 2 → 2
+Input: pos = 2,
    
-Output: 0 → 1 → 1 → 2 → 2 → 2 → 2 → 2
-Explanation: All the 0s are segregated to the left end of the linked list, 2s to the right end of the list, and 1s in between. The final list will be:
+Output: 4
+Explanation: There exists a loop in the linked list and the length of the loop is 4.
+Input: pos = 3,
    
-Input: head = 2 → 2 → 0 → 1
-   
-Output: 0 → 1 → 2 → 2
-Explanation: After arranging all the 0s, 1s and 2s in the given format, the output will be:
-   
+Output: 3
+Explanation: The loop is from 19 to 10. So length of loop is 19 → 33 → 10 = 3.
+Input: pos = 0,
+    
+Output: 0
+Explanation: There is no loop.
 Constraints:
-1 ≤ no. of nodes ≤ 106
-0 ≤ node->data ≤ 2
+1 ≤ number of nodes ≤ 105
+1 ≤ node->data ≤ 104
+0 ≤ pos < number of nodes
 
 </pre>
 
@@ -27,27 +32,26 @@ Constraints:
 ```
 '''
 class Node:
-    def __init__(self, data):
+    def __init__(self, data): 
         self.data = data
         self.next = None
 '''
-	
+
 class Solution:
-    def segregate(self, head):
+    def lengthOfLoop(self, head):
         #code here
-        i=[]
-        n=head
-        while n:
-            i.append(n.data)
-            n=n.next
-        i.sort()
-        current=head
-        c=0
-        while current:
-            current.data=i[c]
-            c+=1
-            current=current.next
-        return head
+        c = head
+        d = set()
+        ls = []
+        while c:
+            if c not in d:
+               d.add(c)
+               ls.append(c)
+               c = c.next
+            else:
+                a = len(ls) - ls.index(c)
+                return a
+        return 0
 
 
 ```
