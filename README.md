@@ -1,62 +1,49 @@
-# 07-09-2025
+# 08-09-2025
 ---
-## Merge K sorted linked lists
-Difficulty: MediumAccuracy: 57.01%Submissions: 117K+Points: 4Average Time: 60m
+## Merge Sort for Linked List
+Difficulty: MediumAccuracy: 74.76%Submissions: 85K+Points: 4Average Time: 30m
 <pre>
-Given an array arr[] of n sorted linked lists of different sizes. Your task is to merge all these lists into a single sorted linked list and return the head of the merged list.
+You are given the head of a linked list. You have to sort the given linked list using Merge Sort.
 
 Examples:
 
 Input:
-   
-Output: 1 -> 2 -> 3 -> 4 -> 7 -> 8 -> 9
-Explanation: The arr[] has 3 sorted linked list of size 3, 3, 1.
-1st list: 1 -> 3 -> 7
-2nd list: 2 -> 4 -> 8
-3rd list: 9
-The merged list will be: 
+    
+Output: 10 -> 20 -> 30 -> 40 -> 50 -> 60
+Explanation: After sorting the given linked list, the resultant list will be:
     
 Input:
-   
-Output: 1 -> 3 -> 4 -> 5 -> 6 -> 8
-Explanation: The arr[] has 3 sorted linked list of size 2, 1, 3.
-1st list: 1 -> 3
-2nd list: 8
-3rd list: 4 -> 5 -> 6
-The merged list will be: 
     
-Constraints
-1 ≤ total no. of nodes ≤ 105
-1 ≤ node->data ≤ 103
+Output: 2 -> 5 -> 8 -> 9
+Explanation: After sorting the given linked list, the resultant list will be:
+    
+Constraints:
+1 ≤ number of nodes ≤ 105
+0 ≤ node->data ≤ 106
 </pre>
 
 ---
 ```
 '''
 class Node:
-    def _init_(self, x):
-        self.data = x
+    def __init__(self, data):
+        self.data = data
         self.next = None
 '''
 
 class Solution:
-    def mergeKLists(self, arr):
+    def mergeSort(self, head):
         # code here
-        import heapq
+        i=[]
+        new=head
+        while new:
+            i.append(new.data)
+            new=new.next
+        i.sort()    
+        current=head
+        for J in i:
+            current.data=J
+            current=current.next
+        return head
         
-        h=[(d.data,i,) for i,d in enumerate(arr)]
-        heapq.heapify(h)
-        m=Node(-1)
-        cur=m
-        while h:
-            o,x=heapq.heappop(h)
-            cur.next=arr[x]
-            cur=cur.next
-            arr[x]=arr[x].next
-            if arr[x]:
-                heapq.heappush(h,(arr[x].data,x,))
-        return m.next
-
-
-```
 ---
