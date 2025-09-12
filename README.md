@@ -1,48 +1,50 @@
-# 11-09-2025
+# 12-09-2025
 ---
-## Minimum Jumps
-Difficulty: MediumAccuracy: 11.91%Submissions: 1MPoints: 4
+## Minimize the Heights II
+Difficulty: MediumAccuracy: 15.06%Submissions: 747K+Points: 4Average Time: 25m 
 
 <pre>
-You are given an array arr[] of non-negative numbers. Each number tells you the maximum number of steps you can jump forward from that position.
+Given an array arr[] denoting heights of n towers and a positive integer k.
 
-For example:
+For each tower, you must perform exactly one of the following operations exactly once.
 
-If arr[i] = 3, you can jump to index i + 1, i + 2, or i + 3 from position i.
-If arr[i] = 0, you cannot jump forward from that position.
-Your task is to find the minimum number of jumps needed to move from the first position in the array to the last position.
+Increase the height of the tower by k
+Decrease the height of the tower by k
+Find out the minimum possible difference between the height of the shortest and tallest towers after you have modified each tower.
 
-Note:  Return -1 if you can't reach the end of the array.
+You can find a slight modification of the problem here.
+Note: It is compulsory to increase or decrease the height by k for each tower. After the operation, the resultant array should not contain any negative integers.
 
-Examples : 
+Examples :
 
-Input: arr[] = [1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9]
-Output: 3 
-Explanation: First jump from 1st element to 2nd element with value 3. From here we jump to 5th element with value 9, and from here we will jump to the last. 
-Input: arr = [1, 4, 3, 2, 6, 7]
-Output: 2 
-Explanation: First we jump from the 1st to 2nd element and then jump to the last element.
-Input: arr = [0, 10, 20]
-Output: -1
-Explanation: We cannot go anywhere from the 1st element.
-Constraints:
-2 ≤ arr.size() ≤ 105
-0 ≤ arr[i] ≤ 105
+Input: k = 2, arr[] = [1, 5, 8, 10]
+Output: 5
+Explanation: The array can be modified as [1+k, 5-k, 8-k, 10-k] = [3, 3, 6, 8]. The difference between the largest and the smallest is 8-3 = 5.
+Input: k = 3, arr[] = [3, 9, 12, 16, 20]
+Output: 11
+Explanation: The array can be modified as [3+k, 9+k, 12-k, 16-k, 20-k] = [6, 12, 9, 13, 17]. The difference between the largest and the smallest is 17-6 = 11. 
+Constraints
+1 ≤ k ≤ 107
+1 ≤ n ≤ 105
+1 ≤ arr[i] ≤ 107
+	
 </pre>
 
 ---
 ```
 class Solution:
-	def minJumps(self, arr):
-	    # code here
-	    j, d, p = 0, 0, 0
-        for i in range(len(arr)-1):
-            d = max(d, i + arr[i])
-            if(i >= d):
-                return -1
-            if(p == i):
-                p = d
-                j += 1
-        return j
+    def getMinDiff(self, arr, k):
+        # code here
+        arr.sort()
+        r = arr[-1] - arr[0]
+        s = arr[0] + k
+        b = arr[-1] - k
+        for i in range(1, len(arr)):
+            if(arr[i] - k < 0):
+                continue
+            mn = min(s, arr[i] - k)
+            mx = max(b, arr[i-1] + k)
+            r = min(r, mx - mn)
+        return r
 ```
 ---
