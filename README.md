@@ -1,50 +1,103 @@
-# 12-09-2025
+# 13-09-2025
 ---
-## Minimize the Heights II
-Difficulty: MediumAccuracy: 15.06%Submissions: 747K+Points: 4Average Time: 25m 
+## Minimum Cost to cut a board into squares
+Difficulty: MediumAccuracy: 60.83%Submissions: 25K+Points: 4
+
 
 <pre>
-Given an array arr[] denoting heights of n towers and a positive integer k.
+Given a board of dimensions n × m that needs to be cut into n*m squares. The cost of making a cut along a horizontal or vertical edge is provided in two arrays:
 
-For each tower, you must perform exactly one of the following operations exactly once.
+x[]: Cutting costs along the vertical edges (length-wise).
+y[]: Cutting costs along the horizontal edges (width-wise).
+Find the minimum total cost required to cut the board into squares optimally.
 
-Increase the height of the tower by k
-Decrease the height of the tower by k
-Find out the minimum possible difference between the height of the shortest and tallest towers after you have modified each tower.
+Examples:
 
-You can find a slight modification of the problem here.
-Note: It is compulsory to increase or decrease the height by k for each tower. After the operation, the resultant array should not contain any negative integers.
+Input: n = 4, m = 6, x[] = [2, 1, 3, 1, 4], y[] = [4, 1, 2]
+Output: 42
+Explanation:
 
-Examples :
+Initially no. of horizontal segments = 1 & no. of vertical segments = 1.
+Optimal way to cut into square is:
+• Pick 4 (from x) -> vertical cut, Cost = 4 × horizontal segments = 4,
+  Now, horizontal segments = 1, vertical segments = 2.
+• Pick 4 (from y) -> horizontal cut, Cost = 4 × vertical segments = 8,
+  Now, horizontal segments = 2, vertical segments = 2.
+• Pick 3 (from x) -> vertical cut, Cost = 3 × horizontal segments = 6,
+  Now, horizontal segments = 2, vertical segments = 3.
+• Pick 2 (from x) -> vertical cut, Cost = 2 × horizontal segments = 4,
+  Now, horizontal segments = 2, vertical segments = 4.
+• Pick 2 (from y) -> horizontal cut, Cost = 2 × vertical segments = 8,
+  Now, horizontal segments = 3, vertical segments = 4.
+• Pick 1 (from x) -> vertical cut, Cost = 1 × horizontal segments = 3,
+  Now, horizontal segments = 3, vertical segments = 5.
+• Pick 1 (from x) -> vertical cut, Cost = 1 × horizontal segments = 3,
+  Now, horizontal segments = 3, vertical segments = 6.
+• Pick 1 (from y) -> horizontal cut, Cost = 1 × vertical segments = 6,
+  Now, horizontal segments = 4, vertical segments = 6.
+So, the total cost = 4 + 8 + 6 + 4 + 8 + 3 + 3 + 6 = 42.
+Input: n = 4, m = 4, x[] = [1, 1, 1], y[] = [1, 1, 1]
+Output: 15
+Explanation: 
 
-Input: k = 2, arr[] = [1, 5, 8, 10]
-Output: 5
-Explanation: The array can be modified as [1+k, 5-k, 8-k, 10-k] = [3, 3, 6, 8]. The difference between the largest and the smallest is 8-3 = 5.
-Input: k = 3, arr[] = [3, 9, 12, 16, 20]
-Output: 11
-Explanation: The array can be modified as [3+k, 9+k, 12-k, 16-k, 20-k] = [6, 12, 9, 13, 17]. The difference between the largest and the smallest is 17-6 = 11. 
-Constraints
-1 ≤ k ≤ 107
-1 ≤ n ≤ 105
-1 ≤ arr[i] ≤ 107
+Initially no. of horizontal segments = 1 & no. of vertical segments = 1.
+Optimal way to cut into square is: 
+• Pick 1 (from y) -> horizontal cut, Cost = 1 × vertical segments = 1,
+  Now, horizontal segments = 2, vertical segments = 1.
+• Pick 1 (from y) -> horizontal cut, Cost = 1 × vertical segments = 1,
+  Now, horizontal segments = 3, vertical segments = 1.
+• Pick 1 (from y) -> horizontal cut, Cost = 1 × vertical segments = 1,
+  Now, horizontal segments = 4, vertical segments = 1.
+• Pick 1 (from x) -> vertical cut, Cost = 1 × horizontal segments = 4,
+  Now, horizontal segments = 4, vertical segments = 2.
+• Pick 1 (from x) -> vertical cut, Cost = 1 × horizontal segments = 4,
+  Now, horizontal segments = 4, vertical segments = 3.
+• Pick 1 (from x) -> vertical cut, Cost = 1 × horizontal segments = 4,
+  Now, horizontal segments = 4, vertical segments = 4
+So, the total cost = 1 + 1 + 1 + 4 + 4 + 4 = 15.
+Constraints:
+2 ≤ n, m ≤ 103
+1 ≤ x[i], y[j] ≤103
 	
 </pre>
 
 ---
 ```
 class Solution:
-    def getMinDiff(self, arr, k):
+    def minCost(self, n, m, x, y):
         # code here
-        arr.sort()
-        r = arr[-1] - arr[0]
-        s = arr[0] + k
-        b = arr[-1] - k
-        for i in range(1, len(arr)):
-            if(arr[i] - k < 0):
-                continue
-            mn = min(s, arr[i] - k)
-            mx = max(b, arr[i-1] + k)
-            r = min(r, mx - mn)
-        return r
+        x.sort(reverse=True)
+        y.sort(reverse=True)
+
+        horizontal_pieces = 1
+        vertical_pieces = 1
+
+        i = j = 0
+        total_cost = 0
+
+        while i < len(x) and j < len(y):
+            if x[i] > y[j]:
+                total_cost += x[i] * horizontal_pieces
+                vertical_pieces += 1
+                i += 1
+            else:
+                total_cost += y[j] * vertical_pieces
+                horizontal_pieces += 1
+                j += 1
+
+        while i < len(x):
+            total_cost += x[i] * horizontal_pieces
+            i += 1
+
+
+        while j < len(y):
+            total_cost += y[j] * vertical_pieces
+            j += 1
+
+        return total_cost
+        
+        
+        
+
 ```
 ---
