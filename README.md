@@ -1,48 +1,48 @@
-# 14-09-2025
+# 15-09-2025
 ---
-## Gas Station
-Difficulty: MediumAccuracy: 34.79%Submissions: 213K+Points: 4Average Time: 20m
+## String stack
+Difficulty: MediumAccuracy: 46.69%Submissions: 19K+Points: 4
 
 
 <pre>
-There are n gas stations along a circular tour. You are given two integer arrays gas[] and cost[], where gas[i] is the amount of gas available at station i and cost[i] is the gas needed to travel from station i to station (i+1). You have a car with an unlimited gas tank and start with an empty tank at some station. Your task is to return the index of the starting station if it is possible to travel once around the circular route in a clockwise direction without running out of gas at any station; otherwise, return -1.
+You are given two strings pat and tar consisting of lowercase English characters. You can construct a new string s by performing any one of the following operation for each character in pat:
 
-Note: If a solution exists, it is guaranteed to be unique.
+Append the character pat[i] to the string s.
+Delete the last character of s (if s is empty do nothing).
+After performing operations on every character of pat exactly once, your goal is to determine if it is possible to make the string s equal to string tar.
 
 Examples:
 
-Input: gas[] = [4, 5, 7, 4], cost[]= [6, 6, 3, 5]
-Output: 2
-Explanation: Start at gas station at index 2 and fill up with 7 units of gas. Your tank = 0 + 7 = 7
-Travel to station 3. Available gas = (7 – 3 + 4) = 8.
-Travel to station 0. Available gas = (8 – 5 + 4) = 7.
-Travel to station 1. Available gas = (7 – 6 + 5) = 6.
-Return to station 2. Available gas = (6 – 6) = 0.
-Input: gas[] = [3, 9], cost[] = [7, 6]
-Output: -1
-Explanation: There is no gas station to start with such that you can complete the tour.
+Input: pat = "geuaek", tar = "geek"
+Output: true
+Explanation: Append the first three characters of pat to s, resulting in s = "geu". Delete the last character for 'a', leaving s = "ge". Then, append the last two characters 'e' and 'k' from pat to s, resulting in s = "geek", which matches tar.
+Input: pat = "agiffghd", tar = "gfg"
+Output: true
+Explanation: Skip the first character 'a' in pat. Append 'g' and 'i' to s, resulting in s = "gi". Delete the last character for 'f', leaving s = "g". Append 'f', 'g', and 'h' to s, resulting in s = "gfgh". Finally, delete the last character for 'd', leaving s = "gfg", which matches tar.
+Input: pat = "ufahs", tar = "aus"
+Output: false
+Explanation: It is impossible to construct the string tar from pat with the given operations.
 Constraints:
-1 ≤ n ≤ 106
-1 ≤ gas[i], cost[i] ≤ 103
+1 ≤ pat.size(), tar.size() ≤ 105
 	
 </pre>
 
 ---
 ```
 class Solution:
-    def startStation(self, gas, cost):
-        #  code here
-        if sum(gas) < sum(cost):
-            return -1
-        
-        start = 0
-        tank = 0
-        for i in range (len(gas)):
-            tank += gas[i] - cost[i]
-            if tank < 0:
-                start = i + 1
-                tank = 0
-        return start
+    def stringStack(self, pat, tar):
+        # code here
+        i = len(pat) - 1
+        j = len(tar) - 1
+
+        while i >= 0 and j >= 0:
+            if pat[i] == tar[j]:
+                i -= 1
+                j -= 1
+            else:
+                i -= 2
+
+        return j < 0
         
         
 
