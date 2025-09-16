@@ -1,49 +1,52 @@
-# 15-09-2025
+# 16-09-2025
 ---
-## String stack
-Difficulty: MediumAccuracy: 46.69%Submissions: 19K+Points: 4
-
+## Postfix Evaluation
+Difficulty: MediumAccuracy: 63.04%Submissions: 125K+Points: 4
 
 <pre>
-You are given two strings pat and tar consisting of lowercase English characters. You can construct a new string s by performing any one of the following operation for each character in pat:
+You are given an array of strings arr[] that represents a valid arithmetic expression written in Reverse Polish Notation (Postfix Notation). Your task is to evaluate the expression and return an integer representing its value.
 
-Append the character pat[i] to the string s.
-Delete the last character of s (if s is empty do nothing).
-After performing operations on every character of pat exactly once, your goal is to determine if it is possible to make the string s equal to string tar.
+Note: A postfix expression is of the form operand1 operand2 operator (e.g., "a b +"). 
+And the division operation between two integers always computes the floor value, i.e floor(5 / 3) = 1 and floor(-5 / 3) = -2.
+It is guaranteed that the result of the expression and all intermediate calculations will fit in a 32-bit signed integer.
 
 Examples:
 
-Input: pat = "geuaek", tar = "geek"
-Output: true
-Explanation: Append the first three characters of pat to s, resulting in s = "geu". Delete the last character for 'a', leaving s = "ge". Then, append the last two characters 'e' and 'k' from pat to s, resulting in s = "geek", which matches tar.
-Input: pat = "agiffghd", tar = "gfg"
-Output: true
-Explanation: Skip the first character 'a' in pat. Append 'g' and 'i' to s, resulting in s = "gi". Delete the last character for 'f', leaving s = "g". Append 'f', 'g', and 'h' to s, resulting in s = "gfgh". Finally, delete the last character for 'd', leaving s = "gfg", which matches tar.
-Input: pat = "ufahs", tar = "aus"
-Output: false
-Explanation: It is impossible to construct the string tar from pat with the given operations.
+Input: arr[] = ["2", "3", "1", "*", "+", "9", "-"]
+Output: -4
+Explanation: If the expression is converted into an infix expression, it will be 2 + (3 * 1) – 9 = 5 – 9 = -4.
+Input: arr[] = ["2", "3", "^", "1", "+"]
+Output: 9
+Explanation: If the expression is converted into an infix expression, it will be 2 ^ 3 + 1 = 8 + 1 = 9.
 Constraints:
-1 ≤ pat.size(), tar.size() ≤ 105
+3 ≤ arr.size() ≤ 103
+arr[i] is either an operator: "+", "-", "*", "/" or "^", or an integer in the range [-104, 104]
 	
 </pre>
 
 ---
 ```
 class Solution:
-    def stringStack(self, pat, tar):
+    def evaluatePostfix(self, arr):
         # code here
-        i = len(pat) - 1
-        j = len(tar) - 1
+        arithmetic = {
+            '+' : lambda a, b : a + b,
+            '-' : lambda a, b : a - b,
+            '*' : lambda a, b : a * b,
+            '/' : lambda a, b : a // b,
+            '^' : lambda a, b : a ** b
+        }
 
-        while i >= 0 and j >= 0:
-            if pat[i] == tar[j]:
-                i -= 1
-                j -= 1
-            else:
-                i -= 2
+        bt = []
+        for i in arr:
+            res = i
+            if i in arithmetic:
+                arg2 = int(bt.pop())
+                arg1 = int(bt.pop())
+                res = arithmetic[i](arg1, arg2)
+            bt.append(res)
 
-        return j < 0
-        
+        return bt[-1]
         
 
 ```
