@@ -1,53 +1,53 @@
-# 16-09-2025
+# 17-09-2025
 ---
-## Postfix Evaluation
-Difficulty: MediumAccuracy: 63.04%Submissions: 125K+Points: 4
+## Decode the string
+Difficulty: MediumAccuracy: 44.28%Submissions: 67K+Points: 4Average Time: 10m
 
 <pre>
-You are given an array of strings arr[] that represents a valid arithmetic expression written in Reverse Polish Notation (Postfix Notation). Your task is to evaluate the expression and return an integer representing its value.
+Given an encoded string s, decode it by expanding the pattern k[substring], where the substring inside brackets is written k times. k is guaranteed to be a positive integer, and encodedString contains only lowercase english alphabets. Return the final decoded string.
 
-Note: A postfix expression is of the form operand1 operand2 operator (e.g., "a b +"). 
-And the division operation between two integers always computes the floor value, i.e floor(5 / 3) = 1 and floor(-5 / 3) = -2.
-It is guaranteed that the result of the expression and all intermediate calculations will fit in a 32-bit signed integer.
+Note: The test cases are generated so that the length of the output string will never exceed 105 .
 
 Examples:
 
-Input: arr[] = ["2", "3", "1", "*", "+", "9", "-"]
-Output: -4
-Explanation: If the expression is converted into an infix expression, it will be 2 + (3 * 1) – 9 = 5 – 9 = -4.
-Input: arr[] = ["2", "3", "^", "1", "+"]
-Output: 9
-Explanation: If the expression is converted into an infix expression, it will be 2 ^ 3 + 1 = 8 + 1 = 9.
+Input: s = "3[b2[ca]]"
+Output: "bcacabcacabcaca"
+Explanation:
+Inner substring “2[ca]” breakdown into “caca”.
+Now, new string becomes “3[bcaca]”
+Similarly “3[bcaca]” becomes “bcacabcacabcaca” which is final result.
+Input: s = "3[ab]"
+Output: "ababab"
+Explanation: The substring "ab" is repeated 3 times giving "ababab".
 Constraints:
-3 ≤ arr.size() ≤ 103
-arr[i] is either an operator: "+", "-", "*", "/" or "^", or an integer in the range [-104, 104]
+1 ≤ |s| ≤ 105 
+1 ≤ k ≤ 100
 	
 </pre>
 
 ---
 ```
 class Solution:
-    def evaluatePostfix(self, arr):
+    def decodedString(self, s):
         # code here
-        arithmetic = {
-            '+' : lambda a, b : a + b,
-            '-' : lambda a, b : a - b,
-            '*' : lambda a, b : a * b,
-            '/' : lambda a, b : a // b,
-            '^' : lambda a, b : a ** b
-        }
+        stack = []
+        for i in s:
+            if i == ']':
+                expand = ''
+                while stack[-1] != '[':
+                    expand = stack.pop() + expand
+                stack.pop()
 
-        bt = []
-        for i in arr:
-            res = i
-            if i in arithmetic:
-                arg2 = int(bt.pop())
-                arg1 = int(bt.pop())
-                res = arithmetic[i](arg1, arg2)
-            bt.append(res)
-
-        return bt[-1]
-        
+                m = ''
+                while stack and stack[-1].isdigit():
+                    m = stack.pop() + m
+                
+                stack.append(int(m) * expand)
+                continue
+            
+            stack.append(i)
+            
+        return ''.join(stack)
 
 ```
 ---
