@@ -1,53 +1,53 @@
-# 17-09-2025
+# 18-09-2025
 ---
-## Decode the string
-Difficulty: MediumAccuracy: 44.28%Submissions: 67K+Points: 4Average Time: 10m
+## Next Greater Element in Circular Array
+Difficulty: MediumAccuracy: 56.97%Submissions: 63K+Points: 4
 
 <pre>
-Given an encoded string s, decode it by expanding the pattern k[substring], where the substring inside brackets is written k times. k is guaranteed to be a positive integer, and encodedString contains only lowercase english alphabets. Return the final decoded string.
+Given a circular integer array arr[], the task is to determine the next greater element (NGE) for each element in the array.
 
-Note: The test cases are generated so that the length of the output string will never exceed 105 .
+The next greater element of an element arr[i] is the first element that is greater than arr[i] when traversing circularly. If no such element exists, return -1 for that position.
 
-Examples:
+Note: Since the array is circular, after reaching the last element, the search continues from the beginning until we have looked at all elements once.
 
-Input: s = "3[b2[ca]]"
-Output: "bcacabcacabcaca"
+Examples: 
+
+Input: arr[] = [1, 3, 2, 4]
+Output: [3, 4, 4, -1]
 Explanation:
-Inner substring “2[ca]” breakdown into “caca”.
-Now, new string becomes “3[bcaca]”
-Similarly “3[bcaca]” becomes “bcacabcacabcaca” which is final result.
-Input: s = "3[ab]"
-Output: "ababab"
-Explanation: The substring "ab" is repeated 3 times giving "ababab".
+The next greater element for 1 is 3.
+The next greater element for 3 is 4.
+The next greater element for 2 is 4.
+The next greater element for 4 does not exist, so return -1.
+Input: arr[] = [0, 2, 3, 1, 1]
+Output: [2, 3, -1, 2, 2]
+Explanation:
+The next greater element for 0 is 2.
+The next greater element for 2 is 3.
+The next greater element for 3 does not exist, so return -1.
+The next greater element for 1 is 2 (from circular traversal).
+The next greater element for 1 is 2 (from circular traversal).
 Constraints:
-1 ≤ |s| ≤ 105 
-1 ≤ k ≤ 100
+1 ≤ arr.size() ≤ 105
+0 ≤ arr[i] ≤ 106
+
 	
 </pre>
 
 ---
 ```
 class Solution:
-    def decodedString(self, s):
+    def nextGreater(self, arr):
         # code here
+        narr = arr + arr
+        res = [-1] * len(arr)
         stack = []
-        for i in s:
-            if i == ']':
-                expand = ''
-                while stack[-1] != '[':
-                    expand = stack.pop() + expand
-                stack.pop()
-
-                m = ''
-                while stack and stack[-1].isdigit():
-                    m = stack.pop() + m
-                
-                stack.append(int(m) * expand)
-                continue
-            
+        for i in range(len(narr)):
+            while stack and narr[stack[-1]] < narr[i]:
+                ind = stack.pop()
+                if ind < len(res):
+                    res[ind] = narr[i]
             stack.append(i)
-            
-        return ''.join(stack)
-
+        return res
 ```
 ---
