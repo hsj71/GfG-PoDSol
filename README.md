@@ -1,35 +1,30 @@
-# 18-09-2025
+# 19-09-2025
 ---
-## Next Greater Element in Circular Array
-Difficulty: MediumAccuracy: 56.97%Submissions: 63K+Points: 4
+## Min Add to Make Parentheses Valid
+Difficulty: MediumAccuracy: 61.08%Submissions: 10K+Points: 4
 
 <pre>
-Given a circular integer array arr[], the task is to determine the next greater element (NGE) for each element in the array.
+You are given a string s consisting only of the characters '(' and ')'. Your task is to determine the minimum number of parentheses (either '(' or ')') that must be inserted at any positions to make the string s a valid parentheses string.
 
-The next greater element of an element arr[i] is the first element that is greater than arr[i] when traversing circularly. If no such element exists, return -1 for that position.
+A parentheses string is considered valid if:
 
-Note: Since the array is circular, after reaching the last element, the search continues from the beginning until we have looked at all elements once.
+Every opening parenthesis '(' has a corresponding closing parenthesis ')'.
+Every closing parenthesis ')' has a corresponding opening parenthesis '('.
+Parentheses are properly nested.
+Examples:
 
-Examples: 
-
-Input: arr[] = [1, 3, 2, 4]
-Output: [3, 4, 4, -1]
-Explanation:
-The next greater element for 1 is 3.
-The next greater element for 3 is 4.
-The next greater element for 2 is 4.
-The next greater element for 4 does not exist, so return -1.
-Input: arr[] = [0, 2, 3, 1, 1]
-Output: [2, 3, -1, 2, 2]
-Explanation:
-The next greater element for 0 is 2.
-The next greater element for 2 is 3.
-The next greater element for 3 does not exist, so return -1.
-The next greater element for 1 is 2 (from circular traversal).
-The next greater element for 1 is 2 (from circular traversal).
+Input: s = "(()("
+Output: 2
+Explanation: There are two unmatched '(' at the end, so we need to add two ')' to make the string valid.
+Input: s = ")))"
+Output: 3
+Explanation: Three '(' need to be added at the start to make the string valid.
+Input: s = ")()()"
+Output: 1 
+Explanation: The very first ')' is unmatched, so we need to add one '(' at the beginning.
 Constraints:
-1 ≤ arr.size() ≤ 105
-0 ≤ arr[i] ≤ 106
+1 ≤ s.size() ≤ 105
+s[i] ∈ { '(' , ')' }
 
 	
 </pre>
@@ -37,17 +32,19 @@ Constraints:
 ---
 ```
 class Solution:
-    def nextGreater(self, arr):
+    def minParentheses(self, s):
         # code here
-        narr = arr + arr
-        res = [-1] * len(arr)
-        stack = []
-        for i in range(len(narr)):
-            while stack and narr[stack[-1]] < narr[i]:
-                ind = stack.pop()
-                if ind < len(res):
-                    res[ind] = narr[i]
-            stack.append(i)
+        op=0
+        res=0
+        for i in s:
+            if i=='(':
+                op+=1
+            elif op>0:
+                op-=1
+            else:
+                res+=1
+        res+=op
         return res
+        
 ```
 ---
