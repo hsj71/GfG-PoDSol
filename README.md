@@ -1,23 +1,34 @@
-# 20-09-2025
+# 21-09-2025
 ---
-## Longest Subarray Length
-Difficulty: MediumAccuracy: 45.14%Submissions: 20K+Points: 4
+## Max rectangle
+Difficulty: HardAccuracy: 36.43%Submissions: 126K+Points: 8Average Time: 35m
 
 <pre>
-You are given an array of integers arr[]. Your task is to find the length of the longest subarray such that all the elements of the subarray are smaller than or equal to the length of the subarray.
+You are given a 2D binary matrix mat[ ][ ], where each cell contains either 0 or 1. Your task is to find the maximum area of a rectangle that can be formed using only 1's within the matrix.
 
 Examples:
 
-Input: arr[] = [1, 2, 3]
-Output: 3
-Explanation: The longest subarray is the entire array itself, which has a length of 3. All elements in the subarray are less than or equal to 3.
-Input: arr[] = [6, 4, 2, 5]
-Output: 0
-Explanation: There is no subarray where all elements are less than or equal to the length of the subarray. The longest subarray is empty, which has a length of 0.
+Input: mat[][] = [[0, 1, 1, 0],
+                [1, 1, 1, 1],
+                [1, 1, 1, 1],
+                [1, 1, 0, 0]]
+Output: 8
+Explanation: The largest rectangle with only 1’s is from (1, 0) to (2, 3) which is
+[1, 1, 1, 1]
+[1, 1, 1, 1]
+and area is 4 * 2 = 8.
+Input: mat[][] = [[0, 1, 1],
+                [1, 1, 1],
+                [0, 1, 1]]
+Output: 6
+Explanation: The largest rectangle with only 1’s is from (0, 1) to (2, 2) which is
+[1, 1]
+[1, 1]
+[1, 1]
+and area is 2 * 3 = 6.
 Constraints:
-1 ≤ arr.size() ≤ 105
-1 ≤ arr[i] ≤ 109
-
+1 ≤ mat.size(), mat[0].size() ≤1000
+0 ≤ mat[][] ≤1
 
 	
 </pre>
@@ -25,29 +36,34 @@ Constraints:
 ---
 ```
 class Solution:
-    def longestSubarray(self, arr):
-        # code here
-        stack = []
-        nge_left = [-1] * len(arr)
-        for i in range(len(arr)-1, -1, -1):
-            while stack and arr[stack[-1]] < arr[i]:
-                nge_left[stack.pop()] = i
-            stack.append(i)
+    def maxArea(self, mat):
+        def largestHistogramArea(heights):
+            # Add sentinel zeros to simplify edge handling
+            heights = [0] + heights + [0]
+            stack = []
+            max_area = 0
 
-        stack = []
-        nge_right = [len(arr)] * len(arr)
-        for i in range(len(arr)):
-            while stack and arr[stack[-1]] < arr[i]:
-                nge_right[stack.pop()] = i
-            stack.append(i)
+            for i, h in enumerate(heights):
+                while stack and heights[stack[-1]] > h:
+                    height = heights[stack.pop()]
+                    width = i - stack[-1] - 1
+                    max_area = max(max_area, height * width)
+                stack.append(i)
 
-        maxi = 0
-        for i in range(len(arr)):
-            l = nge_right[i] - nge_left[i] - 1
-            v = arr[i]
-            if v <= l:
-                maxi = max(maxi, l)
-        return maxi
+            return max_area
+
+        if not mat or not mat[0]:
+            return 0
+
+        max_area = largestHistogramArea(mat[0])
+
+        for i in range(1, len(mat)):
+            for j in range(len(mat[0])):
+                if mat[i][j] == 1:
+                    mat[i][j] += mat[i - 1][j]
+            max_area = max(max_area, largestHistogramArea(mat[i]))
+
+        return max_area
         
         
 ```
