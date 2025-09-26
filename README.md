@@ -1,37 +1,54 @@
-# 25-09-2025
+# 26-09-2025
 ---
-## Generate Binary Numbers
-Difficulty: EasyAccuracy: 67.48%Submissions: 60K+Points: 2
+## Rotate Deque By K
+Difficulty: EasyAccuracy: 75.79%Submissions: 22K+Points: 2
 
 <pre>
-Given a number n. The task is to generate all binary numbers with decimal values from 1 to n.
 
+You are given a deque dq (double-ended queue) containing non-negative integers, along with two positive integer type and k. The task is to rotate the deque circularly by k positions.
+There are two types of rotation operations:
+
+
+
+Right Rotation (Clockwise): If type = 1, rotate the deque to the right. This means moving the last element to the front, and repeating the process k times.
+Left Rotation (Anti-Clockwise): If type = 2, rotate the deque to the left. This means moving the first element to the back, and repeating the process k times.
 Examples:
 
-Input: n = 4
-Output: ["1", "10", "11", "100"]
-Explanation: Binary numbers from 1 to 4 are 1, 10, 11 and 100.
-Input: n = 6
-Output: ["1", "10", "11", "100", "101", "110"]
-Explanation: Binary numbers from 1 to 6 are 1, 10, 11, 100, 101 and 110.
+Input: dq = [1, 2, 3, 4, 5, 6], type = 1, k = 2
+Output: [5, 6, 1, 2, 3, 4] 
+Explanation: The type is 1 and k is 2. So, we need to right rotate dequeue by 2 times.
+In first right rotation we get [6, 1, 2, 3, 4, 5].
+In second right rotation we get [5, 6, 1, 2, 3, 4].
+Input: dq = [10, 20, 30, 40, 50], type = 2, k = 3 
+Output: [40, 50, 10, 20, 30] 
+Explanation: The type is 2 and k is 3. So, we need to left rotate dequeue by 3 times.
+In first left rotation we get [20, 30, 40, 50, 10]. 
+In second left rotation we get [30, 40, 50, 10, 20].
+In third left rotation we get [40, 50, 10, 20, 30].
 Constraints:
-1 ≤ n ≤ 106
+1 ≤ dq.size() ≤ 105 
+1 ≤ k ≤ 105 
+1 ≤ type ≤ 2
 
 	
 </pre>
 
 ---
 ```
-class Solution:
-    def generateBinary(self, n):
-        # code here
-        i = 1
-        res = []
-        while i<=n:
-            res.append(bin(i)[2:])
-            i+=1
+class Solution:    
+    def rotateDeque(self, dq, type, k):
+        #code here
+        k=k%len(dq)
+        if type==1:
+            while k:
+                dq.appendleft(dq.pop())
+                k-=1
+        else:
+            while k:
+                dq.append(dq.popleft())
+                k-=1
+        return dq
 
-        return res
         
         
 ```
