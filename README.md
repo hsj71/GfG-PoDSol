@@ -1,54 +1,57 @@
-# 26-09-2025
+# 27-09-2025
 ---
-## Rotate Deque By K
-Difficulty: EasyAccuracy: 75.79%Submissions: 22K+Points: 2
+## Minimum K Consecutive Bit Flips
+Difficulty: HardAccuracy: 64.29%Submissions: 9K+Points: 8
 
 <pre>
 
-You are given a deque dq (double-ended queue) containing non-negative integers, along with two positive integer type and k. The task is to rotate the deque circularly by k positions.
-There are two types of rotation operations:
 
+You are given a binary array arr[] (containing only 0's and 1's) and an integer k. In one operation, you can select a contiguous subarray of length k and flip all its bits (i.e., change every 0 to 1 and every 1 to 0).
 
+Your task is to find the minimum number of such operations required to make the entire array consist of only 1's. If it is not possible, return -1.
 
-Right Rotation (Clockwise): If type = 1, rotate the deque to the right. This means moving the last element to the front, and repeating the process k times.
-Left Rotation (Anti-Clockwise): If type = 2, rotate the deque to the left. This means moving the first element to the back, and repeating the process k times.
 Examples:
 
-Input: dq = [1, 2, 3, 4, 5, 6], type = 1, k = 2
-Output: [5, 6, 1, 2, 3, 4] 
-Explanation: The type is 1 and k is 2. So, we need to right rotate dequeue by 2 times.
-In first right rotation we get [6, 1, 2, 3, 4, 5].
-In second right rotation we get [5, 6, 1, 2, 3, 4].
-Input: dq = [10, 20, 30, 40, 50], type = 2, k = 3 
-Output: [40, 50, 10, 20, 30] 
-Explanation: The type is 2 and k is 3. So, we need to left rotate dequeue by 3 times.
-In first left rotation we get [20, 30, 40, 50, 10]. 
-In second left rotation we get [30, 40, 50, 10, 20].
-In third left rotation we get [40, 50, 10, 20, 30].
+Input: arr = [1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1], k = 2
+Output: 4 
+Explanation: 4 operations are required to convert all 0's to 1's.
+Select subarray [2, 3] and flip all bits resulting array will be [1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1]
+Select subarray [4, 5] and flip all bits resulting array will be [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1]
+Select subarray [5, 6] and flip all bits resulting array will be [1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1]
+Select subarray [6, 7] and flip all bits resulting array will be [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+Input: arr = [0, 0, 1, 1, 1, 0, 0], k = 3
+Output: -1
+Explanation: It is not possible to convert all elements to 1's by performing any number of operations.
 Constraints:
-1 ≤ dq.size() ≤ 105 
-1 ≤ k ≤ 105 
-1 ≤ type ≤ 2
+1 ≤ arr.size() ≤ 106
+1 ≤ k ≤ arr.size()
+
+
 
 	
 </pre>
 
 ---
 ```
-class Solution:    
-    def rotateDeque(self, dq, type, k):
-        #code here
-        k=k%len(dq)
-        if type==1:
-            while k:
-                dq.appendleft(dq.pop())
-                k-=1
-        else:
-            while k:
-                dq.append(dq.popleft())
-                k-=1
-        return dq
+class Solution:
+    def kBitFlips(self, arr, k):
+        # code here
+        n = len(arr)
+        flipped = [0] * n
+        count = 0
+        flip = 0
 
+        for i in range(n):
+            if i >= k:
+                flip ^= flipped[i - k]
+            if arr[i] ^ flip == 0:
+                if i + k > n:
+                    return -1
+                count += 1
+                flip ^= 1
+                flipped[i] = 1
+
+        return count
         
         
 ```
