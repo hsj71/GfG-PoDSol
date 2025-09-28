@@ -1,30 +1,27 @@
-# 27-09-2025
+# 28-09-2025
 ---
-## Minimum K Consecutive Bit Flips
-Difficulty: HardAccuracy: 64.29%Submissions: 9K+Points: 8
+## Longest Bounded-Difference Subarray
+Difficulty: MediumAccuracy: 58.27%Submissions: 25K+Points: 4
 
 <pre>
 
-
-You are given a binary array arr[] (containing only 0's and 1's) and an integer k. In one operation, you can select a contiguous subarray of length k and flip all its bits (i.e., change every 0 to 1 and every 1 to 0).
-
-Your task is to find the minimum number of such operations required to make the entire array consist of only 1's. If it is not possible, return -1.
+Given an array of positive integers arr[] and a non-negative integer x, the task is to find the longest sub-array where the absolute difference between any two elements is not greater than x.
+If multiple such subarrays exist, return the one that starts at the smallest index.
 
 Examples:
 
-Input: arr = [1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1], k = 2
-Output: 4 
-Explanation: 4 operations are required to convert all 0's to 1's.
-Select subarray [2, 3] and flip all bits resulting array will be [1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1]
-Select subarray [4, 5] and flip all bits resulting array will be [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1]
-Select subarray [5, 6] and flip all bits resulting array will be [1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1]
-Select subarray [6, 7] and flip all bits resulting array will be [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-Input: arr = [0, 0, 1, 1, 1, 0, 0], k = 3
-Output: -1
-Explanation: It is not possible to convert all elements to 1's by performing any number of operations.
+Input: arr[] = [8, 4, 5, 6, 7], x = 3 
+Output: [4, 5, 6, 7] 
+Explanation: The sub-array described by index [1..4], i.e. [4, 5, 6, 7]
+contains no two elements whose absolute differnce is greater than 3.
+Input: arr[] = [1, 10, 12, 13, 14], x = 2 
+Output: [12, 13, 14] 
+Explanation: The sub-array described by index [2..4], i.e. [12, 13, 14]
+contains no two elements whose absolute differnece is greater than 2. 
 Constraints:
-1 ≤ arr.size() ≤ 106
-1 ≤ k ≤ arr.size()
+1 ≤ arr.size() ≤ 105
+1 ≤ arr[i] ≤ 109
+0 ≤ x ≤ 109
 
 
 
@@ -34,24 +31,41 @@ Constraints:
 ---
 ```
 class Solution:
-    def kBitFlips(self, arr, k):
-        # code here
+    def longestSubarray(self, arr, x):
+        #code here
+        from collections import deque
         n = len(arr)
-        flipped = [0] * n
-        count = 0
-        flip = 0
+        max_deque = deque()
+        min_deque = deque()
+        left = 0
+        best_len = 0
+        best_start = 0
 
-        for i in range(n):
-            if i >= k:
-                flip ^= flipped[i - k]
-            if arr[i] ^ flip == 0:
-                if i + k > n:
-                    return -1
-                count += 1
-                flip ^= 1
-                flipped[i] = 1
+        for right in range(n):
+            # Maintain decreasing order in max_deque
+            while max_deque and arr[right] > arr[max_deque[-1]]:
+                max_deque.pop()
+            max_deque.append(right)
 
-        return count
+            # Maintain increasing order in min_deque
+            while min_deque and arr[right] < arr[min_deque[-1]]:
+                min_deque.pop()
+            min_deque.append(right)
+
+            # Shrink window if condition violated
+            while arr[max_deque[0]] - arr[min_deque[0]] > x:
+                left += 1
+                if max_deque[0] < left:
+                    max_deque.popleft()
+                if min_deque[0] < left:
+                    min_deque.popleft()
+
+            # Update best window
+            if right - left + 1 > best_len:
+                best_len = right - left + 1
+                best_start = left
+
+        return arr[best_start: best_start + best_len]
         
         
 ```
