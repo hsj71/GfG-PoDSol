@@ -1,27 +1,24 @@
-# 28-09-2025
+# 29-09-2025
 ---
-## Longest Bounded-Difference Subarray
-Difficulty: MediumAccuracy: 58.27%Submissions: 25K+Points: 4
+## Maximum subarray sum 2
+Difficulty: HardAccuracy: 57.52%Submissions: 9K+Points: 8
 
 <pre>
 
-Given an array of positive integers arr[] and a non-negative integer x, the task is to find the longest sub-array where the absolute difference between any two elements is not greater than x.
-If multiple such subarrays exist, return the one that starts at the smallest index.
+You are given an array arr[] of integers and two integers a and b, You have to find the maximum possible sum of a contiguous subarray whose length is at least a and at most b.
 
 Examples:
 
-Input: arr[] = [8, 4, 5, 6, 7], x = 3 
-Output: [4, 5, 6, 7] 
-Explanation: The sub-array described by index [1..4], i.e. [4, 5, 6, 7]
-contains no two elements whose absolute differnce is greater than 3.
-Input: arr[] = [1, 10, 12, 13, 14], x = 2 
-Output: [12, 13, 14] 
-Explanation: The sub-array described by index [2..4], i.e. [12, 13, 14]
-contains no two elements whose absolute differnece is greater than 2. 
+Input: arr[] = [4, 5, -1, -2, 6], a = 2, b = 4
+Output: 9
+Explanation: The subarray [4, 5] has length 2 and sum 9, which is the maximum among all subarrays of length between 2 and 4.
+Input: arr[] = [-1, 3, -1, -2, 5, 3, -5, 2, 2], a = 3, b = 5
+Output: 8
+Explanation: The subarray [3, -1, -2, 5, 3] has length 5 and sum 8, which is the maximum among all subarrays of length between 3 and 5.
 Constraints:
 1 ≤ arr.size() ≤ 105
-1 ≤ arr[i] ≤ 109
-0 ≤ x ≤ 109
+-105 ≤ arr[i] ≤ 105
+1 ≤ a ≤ b ≤ arr.size()
 
 
 
@@ -30,42 +27,25 @@ Constraints:
 
 ---
 ```
+import heapq
+
 class Solution:
-    def longestSubarray(self, arr, x):
-        #code here
-        from collections import deque
+    def maxSubarrSum(self, arr, a, b):
         n = len(arr)
-        max_deque = deque()
-        min_deque = deque()
-        left = 0
-        best_len = 0
-        best_start = 0
+        prefix = [0] * (n+1)
+        for i in range(n):
+            prefix[i+1] = prefix[i] + arr[i]
 
-        for right in range(n):
-            # Maintain decreasing order in max_deque
-            while max_deque and arr[right] > arr[max_deque[-1]]:
-                max_deque.pop()
-            max_deque.append(right)
+        heap = []
+        res = float('-inf')
 
-            # Maintain increasing order in min_deque
-            while min_deque and arr[right] < arr[min_deque[-1]]:
-                min_deque.pop()
-            min_deque.append(right)
+        for r in range(a, n+1):
+            heapq.heappush(heap, (prefix[r-a], r-a))
+            while heap and heap[0][1] < r-b:
+                heapq.heappop(heap)
+            res = max(res, prefix[r] - heap[0][0])
 
-            # Shrink window if condition violated
-            while arr[max_deque[0]] - arr[min_deque[0]] > x:
-                left += 1
-                if max_deque[0] < left:
-                    max_deque.popleft()
-                if min_deque[0] < left:
-                    min_deque.popleft()
-
-            # Update best window
-            if right - left + 1 > best_len:
-                best_len = right - left + 1
-                best_start = left
-
-        return arr[best_start: best_start + best_len]
+        return res
         
         
 ```
