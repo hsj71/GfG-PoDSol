@@ -1,0 +1,37 @@
+# 30-09-2025
+---
+## Generate all binary strings
+Difficulty: MediumAccuracy: 63.9%Submissions: 40K+Points: 4Average Time: 20m
+
+<pre>
+
+Given an integer n. You need to generate all the binary strings of n characters representing bits.
+
+Note: Return the strings in  ascending order.
+
+Examples:
+
+Input: n = 2
+Output: [00, 01, 10, 11]
+Explanation: As each position can be either 0 or 1, the total possible combinations are 4.
+Input: n = 3
+Output: [000, 001, 010, 011, 100, 101, 110, 111]
+Explanation: As each position can be either 0 or 1, the total possible combinations are 8.
+Constraints:
+1 ≤ n ≤ 20
+</pre>
+
+---
+```
+class Solution:
+    def binstr(self, n):
+        # code here
+        x=2**n
+        a=[]
+        for i in range(0,x):
+            a.append(format(i,'b').zfill(n))
+        return a
+        
+        
+```
+---
