@@ -1,36 +1,54 @@
-# 30-09-2025
+# 1-10-2025
 ---
-## Generate all binary strings
-Difficulty: MediumAccuracy: 63.9%Submissions: 40K+Points: 4Average Time: 20m
+## All Unique Permutations of an array
+Difficulty: MediumAccuracy: 52.85%Submissions: 49K+Points: 4Average Time: 15m
 
 <pre>
 
-Given an integer n. You need to generate all the binary strings of n characters representing bits.
-
-Note: Return the strings in  ascending order.
+Given an array arr[] that may contain duplicates. Find all possible distinct permutations of the array in sorted order.
+Note: A sequence A is greater than sequence B if there is an index i for which Aj = Bj for all j<i and Ai > Bi.
 
 Examples:
 
-Input: n = 2
-Output: [00, 01, 10, 11]
-Explanation: As each position can be either 0 or 1, the total possible combinations are 4.
-Input: n = 3
-Output: [000, 001, 010, 011, 100, 101, 110, 111]
-Explanation: As each position can be either 0 or 1, the total possible combinations are 8.
+Input: arr[] = [1, 3, 3]
+Output: [[1, 3, 3], [3, 1, 3], [3, 3, 1]]
+Explanation: These are the only possible distinct permutations for the given array.
+Input: arr[] = [2, 3]
+Output: [[2, 3], [3, 2]]
+Explanation: These are the only possible distinct permutations for the given array.
 Constraints:
-1 ≤ n ≤ 20
+1 ≤ arr.size() ≤ 9
+
+
 </pre>
 
 ---
 ```
 class Solution:
-    def binstr(self, n):
-        # code here
-        x=2**n
-        a=[]
-        for i in range(0,x):
-            a.append(format(i,'b').zfill(n))
-        return a
+    def uniquePerms(self, arr):
+        # code here 
+        arr.sort()
+        n = len(arr)
+        res = []
+        used = [False]*n
+
+        def backtrack(path):
+            if len(path) == n:
+                res.append(path[:])
+                return
+            for i in range(n):
+                if used[i]: 
+                    continue
+                if i > 0 and arr[i] == arr[i-1] and not used[i-1]:
+                    continue
+                used[i] = True
+                path.append(arr[i])
+                backtrack(path)
+                path.pop()
+                used[i] = False
+
+        backtrack([])
+        return res
         
         
 ```
