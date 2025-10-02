@@ -1,53 +1,49 @@
-# 1-10-2025
+# 2-10-2025
 ---
-## All Unique Permutations of an array
-Difficulty: MediumAccuracy: 52.85%Submissions: 49K+Points: 4Average Time: 15m
+## Unique K-Number Sum
+Difficulty: MediumAccuracy: 73.03%Submissions: 8K+Points: 4
 
 <pre>
 
-Given an array arr[] that may contain duplicates. Find all possible distinct permutations of the array in sorted order.
-Note: A sequence A is greater than sequence B if there is an index i for which Aj = Bj for all j<i and Ai > Bi.
+
+Given two integers n and k, the task is to find all valid combinations of k numbers that adds up to n based on the following conditions:
+
+Only numbers from the range [1, 9] used.
+Each number can only be used at most once.
+Note: You can return the combinations in any order, the driver code will print them in sorted order.
 
 Examples:
 
-Input: arr[] = [1, 3, 3]
-Output: [[1, 3, 3], [3, 1, 3], [3, 3, 1]]
-Explanation: These are the only possible distinct permutations for the given array.
-Input: arr[] = [2, 3]
-Output: [[2, 3], [3, 2]]
-Explanation: These are the only possible distinct permutations for the given array.
+Input: n = 9, k = 3
+Output: [[1, 2, 6], [1, 3, 5], [2, 3, 4]]
+Explanation: There are three valid combinations of 3 numbers that sum to 9: [1 ,2, 6], [1, 3, 5] and [2, 3, 4].
+Input: n = 3, k = 3
+Output: []
+Explanation: It is not possible to pick 3 distinct numbers from 1 to 9 that sum to 3, so no valid combinations exist.
 Constraints:
-1 ≤ arr.size() ≤ 9
-
+1 ≤ n ≤ 50
+1 ≤ k ≤ 9
 
 </pre>
 
 ---
 ```
 class Solution:
-    def uniquePerms(self, arr):
-        # code here 
-        arr.sort()
-        n = len(arr)
-        res = []
-        used = [False]*n
+    def solve(self,n,digit,temp,res,k):
+        if len(temp)==k:
+            if n==0:
+                res.append(temp.copy())
+            return
+        if n<=0 or digit==0:
+            return
+        temp.append(digit)
+        self.solve(n-digit,digit-1,temp,res,k)
+        temp.pop()
+        self.solve(n,digit-1,temp,res,k)
 
-        def backtrack(path):
-            if len(path) == n:
-                res.append(path[:])
-                return
-            for i in range(n):
-                if used[i]: 
-                    continue
-                if i > 0 and arr[i] == arr[i-1] and not used[i-1]:
-                    continue
-                used[i] = True
-                path.append(arr[i])
-                backtrack(path)
-                path.pop()
-                used[i] = False
-
-        backtrack([])
+    def combinationSum(self, n, k):
+        res=[]
+        self.solve(n,9,[],res,k)
         return res
         
         
