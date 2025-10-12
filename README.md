@@ -1,26 +1,43 @@
-# 11-10-2025
+# 12-10-2025
 ---
-## Maximum path sum
-Difficulty: MediumAccuracy: 42.92%Submissions: 111K+Points: 4Average Time: 45m
-
+## Distribute Candies
+Difficulty: HardAccuracy: 63.24%Submissions: 35K+Points: 8
 <pre>
 
 
-Given the root of a binary tree, your task is to find the maximum path sum. The path may start and end at any node in the tree.
+
+You are given the root of a binary tree with n nodes, where each node contains a certain number of candies, and the total number of candies across all nodes is n. In one move, you can select any two adjacent nodes and transfer one candy from one node to the other. The transfer can occur between a parent and child in either direction.
+
+The task is to determine the minimum number of moves required to ensure that every node in the tree has exactly one candy.
+
+Note: The testcases are framed such that it is always possible to achieve a configuration in which every node has exactly one candy, after some moves.
 
 Examples:
 
-Input: root[] = [10, 2, 10, 20, 1, N, -25, N, N, N, N, 3, 4]
-Output: 42
-Explanation: Max path sum is represented using green colour nodes in the above binary tree.
-
-Input: root[] = [-17, 11, 4, 20, -2, 10]
-Output: 31
-Explanation: Max path sum is represented using green colour nodes in the above binary tree.
-
+Input: root = [5, 0, 0, N, N, 0, 0]
+  
+Output: 6
+Explanation:
+Move 1 candy from root to left child
+Move 1 candy from root to right child
+Move 1 candy from right child to root->right->left node
+Move 1 candy from root to right child
+Move 1 candy from right child to root->right->right node
+Move 1 candy from root to right child
+so, total 6 moves required.
+Input: root = [2, 0, 0, N, N, 3, 0]
+  
+Output: 4
+Explanation:
+Move 1 candy from root to left child
+Move 1 candy from root->right->left node to root->right node
+Move 1 candy from root->right node to root->right->right node
+Move 1 candy from root->right->left node to root->right node
+so, total 4 moves required.
 Constraints:
-1 ≤ number of nodes ≤ 103
--104 ≤ node->data ≤ 104
+1 ≤ n ≤ 3*103
+0 ≤ Node->data ≤ n
+The sum of all Node->data = n
 
 
 
@@ -28,27 +45,28 @@ Constraints:
 
 ---
 ```
-'''
 class Node:
-    def __init__(self,val):
+    def __init__(self, val):
         self.data = val
         self.left = None
         self.right = None
-'''
+
 
 class Solution:
-    def dfs(self,root,ans):
-        if root:
-            l=max(self.dfs(root.left,ans),0)
-            r=max(self.dfs(root.right,ans),0)
-            ans[0]=max(ans[0],root.data+l+r)
-            return root.data+max(l,r)
-        return 0
-    
-    def findMaxSum(self, root): 
-        ans=[-float("inf")]
-        self.dfs(root,ans)
-        return ans[0]
+    def __init__(self):
+        self.moves = 0  
+
+    def distCandy(self, root):
+        def dfs(node):
+            if not node:
+                return 0
+            left_balance = dfs(node.left)
+            right_balance = dfs(node.right)
+            self.moves += abs(left_balance) + abs(right_balance)
+            return node.data + left_balance + right_balance - 1
+
+        dfs(root)
+        return self.moves
         
 ```
 ---
