@@ -1,72 +1,51 @@
-# 12-10-2025
+# 13-10-2025
 ---
-## Distribute Candies
-Difficulty: HardAccuracy: 63.24%Submissions: 35K+Points: 8
+## Maximum Non-Adjacent Nodes Sum
+Difficulty: MediumAccuracy: 55.35%Submissions: 97K+Points: 4Average Time: 45m
 <pre>
 
 
-
-You are given the root of a binary tree with n nodes, where each node contains a certain number of candies, and the total number of candies across all nodes is n. In one move, you can select any two adjacent nodes and transfer one candy from one node to the other. The transfer can occur between a parent and child in either direction.
-
-The task is to determine the minimum number of moves required to ensure that every node in the tree has exactly one candy.
-
-Note: The testcases are framed such that it is always possible to achieve a configuration in which every node has exactly one candy, after some moves.
+Given the root of a binary tree with integer values. Your task is to select a subset of nodes such that the sum of their values is maximized, with the condition that no two selected nodes are directly connected that is, if a node is included in the subset, neither its parent nor its children can be included.
 
 Examples:
 
-Input: root = [5, 0, 0, N, N, 0, 0]
-  
-Output: 6
-Explanation:
-Move 1 candy from root to left child
-Move 1 candy from root to right child
-Move 1 candy from right child to root->right->left node
-Move 1 candy from root to right child
-Move 1 candy from right child to root->right->right node
-Move 1 candy from root to right child
-so, total 6 moves required.
-Input: root = [2, 0, 0, N, N, 3, 0]
-  
-Output: 4
-Explanation:
-Move 1 candy from root to left child
-Move 1 candy from root->right->left node to root->right node
-Move 1 candy from root->right node to root->right->right node
-Move 1 candy from root->right->left node to root->right node
-so, total 4 moves required.
+Input: root = [11, 1, 2]
+
+Output: 11
+Explanation: The maximum sum is obtained by selecting the node 11.
+
+Input: root = [1, 2, 3, 4, N, 5, 6]
+
+Output: 16
+Explanation: The maximum sum is obtained by selecting the nodes 1, 4, 5 and 6, which are not directly connected to each other. Their total sum is 16.  
+
 Constraints:
-1 ≤ n ≤ 3*103
-0 ≤ Node->data ≤ n
-The sum of all Node->data = n
+1 ≤ number of nodes ≤ 104
+1 ≤ node.data ≤ 105
 
 
 
 </pre>
 
 ---
-```
+'''
 class Node:
     def __init__(self, val):
         self.data = val
         self.left = None
         self.right = None
-
+'''
 
 class Solution:
-    def __init__(self):
-        self.moves = 0  
-
-    def distCandy(self, root):
-        def dfs(node):
-            if not node:
-                return 0
-            left_balance = dfs(node.left)
-            right_balance = dfs(node.right)
-            self.moves += abs(left_balance) + abs(right_balance)
-            return node.data + left_balance + right_balance - 1
-
-        dfs(root)
-        return self.moves
+    def getMaxSum(self, root):
+        #code here
+        def dfs(cur=root):
+            if not cur:
+                return 0,0
+            li,le=dfs(cur.left)
+            ri,re=dfs(cur.right)
+            return cur.data+le+re,max(li+ri,li+re,le+ri,le+re)
+        return max(dfs())
         
 ```
 ---
