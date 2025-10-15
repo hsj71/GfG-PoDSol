@@ -1,49 +1,62 @@
-# 14-10-2025
+# 15-10-2025
 ---
-## Sum of Nodes in BST Range
-Difficulty: MediumAccuracy: 85.12%Submissions: 7K+Points: 4
+## k-th Smallest in BST
+Difficulty: MediumAccuracy: 43.53%Submissions: 152K+Points: 4Average Time: 40m
 <pre>
 
 
-Given the root of a Binary Search Tree and two integers l and r, the task is to find the sum of all nodes that lie between l and r, including both l and r.
+Given the root of a BST and an integer k, the task is to find the kth smallest element in the BST. If there is no kth smallest element present then return -1.
 
-Examples
+Examples:
 
-Input: root = [22, 12, 30, 8, 20], l = 10, r = 22
-     
-Output: 54
-Explanation: The nodes in the given Tree that lies in the range [10, 22] are {12, 20, 22}. Therefore, the sum of nodes is 12 + 20 + 22 = 54.
-Input: root = [8, 5, 11, 3, 6, N, 20], l = 11, r = 15  
-     
-Output: 11
-Explanation: The nodes in the given Tree that lies in the range [11, 15] is {11}. Therefore, the sum of node is 11.
+Input: root = [20, 8, 22, 4, 12, N, N, N, N, 10, 14], k = 3
+    
+Output: 10
+Explanation: 10 is the 3rd smallest element in the BST.
+Input: root = [2, 1, 3], k = 5
+    
+Output: -1
+Explanation: There is no 5th smallest element in the BST as the size of BST is 3.
 Constraints:
-0 ≤ number of nodes ≤ 104
-0 ≤ node->data ≤ 104
-0 ≤ l ≤ r ≤ 104
+1 ≤ number of nodes, k ≤ 104
+1 ≤ node->data ≤ 104
+
+
 
 </pre>
 
 ---
-"""
+'''
 class Node:
     def __init__(self, val):
         self.data = val
         self.left = None
         self.right = None
-"""
+'''
 
 class Solution:
-    def inorder(self,root,l,r):
-        if root:
-            self.inorder(root.left,l,r)
-            if l<=root.data<=r:
-                self.ans+=root.data
-            self.inorder(root.right,l,r)
-    
-    def nodeSum(self, root, l, r):
-        self.ans=0
-        self.inorder(root,l,r)
+    def __init__(self):
+        self.ans = -1
+        self.k = None
+        
+    def InOrderTraversal(self, root):
+        if root == None:
+            return
+        
+        self.InOrderTraversal(root.left)
+        self.k -= 1
+        if self.k == 0:
+            self.ans = root.data
+            raise Exception()
+            
+        self.InOrderTraversal(root.right)
+        
+    def kthSmallest(self, root, k):
+        self.k = k
+        try:
+            self.InOrderTraversal(root)
+        except Exception:
+            pass
         return self.ans
         
 
