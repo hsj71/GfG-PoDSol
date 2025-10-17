@@ -1,31 +1,29 @@
-# 16-10-2025
+# 17-10-2025
 ---
-## Remove BST keys outside given range
-Difficulty: MediumAccuracy: 59.43%Submissions: 15K+Points: 4
+## BST to greater sum tree
+Difficulty: MediumAccuracy: 66.73%Submissions: 23K+Points: 4
+
 <pre>
 
 
-Given the root of a Binary Search Tree (BST) and two integers l and r, remove all the nodes whose values lie outside the range [l, r].
-
-Note: The modified tree should also be BST and the sequence of the remaining nodes should not be changed.
+Given the root of a  BST with unique node values, transform it into greater sum tree where each node contains sum of all nodes greater than that node.
 
 Examples:
 
-Input: root = [6, -13, 14, N, -8, 13, 15, N, N, 7], l = -10, r = 13
+Input: root = [11, 2, 29, 1, 7, 15, 40, N, N, N, N, N, N, 35, N]
+      
+Output: [119, 137, 75, 139, 130, 104, 0, N, N, N, N, N, N, 40, N]
+Explanation: Every node is replaced with the sum of nodes greater than itself. 
+      
+Input: root = [2, 1, 6, N, N, 3, 7]
+     
+Output: [16, 18, 7, N, N, 13, 0]
+Explanation: Every node is replaced with the sum of nodes greater than itself. 
+     
+Constraints :
+1 ≤ node->data ≤ 3*104
+1 ≤ number of nodes ≤ 3*104
 
-Output: [6, -8, 13, N, N, 7]
-Explanation: All the nodes outside the range [-10, 13] are removed and the modified tree is a valid BST.
-
-Input: root = [14, 4, 16, 2, 8, 15, N, -8, 3, 7, 10], l = 2, r = 6
- 
-Output: [4, 2, N, N, 3]
-Explanation: All the nodes outside the range [2, 6] are removed and the modified tree is a valid BST.
-
-   
-Constraints:
-1 ≤ number of nodes ≤ 104
-1 ≤ node->data ≤ 104
-1 ≤ l ≤ r ≤ 104
 
 
 </pre>
@@ -33,20 +31,17 @@ Constraints:
 ---
 ```
 class Solution:
-    def removekeys(self, root, l, r):
+    def transformTree(self, root):
+        sm=0
         def dfs(cur=root):
-            nonlocal l,r
+            nonlocal sm
             if not cur:
-                return None
-            if l<=cur.data<=r:
-                cur.left=dfs(cur.left)
-                cur.right=dfs(cur.right)
-                return cur
-            if cur.data<l:
-                return dfs(cur.right)
-            if cur.data>r:
-                return dfs(cur.left)
-        return dfs()
+                return 0
+            dfs(cur.right)
+            cur.data,sm=sm,sm+cur.data
+            dfs(cur.left)
+        dfs()
+        return root
         
 ```
 ---
