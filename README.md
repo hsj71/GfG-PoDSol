@@ -1,28 +1,31 @@
-# 17-10-2025
+# 18-10-2025
 ---
-## BST to greater sum tree
-Difficulty: MediumAccuracy: 66.73%Submissions: 23K+Points: 4
+## Median of BST
+Difficulty: MediumAccuracy: 27.43%Submissions: 106K+Points: 4
 
 <pre>
 
 
-Given the root of a  BST with unique node values, transform it into greater sum tree where each node contains sum of all nodes greater than that node.
+You are given the root of a Binary Search Tree, find the median of it. 
 
+Let the nodes of the BST, when written in ascending order (inorder traversal), be represented as V1, V2, V3, …, Vn, where n is the total number of nodes in the BST.
+
+If number of nodes are even: return V(n/2)
+If number of nodes are odd: return V((n+1)/2)
 Examples:
 
-Input: root = [11, 2, 29, 1, 7, 15, 40, N, N, N, N, N, N, 35, N]
-      
-Output: [119, 137, 75, 139, 130, 104, 0, N, N, N, N, N, N, 40, N]
-Explanation: Every node is replaced with the sum of nodes greater than itself. 
-      
-Input: root = [2, 1, 6, N, N, 3, 7]
-     
-Output: [16, 18, 7, N, N, 13, 0]
-Explanation: Every node is replaced with the sum of nodes greater than itself. 
-     
-Constraints :
-1 ≤ node->data ≤ 3*104
-1 ≤ number of nodes ≤ 3*104
+Input: root = [20, 8, 22, 4, 12, N, N, N, N, 10, 14]
+2
+Output: 12
+Explanation: The inorder of given BST is 4, 8, 10, 12, 14, 20, 22. Here, n = 7, so, here median will be ((7+1)/2)th value, i.e., 4th value, i.e, 12.
+Input: root = [5, 4, 8, 1]
+1 
+Output: 4
+Explanation: The inorder of given BST is 1, 4, 5, 8. Here, n = 4(even), so, here median will be (4/2)th value, i.e., 2nd value, i.e, 4.
+Constraints:
+1 ≤ number of nodes ≤ 105
+1 ≤ node.data ≤  105
+
 
 
 
@@ -31,17 +34,25 @@ Constraints :
 ---
 ```
 class Solution:
-    def transformTree(self, root):
-        sm=0
-        def dfs(cur=root):
-            nonlocal sm
-            if not cur:
-                return 0
-            dfs(cur.right)
-            cur.data,sm=sm,sm+cur.data
-            dfs(cur.left)
-        dfs()
-        return root
+    def findMedian(self, root):
+        def inorder(node, arr):
+            if not node:
+                return
+            inorder(node.left, arr)
+            arr.append(node.data)
+            inorder(node.right, arr)
+        
+        arr = []
+        inorder(root, arr)
+        n = len(arr)
+        
+        # For 1-based indexing in the problem statement
+        if n % 2 == 1:
+            return arr[n // 2]   # (n+1)/2 (1-based) → n//2 (0-based)
+        else:
+            return arr[(n // 2) - 1]  # V(n/2) (1-based) → (n//2 - 1) (0-based)
+
+
         
 ```
 ---
