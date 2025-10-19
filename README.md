@@ -1,30 +1,33 @@
-# 18-10-2025
+# 19-10-2025
 ---
-## Median of BST
-Difficulty: MediumAccuracy: 27.43%Submissions: 106K+Points: 4
+## K closest Values
+Difficulty: MediumAccuracy: 76.47%Submissions: 7K+Points: 4
 
 <pre>
 
 
-You are given the root of a Binary Search Tree, find the median of it. 
+Given the root of a Binary Search Tree, a target value, and an integer k. Your task is to find the k values in the BST that are closest to the target.
 
-Let the nodes of the BST, when written in ascending order (inorder traversal), be represented as V1, V2, V3, …, Vn, where n is the total number of nodes in the BST.
+The closest value is taken by choosing the one that gives minimum absolute difference from target.
 
-If number of nodes are even: return V(n/2)
-If number of nodes are odd: return V((n+1)/2)
+Note: In case two values have same absolute difference from target, choose the smaller one. The target may or may not be present in BST.
+You can return the values in any order the driver code will print them in sorted order only.
+
 Examples:
 
-Input: root = [20, 8, 22, 4, 12, N, N, N, N, 10, 14]
-2
-Output: 12
-Explanation: The inorder of given BST is 4, 8, 10, 12, 14, 20, 22. Here, n = 7, so, here median will be ((7+1)/2)th value, i.e., 4th value, i.e, 12.
-Input: root = [5, 4, 8, 1]
-1 
-Output: 4
-Explanation: The inorder of given BST is 1, 4, 5, 8. Here, n = 4(even), so, here median will be (4/2)th value, i.e., 2nd value, i.e, 4.
+Input: root = [20, 8, 22, 4, 12, N, N, N, N, 10, 14], target = 17, k = 3
+     
+Output: [14, 20, 12]
+Explanation: Absolute difference of 17 wrt 14 and 20 is 3 and 3, but we choose the smaller value in case of same absolute difference. So, 14 coes first and then 20. Then, 12 and 22 have same absolute difference, i.e., 5 from 17. But we choose the smaller value, i.e., 12.
+     
+Input: root = [5, 4, 8, 1], target = 5, k = 2
+     
+Output: [5, 4]
+Explanation: The absolute difference of 5 wrt 5 is 0, and for 4, the absolute difference is 1.
+    
 Constraints:
-1 ≤ number of nodes ≤ 105
-1 ≤ node.data ≤  105
+1 ≤ number of nodes, k ≤ 104
+1 ≤ node->data, target ≤ 104
 
 
 
@@ -33,25 +36,27 @@ Constraints:
 
 ---
 ```
+from collections import deque
 class Solution:
-    def findMedian(self, root):
-        def inorder(node, arr):
-            if not node:
-                return
-            inorder(node.left, arr)
-            arr.append(node.data)
-            inorder(node.right, arr)
-        
-        arr = []
-        inorder(root, arr)
-        n = len(arr)
-        
-        # For 1-based indexing in the problem statement
-        if n % 2 == 1:
-            return arr[n // 2]   # (n+1)/2 (1-based) → n//2 (0-based)
-        else:
-            return arr[(n // 2) - 1]  # V(n/2) (1-based) → (n//2 - 1) (0-based)
-
+    def inorder(self,root,dq):
+        if root:
+            self.inorder(root.left,dq)
+            if len(dq)<self.k:
+                dq.append(root.data)
+            else:
+                if self.target-dq[0]>root.data-self.target:
+                    dq.popleft()
+                    dq.append(root.data)
+                else:
+                    return
+            self.inorder(root.right,dq)
+    
+    def getKClosest(self, root, target, k):
+        self.k=k
+        self.target=target
+        dq=deque()
+        self.inorder(root,dq)
+        return list(dq)
 
         
 ```
