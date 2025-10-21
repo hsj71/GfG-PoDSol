@@ -1,45 +1,42 @@
-# 20-10-25
+# 21-10-25
 ---
-## Number of BST From Array
-Difficulty: HardAccuracy: 78.62%Submissions: 6K+Points: 8
+## Top K Frequent in Array
+Difficulty: MediumAccuracy: 40.23%Submissions: 106K+Points: 4Average Time: 30m
 <pre>
 
 
-You are given an integer array arr[] containing distinct elements.
+Given a non-empty integer array arr[]. Your task is to find and return the top k elements which have the highest frequency in the array.
 
-Your task is to return an array where the ith element denotes the number of unique BSTs formed when arr[i] is chosen as the root.
+Note: If two numbers have the same frequency, the larger number should be given the higher priority.
 
-Examples :
+Examples:
 
-Input: arr[] = [2, 1, 3]
-Output: [1, 2, 2]
-Explanation: 
-4
-Input: arr[] = [2, 1]
-Ouput: [1, 1]
+Input: arr[] = [3, 1, 4, 4, 5, 2, 6, 1], k = 2
+Output: [4, 1]
+Explanation: Frequency of 4 is 2 and frequency of 1 is 2, these two have the maximum frequency and 4 is larger than 1.
+Input: arr[] = [7, 10, 11, 5, 2, 5, 5, 7, 11, 8, 9], k = 4
+Output: [5, 11, 7, 10]
+Explanation: Frequency of 5 is 3, frequency of 11 is 2, frequency of 7 is 2, frequency of 10 is 1.
 Constraints:
-1 ≤ arr.size() ≤ 6
-1 ≤ arr[i] ≤ 15
+1 ≤ arr.size() ≤ 105
+1 ≤ arr[i] ≤ 105
+1 ≤ k ≤ no. of distinct elements
+    
 </pre>
 
 ---
 ```
+from collections import Counter
 class Solution:
-    bsts=[1,1,2,5,14,42]
-    def countBSTs(self, arr):
-        # Code here
-        n=len(arr)
-        l=[]
-        for i in range(n):
-            x=0
-            c=0
-            for j in range(n):
-                if arr[i]<arr[j]:
-                    c+=1
-                elif arr[i]>arr[j]:
-                    x+=1
-            l.append(self.bsts[x]*self.bsts[c])
-        return l
+	def topKFreq(self, arr, k):
+		count = Counter(arr)
+		res = []
+		for key,value in sorted(count.items(), key=lambda x: (x[1], x[0]), reverse=True):
+		    if len(res)==k:
+		        break
+		    res.append(key)
+		    
+        return res
 
         
 ```
