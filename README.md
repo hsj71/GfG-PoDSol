@@ -1,43 +1,48 @@
-# 21-10-25
+# 22-10-25
 ---
-## Top K Frequent in Array
-Difficulty: MediumAccuracy: 40.23%Submissions: 106K+Points: 4Average Time: 30m
+## Nearly sorted
+Difficulty: MediumAccuracy: 75.25%Submissions: 84K+Points: 4Average Time: 30m
 <pre>
 
+Given an array arr[], where each element is at most k positions away from its correct position in the sorted order.
+Your task is to restore the sorted order of arr[] by rearranging the elements in place.
 
-Given a non-empty integer array arr[]. Your task is to find and return the top k elements which have the highest frequency in the array.
-
-Note: If two numbers have the same frequency, the larger number should be given the higher priority.
+Note: Don't use any sort() method.
 
 Examples:
 
-Input: arr[] = [3, 1, 4, 4, 5, 2, 6, 1], k = 2
-Output: [4, 1]
-Explanation: Frequency of 4 is 2 and frequency of 1 is 2, these two have the maximum frequency and 4 is larger than 1.
-Input: arr[] = [7, 10, 11, 5, 2, 5, 5, 7, 11, 8, 9], k = 4
-Output: [5, 11, 7, 10]
-Explanation: Frequency of 5 is 3, frequency of 11 is 2, frequency of 7 is 2, frequency of 10 is 1.
+Input: arr[] = [2, 3, 1, 4], k = 2
+Output: [1, 2, 3, 4]
+Explanation: All elements are at most k = 2 positions away from their correct positions.
+Element 1 moves from index 2 to 0
+Element 2 moves from index 0 to 1
+Element 3 moves from index 1 to 2
+Element 4 stays at index 3
+Input: arr[]= [7, 9, 14], k = 1
+Output: [7, 9, 14]
+Explanation: All elements are already stored in the sorted order.
 Constraints:
-1 ≤ arr.size() ≤ 105
-1 ≤ arr[i] ≤ 105
-1 ≤ k ≤ no. of distinct elements
+1 ≤ arr.size() ≤ 106
+0 ≤ k < arr.size()
+1 ≤ arr[i] ≤ 106
     
 </pre>
 
 ---
 ```
-from collections import Counter
+import heapq
 class Solution:
-	def topKFreq(self, arr, k):
-		count = Counter(arr)
-		res = []
-		for key,value in sorted(count.items(), key=lambda x: (x[1], x[0]), reverse=True):
-		    if len(res)==k:
-		        break
-		    res.append(key)
-		    
-        return res
-
+    def nearlySorted(self, arr, k):  
+        pq=[]
+        l=0
+        for r in range(len(arr)):
+            heapq.heappush(pq,arr[r])
+            if len(pq)>k:
+                arr[l]=heapq.heappop(pq)
+                l+=1
+        while pq:
+            arr[l]=heapq.heappop(pq)
+            l+=1
         
 ```
 ---
