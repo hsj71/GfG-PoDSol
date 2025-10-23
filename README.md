@@ -1,48 +1,56 @@
-# 22-10-25
+# 23-10-25
 ---
-## Nearly sorted
-Difficulty: MediumAccuracy: 75.25%Submissions: 84K+Points: 4Average Time: 30m
+## K Closest Points to Origin
+Difficulty: MediumAccuracy: 62.4%Submissions: 27K+Points: 4
 <pre>
 
-Given an array arr[], where each element is at most k positions away from its correct position in the sorted order.
-Your task is to restore the sorted order of arr[] by rearranging the elements in place.
 
-Note: Don't use any sort() method.
+Given an integer k and an array of points points[][], where each point is represented as points[i] = [xi, yi] on the X-Y plane. Return the k closest points to the origin (0, 0).
+
+The distance between two points on the X-Y plane is the Euclidean distance, defined as:
+distance = sqrt( (x2 - x1)2 + (y2 - y1)2 )
+
+Note: You can return the k closest points in any order, the driver code will print them in sorted order.
+Test Cases are generated such that there will be a unique ans.
 
 Examples:
 
-Input: arr[] = [2, 3, 1, 4], k = 2
-Output: [1, 2, 3, 4]
-Explanation: All elements are at most k = 2 positions away from their correct positions.
-Element 1 moves from index 2 to 0
-Element 2 moves from index 0 to 1
-Element 3 moves from index 1 to 2
-Element 4 stays at index 3
-Input: arr[]= [7, 9, 14], k = 1
-Output: [7, 9, 14]
-Explanation: All elements are already stored in the sorted order.
+Input: k = 2, points[] = [[1, 3], [-2, 2], [5, 8], [0, 1]]
+Output: [[-2, 2], [0, 1]]
+Explanation: The Euclidean distances from the origin are:
+Point (1, 3) = sqrt(10)
+Point (-2, 2) = sqrt(8)
+Point (5, 8) = sqrt(89)
+Point (0, 1) = sqrt(1)
+The two closest points to the origin are [-2, 2] and [0, 1].
+Input: k = 1, points = [[2, 4], [-1, -1], [0, 0]]
+Output: [[0, 0]]
+Explanation: The Euclidean distances from the origin are:
+Point (2, 4) = sqrt(20)
+Point (-1, -1) = sqrt(2)
+Point (0, 0) = sqrt(0)
+The closest point to origin is (0, 0).
 Constraints:
-1 ≤ arr.size() ≤ 106
-0 ≤ k < arr.size()
-1 ≤ arr[i] ≤ 106
+1 ≤ k ≤ points.size() ≤ 105
+-3*104 ≤ xi, yi ≤ 3*104
     
 </pre>
 
 ---
 ```
-import heapq
+from heapq import *
+import math
 class Solution:
-    def nearlySorted(self, arr, k):  
-        pq=[]
-        l=0
-        for r in range(len(arr)):
-            heapq.heappush(pq,arr[r])
-            if len(pq)>k:
-                arr[l]=heapq.heappop(pq)
-                l+=1
-        while pq:
-            arr[l]=heapq.heappop(pq)
-            l+=1
+    def kClosest(self, points, k):
+        heap=[]
+        for i,j in points:
+            formula=math.sqrt((i)**2+(j)**2)
+            heappush(heap,[formula,[i,j]])
+        ans=[]
+        while k and heap:
+            k-=1
+            ans.append(heappop(heap)[1])
+        return ans
         
 ```
 ---
