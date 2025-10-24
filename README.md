@@ -1,56 +1,59 @@
-# 23-10-25
+# 24-10-25
 ---
-## K Closest Points to Origin
-Difficulty: MediumAccuracy: 62.4%Submissions: 27K+Points: 4
+## Split Array Subsequences
+Difficulty: MediumAccuracy: 56.37%Submissions: 8K+Points: 4
+
 <pre>
 
 
-Given an integer k and an array of points points[][], where each point is represented as points[i] = [xi, yi] on the X-Y plane. Return the k closest points to the origin (0, 0).
+Given a sorted integer array arr[] and an integer k, determine if it is possible to split the array into one or more consecutive subsequences such that:
 
-The distance between two points on the X-Y plane is the Euclidean distance, defined as:
-distance = sqrt( (x2 - x1)2 + (y2 - y1)2 )
+Each subsequence consists of consecutive integers (each number is exactly one greater than the previous).
+Every subsequence has a length of at least k.
+Return true if such a split is possible, otherwise return false.
 
-Note: You can return the k closest points in any order, the driver code will print them in sorted order.
-Test Cases are generated such that there will be a unique ans.
+Examples :
 
-Examples:
-
-Input: k = 2, points[] = [[1, 3], [-2, 2], [5, 8], [0, 1]]
-Output: [[-2, 2], [0, 1]]
-Explanation: The Euclidean distances from the origin are:
-Point (1, 3) = sqrt(10)
-Point (-2, 2) = sqrt(8)
-Point (5, 8) = sqrt(89)
-Point (0, 1) = sqrt(1)
-The two closest points to the origin are [-2, 2] and [0, 1].
-Input: k = 1, points = [[2, 4], [-1, -1], [0, 0]]
-Output: [[0, 0]]
-Explanation: The Euclidean distances from the origin are:
-Point (2, 4) = sqrt(20)
-Point (-1, -1) = sqrt(2)
-Point (0, 0) = sqrt(0)
-The closest point to origin is (0, 0).
+Input: arr[] = [2, 2, 3, 3, 4, 5], k = 2
+Output: true
+Explanation: arr can be split into three subsequence of length k - [2, 3], [2, 3], [4, 5].
+Input: arr[] = [1, 1, 1, 1, 1], k = 4
+Output: false
+Explanation: It is impossible to split arr into consecutive increasing subsequences of length 4 or more.
 Constraints:
-1 ≤ k ≤ points.size() ≤ 105
--3*104 ≤ xi, yi ≤ 3*104
+1 ≤ arr.size()  ≤ 105
+1 ≤ arr[i] ≤ 105
+1 ≤  k ≤  arr.size() 
     
 </pre>
 
 ---
 ```
-from heapq import *
-import math
+from collections import Counter, defaultdict
+
 class Solution:
-    def kClosest(self, points, k):
-        heap=[]
-        for i,j in points:
-            formula=math.sqrt((i)**2+(j)**2)
-            heappush(heap,[formula,[i,j]])
-        ans=[]
-        while k and heap:
-            k-=1
-            ans.append(heappop(heap)[1])
-        return ans
+    def isPossible(self, arr, k):
+        freq = Counter(arr)
+        end = defaultdict(int)
+
+        for num in arr:
+            if freq[num] == 0:
+                continue
+
+            # Try to extend a previous subsequence
+            if end[num - 1] > 0:
+                end[num - 1] -= 1
+                end[num] += 1
+                freq[num] -= 1
+            else:
+                # Try to start a new subsequence of length k
+                for next_num in range(num, num + k):
+                    if freq[next_num] <= 0:
+                        return False
+                    freq[next_num] -= 1
+                end[num + k - 1] += 1
+
+        return True
         
 ```
 ---
