@@ -1,59 +1,52 @@
-# 24-10-25
+# 25-10-25
 ---
-## Split Array Subsequences
-Difficulty: MediumAccuracy: 56.37%Submissions: 8K+Points: 4
+## Minimum Steps to Halve Sum
+Difficulty: MediumAccuracy: 57.08%Submissions: 10K+Points: 4
 
 <pre>
 
 
-Given a sorted integer array arr[] and an integer k, determine if it is possible to split the array into one or more consecutive subsequences such that:
+Given an array arr[], find the minimum number of operations required to make the sum of its elements less than or equal to half of the original sum. In one operation, you may replace any element with half of its value (with floating-point precision).
 
-Each subsequence consists of consecutive integers (each number is exactly one greater than the previous).
-Every subsequence has a length of at least k.
-Return true if such a split is possible, otherwise return false.
+Examples:
 
-Examples :
-
-Input: arr[] = [2, 2, 3, 3, 4, 5], k = 2
-Output: true
-Explanation: arr can be split into three subsequence of length k - [2, 3], [2, 3], [4, 5].
-Input: arr[] = [1, 1, 1, 1, 1], k = 4
-Output: false
-Explanation: It is impossible to split arr into consecutive increasing subsequences of length 4 or more.
+Input: arr[] = [8, 6, 2]
+Output: 3
+Explanation: Initial sum = (8 + 6 + 2) = 16, half = 8
+Halve 8 → arr[] = [4, 6, 2], sum = 12 (still 12 > 8)
+Halve 6 → arr[] = [4, 3, 2], sum = 9 (still 9 > 8)
+Halve 2 → arr[] = [4, 3, 1], sum = 8. 
+Input: arr[] = [9, 1, 2]
+Output: 2
+Explanation: Initial sum = 12, half = 6
+Halve 9 → arr[] = [4.5, 1, 2], sum = 7.5 (still > 6)
+Halve 4.5 → arr[] = [2.25, 1, 2], sum = 5.25 ≤ 6
 Constraints:
-1 ≤ arr.size()  ≤ 105
-1 ≤ arr[i] ≤ 105
-1 ≤  k ≤  arr.size() 
+1 ≤ arr.size() ≤ 105
+0 ≤ arr[i] ≤ 104
     
 </pre>
 
 ---
 ```
-from collections import Counter, defaultdict
-
+from heapq import *
 class Solution:
-    def isPossible(self, arr, k):
-        freq = Counter(arr)
-        end = defaultdict(int)
-
-        for num in arr:
-            if freq[num] == 0:
-                continue
-
-            # Try to extend a previous subsequence
-            if end[num - 1] > 0:
-                end[num - 1] -= 1
-                end[num] += 1
-                freq[num] -= 1
-            else:
-                # Try to start a new subsequence of length k
-                for next_num in range(num, num + k):
-                    if freq[next_num] <= 0:
-                        return False
-                    freq[next_num] -= 1
-                end[num + k - 1] += 1
-
-        return True
+  def minOperations(self, arr):
+    heap=[]
+    c=0
+    s=sum(arr)
+    target=s/2
+    for i in arr:
+        heappush(heap,-i)
+    
+    while heap:
+        if s<=target:
+            return c
+        a=-heappop(heap)/2
+        s-=a
+        c+=1
+        heappush(heap,-a)
+    return 0
         
 ```
 ---
