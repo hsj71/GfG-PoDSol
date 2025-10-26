@@ -1,52 +1,51 @@
-# 25-10-25
+# 26-10-25
 ---
-## Minimum Steps to Halve Sum
-Difficulty: MediumAccuracy: 57.08%Submissions: 10K+Points: 4
+## Minimum Cost of ropes
+Difficulty: MediumAccuracy: 42.73%Submissions: 261K+Points: 4
 
 <pre>
 
 
-Given an array arr[], find the minimum number of operations required to make the sum of its elements less than or equal to half of the original sum. In one operation, you may replace any element with half of its value (with floating-point precision).
+Given an array, arr[] of rope lengths, connect all ropes into a single rope with the minimum total cost. The cost to connect two ropes is the sum of their lengths. 
 
 Examples:
 
-Input: arr[] = [8, 6, 2]
-Output: 3
-Explanation: Initial sum = (8 + 6 + 2) = 16, half = 8
-Halve 8 → arr[] = [4, 6, 2], sum = 12 (still 12 > 8)
-Halve 6 → arr[] = [4, 3, 2], sum = 9 (still 9 > 8)
-Halve 2 → arr[] = [4, 3, 1], sum = 8. 
-Input: arr[] = [9, 1, 2]
-Output: 2
-Explanation: Initial sum = 12, half = 6
-Halve 9 → arr[] = [4.5, 1, 2], sum = 7.5 (still > 6)
-Halve 4.5 → arr[] = [2.25, 1, 2], sum = 5.25 ≤ 6
+Input: arr[] = [4, 3, 2, 6]
+Output: 29
+Explanation: First connect 2 and 3 to get [4, 5, 6] with a cost of 5, then connect 4 and 5 to get [9, 6] with a cost of 9, and finally connect 9 and 6 to get one rope with a cost of 15, giving a total minimum cost of 29. Any other order, such as connecting 4 and 6 first, results in a higher total cost of 38.
+Input: arr[] = [4, 2, 7, 6, 9]
+Output: 62 
+Explanation: First, connect ropes 4 and 2, which makes the array [6, 7, 6, 9]. Cost of this operation 4 + 2 = 6. Next, add ropes 6 and 6, which results in [12, 7, 9]. Cost of this operation 6 + 6 = 12. Then, add 7 and 9, which makes the array [12,16]. Cost of this operation 7 + 9 = 16. And finally, add these two which gives [28]. Hence, the total cost is 6 + 12 + 16 + 28 = 62.
+Input: arr[] = [10]
+Output: 0
+Explanation: Since there is only one rope, no connections are needed, so the cost is 0.
 Constraints:
 1 ≤ arr.size() ≤ 105
-0 ≤ arr[i] ≤ 104
+1 ≤ arr[i] ≤ 104
     
 </pre>
 
 ---
 ```
-from heapq import *
+import heapq
+from typing import List
+
 class Solution:
-  def minOperations(self, arr):
-    heap=[]
-    c=0
-    s=sum(arr)
-    target=s/2
-    for i in arr:
-        heappush(heap,-i)
-    
-    while heap:
-        if s<=target:
-            return c
-        a=-heappop(heap)/2
-        s-=a
-        c+=1
-        heappush(heap,-a)
-    return 0
+    @staticmethod
+    def minCost(arr: List[int]) -> int:
+        if len(arr) == 1:
+            return 0
+
+        heapq.heapify(arr)
+        res = 0
+
+        while len(arr) >= 2:
+            a = heapq.heappop(arr)
+            b = heapq.heappop(arr)
+            res += a + b
+            heapq.heappush(arr, a + b)
+
+        return res
         
 ```
 ---
