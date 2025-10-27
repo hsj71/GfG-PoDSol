@@ -1,51 +1,52 @@
-# 26-10-25
+# 27-10-25
 ---
-## Minimum Cost of ropes
-Difficulty: MediumAccuracy: 42.73%Submissions: 261K+Points: 4
+## Find K Smallest Sum Pairs
+Difficulty: MediumAccuracy: 59.44%Submissions: 9K+Points: 4
 
 <pre>
 
 
-Given an array, arr[] of rope lengths, connect all ropes into a single rope with the minimum total cost. The cost to connect two ropes is the sum of their lengths. 
+Given two integer arrays arr1[] and arr2[] sorted in ascending order and an integer k, your task is to find k pairs with the smallest sums, such that one element of each pair belongs to arr1[] and the other belongs to arr2[].
+
+Return the list of these k pairs, where each pair is represented as [arr1[i], arr2[j]].
+
+Note: You can return any possible k pairs with the smallest sums, the driver code will print true if it is correct else it will print false.
 
 Examples:
 
-Input: arr[] = [4, 3, 2, 6]
-Output: 29
-Explanation: First connect 2 and 3 to get [4, 5, 6] with a cost of 5, then connect 4 and 5 to get [9, 6] with a cost of 9, and finally connect 9 and 6 to get one rope with a cost of 15, giving a total minimum cost of 29. Any other order, such as connecting 4 and 6 first, results in a higher total cost of 38.
-Input: arr[] = [4, 2, 7, 6, 9]
-Output: 62 
-Explanation: First, connect ropes 4 and 2, which makes the array [6, 7, 6, 9]. Cost of this operation 4 + 2 = 6. Next, add ropes 6 and 6, which results in [12, 7, 9]. Cost of this operation 6 + 6 = 12. Then, add 7 and 9, which makes the array [12,16]. Cost of this operation 7 + 9 = 16. And finally, add these two which gives [28]. Hence, the total cost is 6 + 12 + 16 + 28 = 62.
-Input: arr[] = [10]
-Output: 0
-Explanation: Since there is only one rope, no connections are needed, so the cost is 0.
+Input: arr1[] = [1, 7, 11], arr2[] = [2, 4, 6], k = 3
+Output: true
+Explanation: All possible combinations of elements from the two arrays are:
+[1, 2], [1, 4], [1, 6], [7, 2], [7, 4], [7, 6], [11, 2], [11, 4], [11, 6]. 
+Among these, the three pairs with the minimum sums are [1, 2], [1, 4], [1, 6].
+Input: arr1[] = [1, 3], arr2[] = [2, 4] k = 2
+Output: true
+Explanation: All possible combinations are [1, 2], [1, 4], [3, 2], [3, 4]. 
+Among these, the two pairs with the minimum sums are [1, 2], [3, 2].
 Constraints:
-1 ≤ arr.size() ≤ 105
-1 ≤ arr[i] ≤ 104
+1 ≤ arr1.size(), arr2.size() ≤ 5*104
+1 ≤ arr1[i], arr2[j] ≤ 109
+1 ≤ k ≤ 103
     
 </pre>
 
 ---
 ```
-import heapq
-from typing import List
-
+from heapq import *
 class Solution:
-    @staticmethod
-    def minCost(arr: List[int]) -> int:
-        if len(arr) == 1:
-            return 0
-
-        heapq.heapify(arr)
-        res = 0
-
-        while len(arr) >= 2:
-            a = heapq.heappop(arr)
-            b = heapq.heappop(arr)
-            res += a + b
-            heapq.heappush(arr, a + b)
-
-        return res
+    def kSmallestPair(self, arr1, arr2, k):
+        m, n = len(arr1), len(arr2)
+        heap = []
+        ans = []
+        for i in range(min(k, m)):
+            heappush(heap, (arr1[i] + arr2[0], i, 0))
+        while k and heap:
+            _, i, j = heappop(heap)
+            ans.append((arr1[i], arr2[j]))
+            if j + 1 < n:
+                heappush(heap, (arr1[i] + arr2[j + 1], i, j + 1))
+            k-=1
+        return ans
         
 ```
 ---
