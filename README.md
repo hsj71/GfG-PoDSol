@@ -1,51 +1,72 @@
-# 27-10-25
+# 28-10-25
 ---
-## Find K Smallest Sum Pairs
-Difficulty: MediumAccuracy: 59.44%Submissions: 9K+Points: 4
-
+## Distance of nearest cell having 1
+Difficulty: MediumAccuracy: 47.7%Submissions: 114K+Points: 4Average Time: 20m
 <pre>
 
 
-Given two integer arrays arr1[] and arr2[] sorted in ascending order and an integer k, your task is to find k pairs with the smallest sums, such that one element of each pair belongs to arr1[] and the other belongs to arr2[].
+Given a binary grid[][], where each cell contains either 0 or 1, find the distance of the nearest 1 for every cell in the grid.
+The distance between two cells (i1, j1)  and (i2, j2) is calculated as |i1 - i2| + |j1 - j2|. 
+You need to return a matrix of the same size, where each cell (i, j) contains the minimum distance from grid[i][j] to the nearest cell having value 1.
 
-Return the list of these k pairs, where each pair is represented as [arr1[i], arr2[j]].
+Note: It is guaranteed that there is at least one cell with value 1 in the grid.
 
-Note: You can return any possible k pairs with the smallest sums, the driver code will print true if it is correct else it will print false.
+Examples
 
-Examples:
+Input: grid[][] = [[0, 1, 1, 0], 
+                [1, 1, 0, 0], 
+                [0, 0, 1, 1]]
+Output: [[1, 0, 0, 1], 
+        [0, 0, 1, 1], 
+        [1, 1, 0, 0]]
+Explanation: The grid is -
 
-Input: arr1[] = [1, 7, 11], arr2[] = [2, 4, 6], k = 3
-Output: true
-Explanation: All possible combinations of elements from the two arrays are:
-[1, 2], [1, 4], [1, 6], [7, 2], [7, 4], [7, 6], [11, 2], [11, 4], [11, 6]. 
-Among these, the three pairs with the minimum sums are [1, 2], [1, 4], [1, 6].
-Input: arr1[] = [1, 3], arr2[] = [2, 4] k = 2
-Output: true
-Explanation: All possible combinations are [1, 2], [1, 4], [3, 2], [3, 4]. 
-Among these, the two pairs with the minimum sums are [1, 2], [3, 2].
+- 0's at (0,0), (0,3), (1,2), (1,3), (2,0) and (2,1) are at a distance of 1 from 1's at (0,1), (0,2), (0,2), (2,3), (1,0) and (1,1) respectively.
+
+Input: grid[][] = [[1, 0, 1], 
+                [1, 1, 0], 
+                [1, 0, 0]]
+Output: [[0, 1, 0], 
+        [0, 0, 1], 
+        [0, 1, 2]]
+Explanation: The grid is -
+
+- 0's at (0,1), (1,2), (2,1) and (2,2) are at a  distance of 1, 1, 1 and 2 from 1's at (0,0), (0,2), (2,0) and (1,1) respectively.
+
 Constraints:
-1 ≤ arr1.size(), arr2.size() ≤ 5*104
-1 ≤ arr1[i], arr2[j] ≤ 109
-1 ≤ k ≤ 103
+1 ≤ grid.size() ≤ 200
+1 ≤ grid[0].size() ≤ 200
+
+
     
 </pre>
 
 ---
 ```
-from heapq import *
+from collections import deque
 class Solution:
-    def kSmallestPair(self, arr1, arr2, k):
-        m, n = len(arr1), len(arr2)
-        heap = []
-        ans = []
-        for i in range(min(k, m)):
-            heappush(heap, (arr1[i] + arr2[0], i, 0))
-        while k and heap:
-            _, i, j = heappop(heap)
-            ans.append((arr1[i], arr2[j]))
-            if j + 1 < n:
-                heappush(heap, (arr1[i] + arr2[j + 1], i, j + 1))
-            k-=1
+	def nearest(self, grid):
+		q=deque([])
+		ans=[[-1]*(len(grid[0])) for _ in range(len(grid))]
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j]==1:
+                    q.append((i,j,0))
+                    ans[i][j]=0
+        
+        d=[
+            [0,1],
+            [1,0],
+            [-1,0],
+            [0,-1]
+        ]
+        while q:
+            i,j,dis=q.popleft()
+            for k in d:
+                x,y=i+k[0],j+k[1]
+                if 0<=x<len(grid) and 0<=y<len(grid[0]) and ans[x][y]==-1:
+                    ans[x][y]=dis+1
+                    q.append((x,y,dis+1))
         return ans
         
 ```
