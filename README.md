@@ -1,41 +1,30 @@
-# 28-10-25
+# 29-10-25
 ---
-## Distance of nearest cell having 1
-Difficulty: MediumAccuracy: 47.7%Submissions: 114K+Points: 4Average Time: 20m
+## Graph Diameter
+Difficulty: MediumAccuracy: 72.38%Submissions: 7K+Points: 4
+
 <pre>
 
+You are given an undirected connected graph with V vertices numbered from 0 to V-1 and E edges, represented as a 2D array edges[][], where each element edges[i] = [u, v] represents an undirected edge between vertex u and vertex v.
+Find the diameter of the graph.
+The diameter of a graph (sometimes called the width) is the number of edges on the longest path between two vertices in the graph.
 
-Given a binary grid[][], where each cell contains either 0 or 1, find the distance of the nearest 1 for every cell in the grid.
-The distance between two cells (i1, j1)  and (i2, j2) is calculated as |i1 - i2| + |j1 - j2|. 
-You need to return a matrix of the same size, where each cell (i, j) contains the minimum distance from grid[i][j] to the nearest cell having value 1.
+Note: Graph do not contains any cycle.
 
-Note: It is guaranteed that there is at least one cell with value 1 in the grid.
+Examples :
 
-Examples
-
-Input: grid[][] = [[0, 1, 1, 0], 
-                [1, 1, 0, 0], 
-                [0, 0, 1, 1]]
-Output: [[1, 0, 0, 1], 
-        [0, 0, 1, 1], 
-        [1, 1, 0, 0]]
-Explanation: The grid is -
-
-- 0's at (0,0), (0,3), (1,2), (1,3), (2,0) and (2,1) are at a distance of 1 from 1's at (0,1), (0,2), (0,2), (2,3), (1,0) and (1,1) respectively.
-
-Input: grid[][] = [[1, 0, 1], 
-                [1, 1, 0], 
-                [1, 0, 0]]
-Output: [[0, 1, 0], 
-        [0, 0, 1], 
-        [0, 1, 2]]
-Explanation: The grid is -
-
-- 0's at (0,1), (1,2), (2,1) and (2,2) are at a  distance of 1, 1, 1 and 2 from 1's at (0,0), (0,2), (2,0) and (1,1) respectively.
-
+Input: V = 6, E = 5, edges[][] = [[0, 1], [0, 4], [1, 3], [1, 2], [2, 5]]
+    
+Output: 4
+Explanation: The longest path in the graph is from vertices 4 to vertices 5 (4 -> 0 -> 1 -> 2 -> 5).
+Input: V = 7, E = 6, edges[][] = [[0, 2], [0, 4], [0, 3], [3, 1], [3, 5], [1, 6]]
+    
+Output: 4
+Explanation: The longest path in the graph is from vertices 2 to vertices 6 (2 -> 0 -> 3 -> 1 -> 6).
 Constraints:
-1 ≤ grid.size() ≤ 200
-1 ≤ grid[0].size() ≤ 200
+2 ≤ V ≤  105
+1 ≤ E ≤  V - 1
+0 ≤ edges[i][0], edges[i][1] < V
 
 
     
@@ -43,31 +32,26 @@ Constraints:
 
 ---
 ```
-from collections import deque
 class Solution:
-	def nearest(self, grid):
-		q=deque([])
-		ans=[[-1]*(len(grid[0])) for _ in range(len(grid))]
-        for i in range(len(grid)):
-            for j in range(len(grid[0])):
-                if grid[i][j]==1:
-                    q.append((i,j,0))
-                    ans[i][j]=0
-        
-        d=[
-            [0,1],
-            [1,0],
-            [-1,0],
-            [0,-1]
-        ]
-        while q:
-            i,j,dis=q.popleft()
-            for k in d:
-                x,y=i+k[0],j+k[1]
-                if 0<=x<len(grid) and 0<=y<len(grid[0]) and ans[x][y]==-1:
-                    ans[x][y]=dis+1
-                    q.append((x,y,dis+1))
-        return ans
+    def diameter(self, V, edges):
+        from collections import defaultdict
+        adj=defaultdict(set)
+        for sta,sto in edges:
+            adj[sta].add(sto)
+            adj[sto].add(sta)
+        ret=[0,-1]
+        def dfs(cur=0,prv=None,dis=0):
+            nonlocal adj,ret
+            ret=max(ret,[dis,cur])
+            for nxt in adj[cur]:
+                if nxt==prv:
+                    continue
+                dfs(nxt,cur,dis+1)
+        dfs()
+        sta=ret[1]
+        ret=[0,-1]
+        dfs(sta)
+        return ret[0]
         
 ```
 ---
