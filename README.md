@@ -1,27 +1,29 @@
-# 2-11-25
+# 4-11-25
 ---
-## Max DAG Edges
-Difficulty: MediumAccuracy: 73.45%Submissions: 7K+Points: 4
+## Frog Jump
+Difficulty: MediumAccuracy: 49.55%Submissions: 177K+Points: 4Average Time: 15m
 
 <pre>
 
+Given an integer array height[] where height[i] represents the height of the i-th stair, a frog starts from the first stair and wants to reach the last stair. From any stair i, the frog has two options: it can either jump to the (i+1)th stair or the (i+2)th stair. The cost of a jump is the absolute difference in height between the two stairs. Determine the minimum total cost required for the frog to reach the last stair.
 
-Given a directed acyclic graph (DAG) with V vertices numbered from 0 to V-1 and E edges, represented as a 2D array edges[][], where each entry edges[i] = [u, v] denotes a directed edge from vertex u to vertex v, find the maximum number of additional edges that can be added to the graph without forming any cycles.
+Example:
 
-Note: The resulting graph must remain a DAG, meaning that adding any further edge would not create a cycle.
-
-Examples:
-
-Input: V = 3, E = 2, edges[][] = [[0, 1], [1, 2]]
-Output: 1
-Explanation: The given DAG allows one more edge, 0 -> 2, which keeps the structure acyclic. Adding anything else would create a cycle.
-Input: V = 4, E = 4, edges[][] = [[0, 1], [0, 2], [1, 2], [2, 3]]
-Output: 2
-Explanation: Two additional edges (0 -> 3, 1 -> 3) can be added without forming cycles.
+Input: heights[] = [20, 30, 40, 20]
+Output: 20
+Explanation:  Minimum cost is incurred when the frog jumps from stair 0 to 1 then 1 to 3:
+jump from stair 0 to 1: cost = |30 - 20| = 10
+jump from stair 1 to 3: cost = |20 - 30| = 10
+Total Cost = 10 + 10 = 20
+Input: heights[] = [30, 20, 50, 10, 40]
+Output: 30
+Explanation: Minimum cost will be incurred when frog jumps from stair 0 to 2 then 2 to 4:
+jump from stair 0 to 2: cost = |50 - 30| = 20
+jump from stair 2 to 4: cost = |40 - 50| = 10
+Total Cost = 20 + 10 = 30
 Constraints:
-1 ≤ V ≤ 103
-0 ≤ E ≤ (V*(V-1))/2
-0 ≤ edges[i][0], edges[i][1] < V
+1 ≤ height.size() ≤ 105
+0 ≤ height[i] ≤ 104
 
     
 </pre>
@@ -29,12 +31,15 @@ Constraints:
 ---
 ```
 class Solution:
-    def maxEdgesToAdd(self, V, edges):
-        # code here
-        length = len(edges)
-        total_edges = (V * (V - 1)) // 2
-        additional_edges =total_edges-length
-        return additional_edges
+    def minCost(self, height):
+        n=len(height)
+        if n==1:
+            return 0
+        a,b=0,abs(height[0]-height[1])
+        
+        for i in range(3,n+1):
+            b,a=min(b+abs(height[i-1]-height[i-2]),a+abs(height[i-1]-height[i-3])),b
+        return b
         
 ```
 ---
