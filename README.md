@@ -1,45 +1,49 @@
-# 4-11-25
+# 05-11-25
 ---
-## Frog Jump
-Difficulty: MediumAccuracy: 49.55%Submissions: 177K+Points: 4Average Time: 15m
+## Get Minimum Squares
+Difficulty: MediumAccuracy: 45.22%Submissions: 50K+Points: 4
 
 <pre>
 
-Given an integer array height[] where height[i] represents the height of the i-th stair, a frog starts from the first stair and wants to reach the last stair. From any stair i, the frog has two options: it can either jump to the (i+1)th stair or the (i+2)th stair. The cost of a jump is the absolute difference in height between the two stairs. Determine the minimum total cost required for the frog to reach the last stair.
 
-Example:
+Given a positive integer n, find the minimum number of perfect squares (square of an integer) that sum up to n.
 
-Input: heights[] = [20, 30, 40, 20]
-Output: 20
-Explanation:  Minimum cost is incurred when the frog jumps from stair 0 to 1 then 1 to 3:
-jump from stair 0 to 1: cost = |30 - 20| = 10
-jump from stair 1 to 3: cost = |20 - 30| = 10
-Total Cost = 10 + 10 = 20
-Input: heights[] = [30, 20, 50, 10, 40]
-Output: 30
-Explanation: Minimum cost will be incurred when frog jumps from stair 0 to 2 then 2 to 4:
-jump from stair 0 to 2: cost = |50 - 30| = 20
-jump from stair 2 to 4: cost = |40 - 50| = 10
-Total Cost = 20 + 10 = 30
+Note: Every positive integer can be expressed as a sum of square numbers since 1 is a perfect square, and any number can be represented as 1*1 + 1*1 + 1*1 + ....
+
+Examples:
+
+Input: n = 100
+Output: 1
+Explanation: 10 * 10 = 100
+Input: n = 6
+Output: 3
+Explanation = 1 * 1 + 1 * 1 + 2 * 2 = 6 
 Constraints:
-1 ≤ height.size() ≤ 105
-0 ≤ height[i] ≤ 104
+1 ≤ n ≤ 104
 
     
 </pre>
 
 ---
 ```
+import math
+
 class Solution:
-    def minCost(self, height):
-        n=len(height)
-        if n==1:
-            return 0
-        a,b=0,abs(height[0]-height[1])
-        
-        for i in range(3,n+1):
-            b,a=min(b+abs(height[i-1]-height[i-2]),a+abs(height[i-1]-height[i-3])),b
-        return b
+    def minSquares(self, n: int) -> int:
+        # helper: is x a perfect square?
+        is_square = lambda x: int(x**0.5)**2 == x
+
+        # 1) perfect square?
+        if is_square(n): return 1
+
+        # 2) remove factors of 4
+        while n % 4 == 0: n //= 4
+
+        # 3) if n % 8 == 7 then by Legendre's theorem answer is 4
+        if n % 8 == 7: return 4
+
+        # 4) check if sum of two squares -> answer 2
+        return 2 if any(is_square(n - a*a) for a in range(1, math.isqrt(n)+1)) else 3
         
 ```
 ---
