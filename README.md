@@ -1,49 +1,51 @@
-# 05-11-25
+# 06-11-25
 ---
-## Get Minimum Squares
-Difficulty: MediumAccuracy: 45.22%Submissions: 50K+Points: 4
+## Ways To Tile A Floor
+Difficulty: MediumAccuracy: 32.31%Submissions: 59K+Points: 4
 
 <pre>
 
 
-Given a positive integer n, find the minimum number of perfect squares (square of an integer) that sum up to n.
+Given a floor of dimensions 2 x n and tiles of dimensions 2 x 1, the task is to find the number of ways the floor can be tiled. A tile can either be placed horizontally i.e as a 1 x 2 tile or vertically i.e as 2 x 1 tile. 
 
-Note: Every positive integer can be expressed as a sum of square numbers since 1 is a perfect square, and any number can be represented as 1*1 + 1*1 + 1*1 + ....
+Note: Two tiling arrangements are considered different if the placement of at least one tile differs.
 
-Examples:
+Examples :
 
-Input: n = 100
-Output: 1
-Explanation: 10 * 10 = 100
-Input: n = 6
+Input: n = 3
 Output: 3
-Explanation = 1 * 1 + 1 * 1 + 2 * 2 = 6 
-Constraints:
-1 ≤ n ≤ 104
+Explanation: We need 3 tiles to tile the board of size 2 x 3.
+We can tile in following ways:
+1) Place all 3 tiles vertically.
+2) Place first tile vertically and remaining 2 tiles horizontally.
+3) Place first 2 tiles horizontally and remaining tiles vertically.
 
+Input: n = 4
+Output: 5
+Explanation: We need 4 tiles to tile the board of size 2 x 4.
+We can tile in following ways:
+1) All 4 vertical
+2) All 4 horizontal
+3) First 2 vertical, remaining 2 horizontal.
+4) First 2 horizontal, remaining 2 vertical.
+5) Corner 2 vertical, middle 2 horizontal.
+
+Constraints:
+1 ≤ n ≤ 45
     
 </pre>
 
 ---
 ```
-import math
-
 class Solution:
-    def minSquares(self, n: int) -> int:
-        # helper: is x a perfect square?
-        is_square = lambda x: int(x**0.5)**2 == x
-
-        # 1) perfect square?
-        if is_square(n): return 1
-
-        # 2) remove factors of 4
-        while n % 4 == 0: n //= 4
-
-        # 3) if n % 8 == 7 then by Legendre's theorem answer is 4
-        if n % 8 == 7: return 4
-
-        # 4) check if sum of two squares -> answer 2
-        return 2 if any(is_square(n - a*a) for a in range(1, math.isqrt(n)+1)) else 3
+    def numberOfWays(self, n):
+        if n<3:
+            return n
+        x=1
+        y=2
+        for i in range(2,n):
+            x,y=y,x+y
+        return y
         
 ```
 ---
