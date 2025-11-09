@@ -1,59 +1,76 @@
-# 08-11-25
+# 09-11-25
 ---
-## Number of paths in a matrix with k coins
-Difficulty: MediumAccuracy: 16.96%Submissions: 63K+Points: 4
-
+## Chocolate Pickup II
+Difficulty: HardAccuracy: 67.74%Submissions: 7K+Points: 8
 <pre>
   
+You are given a square matrix mat[][] of size n × n, where each cell represents either a blocked cell or a cell containing some chocolates. If mat[i][j] equals -1, then the cell is blocked and cannot be visited. Otherwise, mat[i][j] represents the number of chocolates present in that cell.
+The task is to determine the maximum number of chocolates a robot can collected by starting from the top-left cell (0, 0), moving to the bottom-right cell (n-1, n-1), and then returning back to (0, 0).
+While moving from (0, 0) to (n-1, n-1), the robot can move only in the right (i, j+1) or downward (i+1, j) directions. On the return journey from (n-1, n-1) to (0, 0), it can move only in the left (i, j-1) or upward (i-1, j) directions.
 
-You are given a matrix mat[][] of size n x m, where each of its cells contains some coins. Count the number of ways to collect exactly k coins while moving from the top left cell of the matrix to the bottom right cell.
-From a cell (i, j), you can only move to cell (i+1, j) or (i, j+1).
+Note: After collecting chocolates from a cell (i, j), that cell becomes empty, meaning mat[i][j] becomes 0 for next visit. If there is no valid path from (0, 0) to (n-1, n-1) or for the return trip, the result should be 0.
 
-Note: It is guaranteed that the answer will not exceed 32-bit integer limits.
+Example:
 
-Examples:
-
-Input: k = 12, mat[] = [[1, 2, 3],
-                      [4, 6, 5],
-                      [3, 2, 1]]
-Output: 2
-Explanation: There are 2 possible paths with exactly 12 coins, (1 + 2 + 6 + 2 + 1) and (1 + 2 + 3 + 5 + 1).
-Input: k = 16, mat[] = [[1, 2, 3], 
-                      [4, 6, 5], 
-                      [9, 8, 7]]
-Output: 0 
-Explanation: There are no possible paths that lead to sum = 16.
-Constraints:
-1 ≤ k ≤ 100
-1 ≤ n, m ≤ 100
-0 ≤ mat[i][j] ≤ 200
+Input: mat[][] = [[0, 1, -1], 
+                [1, 1, -1], 
+                [1, 1, 2]]
+Output: 7
+Explanation:
+  
+One of the optimal paths is to move from (0,0) -> (1,0) -> (2,0) -> (2,1) -> (2,2) while going forward, and then from (2,2) -> (2,1) -> (1,1) -> (0,1) -> (0,0) while coming back. The total number of chocolates collected is 7.
+Input: mat[][] = [[1, 1, 0], 
+               [1, 1, 1], 
+               [0, 1, 1]]
+Output: 7
+Explanation:
+  
+One of the optimal paths is to move from (0,0) -> (1,0) -> (2,0) -> (2,1) -> (2,2) while going forward, and then from (2,2) -> (1,2) -> (1,1) -> (0,1) -> (0,0) while coming back. The total number of chocolates collected is 7.
+Input: mat[][] = [[1, 0, -1],
+                [2, -1, -1],
+                [1, -1, 3]]
+Output: 0
+Explanation:
+  
+It is impossible to reach the bottom-right cell (2,2) from (0,0) because every route is blocked. Since the destination cannot be reached, the total chocolates collected is 0.
+Constraint:
+1 ≤ n ≤ 50
+-1 ≤ mat[i][j] ≤ 100
     
 </pre>
 
 ---
 ```
 class Solution:
-    def numberOfPath(self, mat, k):
-        # code here
-        def f(i, j, s):
-            if s > k:
-                return 0
-            if i == m-1 and j == n-1:
-                s += mat[i][j]
-                if s == k:
-                    return 1
-                return 0
-            if i>=m or j>=n:
-                return 0
-            if (i, j, s) in dp:
-                return dp[(i, j, s)]
-            p1 = f(i+1, j, s+mat[i][j])
-            p2 = f(i, j+1, s + mat[i][j])
-            dp[(i, j, s)] = p1+p2
-            return p1 + p2
-        m, n = len(mat), len(mat[0])
-        dp = {}
-        return f(0,0,0)
+    def chocolatePickup(self, grid):
+        from functools import lru_cache
+
+        n = len(grid)
+        m = len(grid[0])
+
+        @lru_cache(None)
+        def dp(r1, c1, c2):
+            r2 = r1 + c1 - c2
+            if r1 >= n or c1 >= m or r2 >= n or c2 >= m or grid[r1][c1] == -1 or grid[r2][c2] == -1:
+                return float('-inf')
+
+            if r1 == n - 1 and c1 == m - 1:
+                return grid[r1][c1]
+
+            res = grid[r1][c1]
+            if (r1, c1) != (r2, c2):
+                res += grid[r2][c2]
+
+            res += max(
+                dp(r1 + 1, c1, c2 + 1),  # down, right
+                dp(r1, c1 + 1, c2 + 1),  # right, right
+                dp(r1 + 1, c1, c2),      # down, down
+                dp(r1, c1 + 1, c2)       # right, down
+            )
+            return res
+
+        result = dp(0, 0, 0)
+        return max(0, result)
 
 
         
