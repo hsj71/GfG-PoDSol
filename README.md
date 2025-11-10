@@ -1,77 +1,45 @@
-# 09-11-25
+# 10-11-25
 ---
-## Chocolate Pickup II
-Difficulty: HardAccuracy: 67.74%Submissions: 7K+Points: 8
+## Stock Buy and Sell with Cooldown
+Difficulty: MediumAccuracy: 51.65%Submissions: 14K+Points: 4Average Time: 20m
 <pre>
   
-You are given a square matrix mat[][] of size n × n, where each cell represents either a blocked cell or a cell containing some chocolates. If mat[i][j] equals -1, then the cell is blocked and cannot be visited. Otherwise, mat[i][j] represents the number of chocolates present in that cell.
-The task is to determine the maximum number of chocolates a robot can collected by starting from the top-left cell (0, 0), moving to the bottom-right cell (n-1, n-1), and then returning back to (0, 0).
-While moving from (0, 0) to (n-1, n-1), the robot can move only in the right (i, j+1) or downward (i+1, j) directions. On the return journey from (n-1, n-1) to (0, 0), it can move only in the left (i, j-1) or upward (i-1, j) directions.
 
-Note: After collecting chocolates from a cell (i, j), that cell becomes empty, meaning mat[i][j] becomes 0 for next visit. If there is no valid path from (0, 0) to (n-1, n-1) or for the return trip, the result should be 0.
+Given an array arr[], where the ith element of arr[] represents the price of a stock on the ith day (all prices are non-negative integers). Find the maximum profit you can make by buying and selling stocks such that after selling a stock, you cannot buy again on the next day (i.e., there is a one-day cooldown).
 
-Example:
+Examples:
 
-Input: mat[][] = [[0, 1, -1], 
-                [1, 1, -1], 
-                [1, 1, 2]]
+Input: arr[] = [0, 2, 1, 2, 3]
+Output: 3
+Explanation: You first buy on day 1, sell on day 2 then cool down, then buy on day 4, and sell on day 5. The total profit earned is (2-0) + (3-2) = 3, which is the maximum achievable profit.
+Input:  arr[] = [3, 1, 6, 1, 2, 4]
 Output: 7
-Explanation:
-  
-One of the optimal paths is to move from (0,0) -> (1,0) -> (2,0) -> (2,1) -> (2,2) while going forward, and then from (2,2) -> (2,1) -> (1,1) -> (0,1) -> (0,0) while coming back. The total number of chocolates collected is 7.
-Input: mat[][] = [[1, 1, 0], 
-               [1, 1, 1], 
-               [0, 1, 1]]
-Output: 7
-Explanation:
-  
-One of the optimal paths is to move from (0,0) -> (1,0) -> (2,0) -> (2,1) -> (2,2) while going forward, and then from (2,2) -> (1,2) -> (1,1) -> (0,1) -> (0,0) while coming back. The total number of chocolates collected is 7.
-Input: mat[][] = [[1, 0, -1],
-                [2, -1, -1],
-                [1, -1, 3]]
-Output: 0
-Explanation:
-  
-It is impossible to reach the bottom-right cell (2,2) from (0,0) because every route is blocked. Since the destination cannot be reached, the total chocolates collected is 0.
+Explanation: You first buy on day 2 and sell on day 3 then cool down, then again you buy on day 5 and then sell on day 6. Clearly, the total profit earned is (6-1) + (4-2) = 7, which is the maximum achievable profit.
 Constraint:
-1 ≤ n ≤ 50
--1 ≤ mat[i][j] ≤ 100
+1 ≤ arr.size() ≤ 105
+1 ≤ arr[i] ≤ 104
+
+
     
 </pre>
 
 ---
 ```
 class Solution:
-    def chocolatePickup(self, grid):
-        from functools import lru_cache
+    def maxProfit(self, prices):
+        n = len(prices)
+        if n == 0:
+            return 0
 
-        n = len(grid)
-        m = len(grid[0])
+        buy, sell, cool = -prices[0], 0, 0
 
-        @lru_cache(None)
-        def dp(r1, c1, c2):
-            r2 = r1 + c1 - c2
-            if r1 >= n or c1 >= m or r2 >= n or c2 >= m or grid[r1][c1] == -1 or grid[r2][c2] == -1:
-                return float('-inf')
+        for i in range(1, n):
+            prev_buy, prev_sell, prev_cool = buy, sell, cool
+            buy = max(prev_buy, prev_cool - prices[i])
+            sell = prev_buy + prices[i]
+            cool = max(prev_cool, prev_sell)
 
-            if r1 == n - 1 and c1 == m - 1:
-                return grid[r1][c1]
-
-            res = grid[r1][c1]
-            if (r1, c1) != (r2, c2):
-                res += grid[r2][c2]
-
-            res += max(
-                dp(r1 + 1, c1, c2 + 1),  # down, right
-                dp(r1, c1 + 1, c2 + 1),  # right, right
-                dp(r1 + 1, c1, c2),      # down, down
-                dp(r1, c1 + 1, c2)       # right, down
-            )
-            return res
-
-        result = dp(0, 0, 0)
-        return max(0, result)
-
+        return max(sell, cool)
 
         
 ```
