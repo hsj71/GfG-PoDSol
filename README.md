@@ -1,24 +1,32 @@
-# 10-11-25
+# 12-11-25
 ---
-## Stock Buy and Sell with Cooldown
-Difficulty: MediumAccuracy: 51.65%Submissions: 14K+Points: 4Average Time: 20m
+## Wildcard Pattern Matching
+Difficulty: MediumAccuracy: 31.13%Submissions: 94K+Points: 4
 <pre>
   
 
-Given an array arr[], where the ith element of arr[] represents the price of a stock on the ith day (all prices are non-negative integers). Find the maximum profit you can make by buying and selling stocks such that after selling a stock, you cannot buy again on the next day (i.e., there is a one-day cooldown).
+
+Given two strings pat and txt which may be of different sizes, You have to return true if the wildcard pattern i.e. pat, matches with txt else return false.
+
+The wildcard pattern pat can include the characters '?' and '*'.
+
+'?' – matches any single character.
+'*' – matches any sequence of characters (including the empty sequence).
+Note: The matching should cover the entire txt (not partial txt).
 
 Examples:
 
-Input: arr[] = [0, 2, 1, 2, 3]
-Output: 3
-Explanation: You first buy on day 1, sell on day 2 then cool down, then buy on day 4, and sell on day 5. The total profit earned is (2-0) + (3-2) = 3, which is the maximum achievable profit.
-Input:  arr[] = [3, 1, 6, 1, 2, 4]
-Output: 7
-Explanation: You first buy on day 2 and sell on day 3 then cool down, then again you buy on day 5 and then sell on day 6. Clearly, the total profit earned is (6-1) + (4-2) = 7, which is the maximum achievable profit.
-Constraint:
-1 ≤ arr.size() ≤ 105
-1 ≤ arr[i] ≤ 104
-
+Input: txt = "abcde", pat = "a?c*"
+Output: true
+Explanation: '?' matches with 'b' and '*' matches with "de".
+Input: txt = "baaabab", pat = "a*ab"
+Output: false
+Explanation: The pattern starts with a, but the text starts with b, so the pattern does not match the text.
+Input: txt = "abc", pat = "*"
+Output: true
+Explanation: '*' matches with whole text "abc".
+Constraints:
+1 ≤ txt.size(), pat.size() ≤ 100
 
     
 </pre>
@@ -26,21 +34,22 @@ Constraint:
 ---
 ```
 class Solution:
-    def maxProfit(self, prices):
-        n = len(prices)
-        if n == 0:
-            return 0
+    def wildCard(self, string: str, pattern: str) -> bool:
+        n, m = len(string), len(pattern)
+        dp = [[False]*(n+1) for _ in range(m+1)]
+        dp[0][0] = True
 
-        buy, sell, cool = -prices[0], 0, 0
+        for i in range(1, m+1):
+            dp[i][0] = pattern[i-1] == '*' and dp[i-1][0]
 
-        for i in range(1, n):
-            prev_buy, prev_sell, prev_cool = buy, sell, cool
-            buy = max(prev_buy, prev_cool - prices[i])
-            sell = prev_buy + prices[i]
-            cool = max(prev_cool, prev_sell)
+        for i in range(1, m+1):
+            for j in range(1, n+1):
+                if pattern[i-1] in ('?', string[j-1]):
+                    dp[i][j] = dp[i-1][j-1]
+                elif pattern[i-1] == '*':
+                    dp[i][j] = dp[i-1][j] or dp[i][j-1]
 
-        return max(sell, cool)
-
+        return dp[m][n]
         
 ```
 ---
