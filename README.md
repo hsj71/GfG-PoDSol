@@ -1,32 +1,36 @@
-# 12-11-25
+# 14-11-25
 ---
-## Wildcard Pattern Matching
-Difficulty: MediumAccuracy: 31.13%Submissions: 94K+Points: 4
+## Minimum Cost to Merge Stones
+Difficulty: HardAccuracy: 71.64%Submissions: 7K+Points: 8Average Time: 45m
 <pre>
-  
 
-
-Given two strings pat and txt which may be of different sizes, You have to return true if the wildcard pattern i.e. pat, matches with txt else return false.
-
-The wildcard pattern pat can include the characters '?' and '*'.
-
-'?' – matches any single character.
-'*' – matches any sequence of characters (including the empty sequence).
-Note: The matching should cover the entire txt (not partial txt).
+Given an array stones[], where the ith element represents the number of stones in the ith pile.
+In one move, you can merge exactly k consecutive piles into a single pile, and the cost of this move is equal to the total number of stones in these k piles.
+Determine the minimum total cost required to merge all the piles into one single pile. If it is not possible to merge all piles into one according to the given rules, return -1.
 
 Examples:
 
-Input: txt = "abcde", pat = "a?c*"
-Output: true
-Explanation: '?' matches with 'b' and '*' matches with "de".
-Input: txt = "baaabab", pat = "a*ab"
-Output: false
-Explanation: The pattern starts with a, but the text starts with b, so the pattern does not match the text.
-Input: txt = "abc", pat = "*"
-Output: true
-Explanation: '*' matches with whole text "abc".
+Input: stones[] = [1, 2, 3], k = 2
+Output: 9
+Explanation: Initially the array looks like [1, 2, 3].
+First, we merge first 2 stones, i.e., 1 and 2, array becomes [3, 3] and cost is 1 + 2 = 3.
+Then, we merge remaining stones, i.e., 3 and 3, array becomes [6] and the cost = 3 + 3 = 6.
+Total cost = 3 + 6 = 9.
+Input: stones[] = [1, 5, 3, 2, 4], k = 2
+Output: 35
+Explanation: Initially the array looks like [1, 5, 3, 2, 4].
+First, we merge 1 and 5, array becomes [6, 3, 2, 4] and cost is 1 + 5 = 6.
+Then, we merge 3 and 2, array becomes [6, 5, 4] and the cost = 3 + 2 = 5.
+Then, we merge 5 and 4, array becomes [6, 9] and the cost = 5 + 4 = 9.
+Finally, we merge 6 and 9, array becomes [15] and the cost = 6 + 9 = 15.
+Total cost = 6 + 5 + 9 + 15 = 35.
+Input: stones[] = [1, 5, 3, 2, 4], k = 4
+Output: -1
+Explanation: There is no possible way to combine the stones in piles of 4 to get 1 stone in the end.
 Constraints:
-1 ≤ txt.size(), pat.size() ≤ 100
+1 ≤ stones.size() ≤ 30
+2 ≤ k ≤ 30
+1 ≤ stones[i] ≤ 100
 
     
 </pre>
@@ -34,22 +38,39 @@ Constraints:
 ---
 ```
 class Solution:
-    def wildCard(self, string: str, pattern: str) -> bool:
-        n, m = len(string), len(pattern)
-        dp = [[False]*(n+1) for _ in range(m+1)]
-        dp[0][0] = True
+    def mergeStones(self, stones, k):
+        n = len(stones)
+        if (n - 1) % (k - 1) != 0:
+            return -1
 
-        for i in range(1, m+1):
-            dp[i][0] = pattern[i-1] == '*' and dp[i-1][0]
+        # Prefix sum for quick range-sum queries
+        pref = [0] * (n + 1)
+        for i in range(n):
+            pref[i + 1] = pref[i] + stones[i]
 
-        for i in range(1, m+1):
-            for j in range(1, n+1):
-                if pattern[i-1] in ('?', string[j-1]):
-                    dp[i][j] = dp[i-1][j-1]
-                elif pattern[i-1] == '*':
-                    dp[i][j] = dp[i-1][j] or dp[i][j-1]
+        def get_sum(l, r):
+            return pref[r + 1] - pref[l]
 
-        return dp[m][n]
+        INF = 10**15
+        
+        # dp[i][j] = minimum cost to merge stones[i..j] into ( (j-i) % (k-1) + 1 ) piles
+        dp = [[0] * n for _ in range(n)]
+
+        # len is the segment length
+        for length in range(k, n + 1):
+            for i in range(n - length + 1):
+                j = i + length - 1
+                dp[i][j] = INF
+
+                # Try merging subsegments
+                for mid in range(i, j, k - 1):
+                    dp[i][j] = min(dp[i][j], dp[i][mid] + dp[mid+1][j])
+
+                # If this range can be merged into 1 pile, add the sum cost
+                if (length - 1) % (k - 1) == 0:
+                    dp[i][j] += get_sum(i, j)
+
+        return dp[0][n-1]
         
 ```
 ---
