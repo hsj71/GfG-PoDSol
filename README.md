@@ -1,36 +1,26 @@
-# 14-11-25
+# 16-11-25
 ---
 ## Minimum Cost to Merge Stones
 Difficulty: HardAccuracy: 71.64%Submissions: 7K+Points: 8Average Time: 45m
 <pre>
 
-Given an array stones[], where the ith element represents the number of stones in the ith pile.
-In one move, you can merge exactly k consecutive piles into a single pile, and the cost of this move is equal to the total number of stones in these k piles.
-Determine the minimum total cost required to merge all the piles into one single pile. If it is not possible to merge all piles into one according to the given rules, return -1.
+Longest Common Increasing Subsequence
+Difficulty: MediumAccuracy: 40.62%Submissions: 18K+Points: 4
+Given two arrays, a[] and b[], find the length of the longest common increasing subsequence(LCIS).
+
+Note:  LCIS refers to a subsequence that is present in both arrays and strictly increases.
 
 Examples:
 
-Input: stones[] = [1, 2, 3], k = 2
-Output: 9
-Explanation: Initially the array looks like [1, 2, 3].
-First, we merge first 2 stones, i.e., 1 and 2, array becomes [3, 3] and cost is 1 + 2 = 3.
-Then, we merge remaining stones, i.e., 3 and 3, array becomes [6] and the cost = 3 + 3 = 6.
-Total cost = 3 + 6 = 9.
-Input: stones[] = [1, 5, 3, 2, 4], k = 2
-Output: 35
-Explanation: Initially the array looks like [1, 5, 3, 2, 4].
-First, we merge 1 and 5, array becomes [6, 3, 2, 4] and cost is 1 + 5 = 6.
-Then, we merge 3 and 2, array becomes [6, 5, 4] and the cost = 3 + 2 = 5.
-Then, we merge 5 and 4, array becomes [6, 9] and the cost = 5 + 4 = 9.
-Finally, we merge 6 and 9, array becomes [15] and the cost = 6 + 9 = 15.
-Total cost = 6 + 5 + 9 + 15 = 35.
-Input: stones[] = [1, 5, 3, 2, 4], k = 4
-Output: -1
-Explanation: There is no possible way to combine the stones in piles of 4 to get 1 stone in the end.
+Input: a[] = [3, 4, 9, 1], b[] = [5, 3, 8, 9, 10, 2, 1]
+Output: 2
+Explanation: The longest increasing subsequence that is common is [3, 9] and its length is 2.
+Input: a[] = [1, 1, 4, 3], b[] = [1, 1, 3, 4]
+Output: 2
+Explanation: There are two common subsequences [1, 4] and [1, 3] both of length 2.
 Constraints:
-1 ≤ stones.size() ≤ 30
-2 ≤ k ≤ 30
-1 ≤ stones[i] ≤ 100
+1 ≤ a.size(), b.size() ≤ 103
+1 ≤ a[i], b[i] ≤ 104
 
     
 </pre>
@@ -38,39 +28,21 @@ Constraints:
 ---
 ```
 class Solution:
-    def mergeStones(self, stones, k):
-        n = len(stones)
-        if (n - 1) % (k - 1) != 0:
-            return -1
+    def LCIS(self, a, b):
+        n, m = len(a), len(b)
+        dp = [0] * m
 
-        # Prefix sum for quick range-sum queries
-        pref = [0] * (n + 1)
         for i in range(n):
-            pref[i + 1] = pref[i] + stones[i]
+            currentMax = 0
+            for j in range(m):
 
-        def get_sum(l, r):
-            return pref[r + 1] - pref[l]
+                if a[i] == b[j]:
+                    dp[j] = currentMax + 1
 
-        INF = 10**15
-        
-        # dp[i][j] = minimum cost to merge stones[i..j] into ( (j-i) % (k-1) + 1 ) piles
-        dp = [[0] * n for _ in range(n)]
+                elif b[j] < a[i]:
+                    currentMax = max(currentMax, dp[j])
 
-        # len is the segment length
-        for length in range(k, n + 1):
-            for i in range(n - length + 1):
-                j = i + length - 1
-                dp[i][j] = INF
-
-                # Try merging subsegments
-                for mid in range(i, j, k - 1):
-                    dp[i][j] = min(dp[i][j], dp[i][mid] + dp[mid+1][j])
-
-                # If this range can be merged into 1 pile, add the sum cost
-                if (length - 1) % (k - 1) == 0:
-                    dp[i][j] += get_sum(i, j)
-
-        return dp[0][n-1]
+        return max(dp)
         
 ```
 ---
