@@ -1,48 +1,44 @@
-# 16-11-25
+# 17-11-25
 ---
-## Minimum Cost to Merge Stones
-Difficulty: HardAccuracy: 71.64%Submissions: 7K+Points: 8Average Time: 45m
+## Max Sum Increasing Subsequence
+Difficulty: MediumAccuracy: 40.02%Submissions: 218K+Points: 4Average Time: 25m
+
 <pre>
 
-Longest Common Increasing Subsequence
-Difficulty: MediumAccuracy: 40.62%Submissions: 18K+Points: 4
-Given two arrays, a[] and b[], find the length of the longest common increasing subsequence(LCIS).
 
-Note:  LCIS refers to a subsequence that is present in both arrays and strictly increases.
+Given an array of positive integers arr[], find the maximum sum of a subsequence such that the elements of the subsequence form a strictly increasing sequence.
+In other words, among all strictly increasing subsequences of the array, return the one with the largest possible sum.
 
 Examples:
 
-Input: a[] = [3, 4, 9, 1], b[] = [5, 3, 8, 9, 10, 2, 1]
-Output: 2
-Explanation: The longest increasing subsequence that is common is [3, 9] and its length is 2.
-Input: a[] = [1, 1, 4, 3], b[] = [1, 1, 3, 4]
-Output: 2
-Explanation: There are two common subsequences [1, 4] and [1, 3] both of length 2.
+Input: arr[] = [1, 101, 2, 3, 100]
+Output: 106
+Explanation: The maximum sum of an increasing sequence is obtained from [1, 2, 3, 100].
+Input: arr[] = [4, 1, 2, 3]
+Output: 6
+Explanation: The maximum sum of an increasing sequence is obtained from [1, 2, 3].
+Input: arr[] = [4, 1, 2, 4]
+Output: 7
+Explanation: The maximum sum of an increasing sequence is obtained from [1, 2, 4].
 Constraints:
-1 ≤ a.size(), b.size() ≤ 103
-1 ≤ a[i], b[i] ≤ 104
-
+1 ≤ arr.size() ≤ 103
+1 ≤ arr[i] ≤ 105
     
 </pre>
 
 ---
 ```
 class Solution:
-    def LCIS(self, a, b):
-        n, m = len(a), len(b)
-        dp = [0] * m
-
-        for i in range(n):
-            currentMax = 0
-            for j in range(m):
-
-                if a[i] == b[j]:
-                    dp[j] = currentMax + 1
-
-                elif b[j] < a[i]:
-                    currentMax = max(currentMax, dp[j])
-
-        return max(dp)
+    def maxSumIS(self, arr):
+        n = len(arr)
+        dp = arr[:]
+        ans = arr[0]
+        for i in range(1, n):
+            for j in range(i):
+                if arr[j] < arr[i]:
+                    dp[i] = max(dp[i], dp[j] + arr[i])
+            ans = max(ans, dp[i])
+        return ans
         
 ```
 ---
