@@ -1,59 +1,75 @@
-# 19-11-25
+# 20-11-25
 ---
-## Path With Minimum Effort
-Difficulty: MediumAccuracy: 53.13%Submissions: 59K+Points: 4Average Time: 25m
+## Make Strings Equal
+Difficulty: MediumAccuracy: 64.4%Submissions: 8K+Points: 4
 <pre>
 
 
-You are given a 2D array mat[][], of size n*m. Your task is to find the minimum possible path cost from the top-left cell (0, 0) to the bottom-right cell (n-1, m-1) by moving up, down, left, or right between adjacent cells.
+Given two strings s and t, consisting of lowercase English letters. You are also given, a 2D array transform[][], where each entry [x, y] means that you are allowed to transform character x into character y and an array cost[], where cost[i] is the cost of transforming transform[i][0] into transform[i][1]. You can apply any transformation any number of times on either string.
 
-Note: The cost of a path is defined as the maximum absolute difference between the values of any two consecutive cells along that path.
+Your task is to find the minimum total cost required to make the strings identical. If it is impossible to make the two strings identical using the available transformations, return -1.
 
 Examples:
 
-Input: mat[][] = [[7, 2, 6, 5],
-               [3, 1, 10, 8]]
-Output: 4
-Explanation: The route of [7, 3, 1, 2, 6, 5, 8] has a minimum value of maximum absolute difference between any two consecutive cells in the route, i.e., 4.
-   
-Input: mat[][] = [[2, 2, 2, 1],
-               [8, 1, 2, 7],
-               [2, 2, 2, 8],
-               [2, 1, 4, 7],
-               [2, 2, 2, 2]]
-Output: 0
-Explanation: The route of [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2] has a minimum value of maximum absolute difference between any two consecutive cells in the route, i.e., 0.
-    
+Input: s = "abcc", t = "bccc", transform[][] = [['a', 'b'], ['b', 'c'], ['c', 'a']], cost[] = [2, 1, 4]
+Output: 3
+Explanation: We can convert both strings into "bccc" with a cost of 3 using these operations:
+transform at Position 0 in s: a -> b (cost 2)
+transform at Position 1 in s: b -> c (cost 1)
+Other characters already match.
+Input: s = "az", t = "dc", transform[][] = [['a', 'b'], ['b', 'c'], ['c', 'd'], ['a', 'd'], ['z', 'c']], cost[] = [5, 3, 2, 50, 10]
+Output: 20
+Explanation: We can convert both strings into "dc" with a cost of 20 using these operations:
+transform at Position 0 in s: a -> d by path a -> b -> c -> d (cost 5 + 3 + 2 = 10)
+transform at Position 1 in s: z -> c (cost 10)
+Input: s = "xyz", t = "xzy", transform[][] = [['x', 'y'], ['x', 'z']], cost[] = [3, 3]
+Output: -1
+Explanation: It is not possible to make the two strings equal.
 Constraints:
-1 ≤ n, m ≤ 100
-0 ≤ mat[i][j] ≤ 106
+1 ≤ s.size() = t.size() ≤ 105
+1 ≤ transform.size() = cost.size() ≤ 500
+'a' ≤ transform[i][0], transform[i][1] ≤ 'z'
+1 ≤ cost[i] ≤ 500
     
 </pre>
 
 ---
 ```
 class Solution:
-    def minCostPath(self, mat):
+    def minCost(self, s, t, transform, cost):
         # code here
-        hth=len(mat)
-        wth=len(mat[0])
-        tots=[[float('inf')]*wth for _ in range(hth)]
-        import heapq
-        hp=[(0,0,0,)]
-        tots[0][0]=0
-        while hp:
-            tot,x,y=heapq.heappop(hp)
-            if (x,y)==(wth-1,hth-1):
-                return tot
-            for dx,dy in [(0,1,),(0,-1,),(1,0,),(-1,0,),]:
-                nx,ny=x+dx,y+dy
-                if not 0<=nx<wth or not 0<=ny<hth:
+        INF = 10**12
+        dist = [[INF] * 26 for _ in range(26)]
+        
+        for i in range(26):
+            dist[i][i] = 0
+        for i, (x, y) in enumerate(transform):
+            u = ord(x) - ord('a')
+            v = ord(y) - ord('a')
+            dist[u][v] = min(dist[u][v], cost[i])
+        for k in range(26):
+            for i in range(26):
+                if dist[i][k] == INF:
                     continue
-                cos=abs(mat[ny][nx]-mat[y][x])
-                ntot=max(tot,cos)
-                if ntot<tots[ny][nx]:
-                    tots[ny][nx]=ntot
-                    heapq.heappush(hp,(ntot,nx,ny,))
+                for j in range(26):
+                    if dist[k][j] == INF:
+                        continue
+                    if dist[i][j] > dist[i][k] + dist[k][j]:
+                        dist[i][j] = dist[i][k] + dist[k][j]
+        ans = 0
+        for i in range(len(s)):
+            a = ord(s[i]) - ord('a')
+            b = ord(t[i]) - ord('a')
+            if a == b:
+                continue
+            best = INF
+            for c in range(26):
+                if dist[a][c] < INF and dist[b][c] < INF:
+                    best = min(best, dist[a][c] + dist[b][c])
+            if best == INF:
+                return -1
+            ans += best
+        return ans
         
 
         
