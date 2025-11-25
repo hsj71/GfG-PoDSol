@@ -1,7 +1,7 @@
 # 13-08-2025
 ---
 ## Tywin's War Strategy
-
+<pre>
 You are given an array arr[] of size n, where arr[i] represents the number of soldiers in the i-th troop. You are also given an integer k. A troop is considered "lucky" if its number of soldiers is a multiple of k. Find the minimum total number of soldiers to add across all troops so that at least ⌈n / 2⌉ troops become lucky.
 
 Examples:
@@ -21,7 +21,7 @@ Constraints:
 1 ≤ arr.size() ≤ 105
 1 ≤ k ≤ 105
 1 ≤ arr[i] ≤ 105
-
+</pre>
 ---
 ```
 class Solution:
