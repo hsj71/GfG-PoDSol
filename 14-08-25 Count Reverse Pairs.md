@@ -1,7 +1,7 @@
 # 14-08-2025
 ---
 ## Count Reverse Pairs
-
+<pre>
 You are given an array arr[] of positive integers, find the count of reverse pairs. A pair of indices (i, j) is said to be a reverse pair if both the following conditions are met:
 
 0 ≤ i < j < arr.size()
@@ -23,7 +23,7 @@ The Reverse pairs are
 Constraints:
 1 ≤ arr.size() ≤ 5*104
 1 ≤ arr[i] ≤ 109
-
+</pre>
 
 ---
 ```
