@@ -1,47 +1,39 @@
-# 25-11-25
+# 26-11-25
 ---
-## Game of XOR
-Difficulty: MediumAccuracy: 50.77%Submissions: 45K+Points: 4
+## AND In Range
+Difficulty: MediumAccuracy: 50.0%Submissions: 11K+Points: 4
 <pre>
 
-You are given an integer array arr[]. The value of a subarray is defined as the bitwise XOR of all elements in that subarray.
-Your task is to compute the bitwise XOR of the values of all possible subarrays of arr[].
+
+You are given two integers l and r. Find the result after applying the series of Bitwise AND ( & ) operation on every natural number between the range l to r (including both).
 
 Examples:
 
-Input: arr[] = [1, 2, 3] 
+Input: l = 8, r = 13
+Output: 8
+Explanation: 
+8 AND 9 AND 10 AND 11 AND 12 AND 13 = 8.
+Input: l = 2, r = 3
 Output: 2
-Explanation:
-xor[1] = 1
-xor[1, 2] = 3
-xor[2, 3] = 1
-xor[1, 2, 3] = 0
-xor[2] = 2
-xor[3] = 3
-Result : 1 ^ 3 ^ 1 ^ 0 ^ 2 ^ 3 = 2
-Input: arr[] = [1, 2]
-Output: 0
-Explanation:
-xor[1] = 1
-xor[1, 2] = 3
-xor[2] = 2
-Result : 1 ^ 3 ^ 2 = 0
+Explanation: 2 AND 3 = 2.
 Constraints:
-1 ≤ arr.size() ≤ 105
-0 ≤ arr[i] ≤ 109
+1 ≤ l ≤ r ≤ 109
     
 </pre>
 
 ---
 ```
 class Solution:
-    def subarrayXor(self, arr):
-        len1 = res = 0
-        for i in arr:
-            if not len1%2:
-                res = res^arr[len1]
-            len1+=1
-        return res if len1%2 else 0
+	def andInRange(self, l, r):
+		# code here
+		shift = 0 
+        while l != r :
+            l >>= 1
+            r >>= 1
+            shift += 1
+            
+        return l << shift
+
         
         
 ```
