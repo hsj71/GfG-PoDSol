@@ -1,40 +1,80 @@
-# 29-11-25
+# 1-12-25
 ---
-## Count set bits
-Difficulty: MediumAccuracy: 35.77%Submissions: 251K+Points: 4
+## XOR Pairs less than K
+Difficulty: MediumAccuracy: 68.92%Submissions: 6K+Points: 4
 <pre>
 
 
-You are given a number n. Find the total count of set bits for all numbers from 1 to n (both inclusive).
+Given an array arr[] and an integer k, we need to count the number of pairs from the given array such that the Bitwise XOR of each pair is less than k.
 
-Examples :
+Examples:
 
-Input: n = 4
-Output: 5
-Explanation: For numbers from 1 to 4. for 1: 0 0 1 => 1 set bit, for 2: 0 1 0 => 1 set bit, for 3: 0 1 1 => 2 set bits, for 4: 1 0 0 => 1 set bit. Therefore, the total set bits are 5.
-Input: n = 17
-Output: 35
-Explanation: From numbers 1 to 17(both inclusive), the total number of set bits are 35.
+Input: arr = [1, 2, 3, 5], k = 5 
+Output: 4
+Explanation: Bitwise XOR of all possible pairs that satisfy the given conditions are:
+arr[0] ^ arr[1] = 1 ^ 2 = 3 
+arr[0] ^ arr[2] = 1 ^ 3 = 2 
+arr[0] ^ arr[3] = 1 ^ 5 = 4 
+arr[1] ^ arr[2] = 2 ^ 3 = 1 
+Therefore, the required output is 4.
+Input: arr[] = [3, 5, 6, 8], k = 7 
+Output: 3
+Explnation: Bitwise XOR of all possible pairs that satisfy the given conditions are:
+arr[0] ^ arr[1] = 6
+arr[0] ^ arr[2] = 5
+arr[1] ^ arr[2] = 3
+Therefore, the required output is 3. 
 Constraints:
-1 ≤ n ≤ 108
+1 ≤ arr.size(), k ≤ 5*104
+1 ≤ arr[i] ≤ 5*104
     
 </pre>
 
 ---
 ```
+class TrieNode:
+    def __init__(self):
+        self.child = [None, None]
+        self.count = 0
+
 class Solution:
-    def countSetBits(self, n):
-        count = 0
-        i = 0
-        while (1 << i) <= n:
-            next_power = 1 << (i + 1)
-            half_power = 1 << i
-            complete_blocks = (n + 1) // next_power
-            count += complete_blocks * half_power
-            remainder = (n + 1) % next_power
-            count += max(0, remainder - half_power)
-            i += 1
-        return count
+    def cntPairs(self, arr, k):
+        root = TrieNode()
+
+        def insert(num):
+            node = root
+            for i in range(15, -1, -1):
+                bit = (num >> i) & 1
+                if not node.child[bit]:
+                    node.child[bit] = TrieNode()
+                node = node.child[bit]
+                node.count += 1
+
+        def query(num, k):
+            node = root
+            total = 0
+            for i in range(15, -1, -1):
+                if not node:
+                    break
+
+                bit = (num >> i) & 1
+                kbit = (k >> i) & 1
+
+                if kbit == 1:
+                    # If kbit = 1, add matches for XOR < k at this bit
+                    if node.child[bit]:
+                        total += node.child[bit].count
+                    node = node.child[1 - bit]
+                else:
+                    node = node.child[bit]
+            return total
+
+        ans = 0
+        for x in arr:
+            ans += query(x, k)
+            insert(x)
+
+        return ans
         
         
 ```
