@@ -1,81 +1,53 @@
-# 1-12-25
+# 3-12-25
 ---
-## XOR Pairs less than K
-Difficulty: MediumAccuracy: 68.92%Submissions: 6K+Points: 4
+## Travelling Salesman Problem
+Difficulty: HardAccuracy: 46.35%Submissions: 36K+Points: 8Average Time: 25m
 <pre>
 
 
-Given an array arr[] and an integer k, we need to count the number of pairs from the given array such that the Bitwise XOR of each pair is less than k.
+Given a 2d matrix cost[][] of size n where cost[i][j] denotes the cost of moving from city i to city j. Your task is to complete a tour from city 0 (0-based index) to all other cities such that you visit each city exactly once and then at the end come back to city 0 at minimum cost.
 
 Examples:
 
-Input: arr = [1, 2, 3, 5], k = 5 
-Output: 4
-Explanation: Bitwise XOR of all possible pairs that satisfy the given conditions are:
-arr[0] ^ arr[1] = 1 ^ 2 = 3 
-arr[0] ^ arr[2] = 1 ^ 3 = 2 
-arr[0] ^ arr[3] = 1 ^ 5 = 4 
-arr[1] ^ arr[2] = 2 ^ 3 = 1 
-Therefore, the required output is 4.
-Input: arr[] = [3, 5, 6, 8], k = 7 
-Output: 3
-Explnation: Bitwise XOR of all possible pairs that satisfy the given conditions are:
-arr[0] ^ arr[1] = 6
-arr[0] ^ arr[2] = 5
-arr[1] ^ arr[2] = 3
-Therefore, the required output is 3. 
+Input: cost[][] = [[0, 111], 
+                [112, 0]]
+Output: 223
+Explanation: We can visit 0->1->0 and cost = 111 + 112.
+Input: cost[][] = [[0, 1000, 5000],
+                [5000, 0, 1000],
+                [1000, 5000, 0]]
+Output: 3000
+Explanation: We can visit 0->1->2->0 and cost = 1000 + 1000 + 1000 = 3000
 Constraints:
-1 ≤ arr.size(), k ≤ 5*104
-1 ≤ arr[i] ≤ 5*104
+1 ≤ cost.size() ≤ 15
+0 ≤ cost[i][j] ≤ 104
     
 </pre>
 
 ---
 ```
-class TrieNode:
-    def __init__(self):
-        self.child = [None, None]
-        self.count = 0
-
 class Solution:
-    def cntPairs(self, arr, k):
-        root = TrieNode()
-
-        def insert(num):
-            node = root
-            for i in range(15, -1, -1):
-                bit = (num >> i) & 1
-                if not node.child[bit]:
-                    node.child[bit] = TrieNode()
-                node = node.child[bit]
-                node.count += 1
-
-        def query(num, k):
-            node = root
-            total = 0
-            for i in range(15, -1, -1):
-                if not node:
-                    break
-
-                bit = (num >> i) & 1
-                kbit = (k >> i) & 1
-
-                if kbit == 1:
-                    # If kbit = 1, add matches for XOR < k at this bit
-                    if node.child[bit]:
-                        total += node.child[bit].count
-                    node = node.child[1 - bit]
-                else:
-                    node = node.child[bit]
-            return total
-
-        ans = 0
-        for x in arr:
-            ans += query(x, k)
-            insert(x)
-
-        return ans
+	def tsp(self, cost):
+        from functools import cache
+        MAX_COST = 15 * 10**4
+        n = len(cost)
+        all_visited_mask = (1 << n) - 1
         
+        @cache
+        def dfs(u=0, visited_mask=1):
+            if visited_mask == all_visited_mask:
+                # All visited, returning to city "0"
+                return cost[u][0]
+            min_cost = MAX_COST
+            for v in range(1, n):
+                v_mask = 1 << v
+                if visited_mask & v_mask == 0:
+                    v_cost = dfs(v, visited_mask | v_mask) + cost[u][v]
+                    if v_cost < min_cost:
+                        min_cost = v_cost
+            return min_cost
+        
+        return dfs()	
         
 ```
 ---
