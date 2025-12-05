@@ -1,34 +1,38 @@
-# 4-12-25
+# 5-12-25
 ---
-## Optimal binary search tree
-Difficulty: HardAccuracy: 50.02%Submissions: 17K+Points: 8
+## Walls Coloring II
+Difficulty: HardAccuracy: 50.15%Submissions: 32K+Points: 8
 <pre>
 
-You are given a set of distinct keys in sorted order, which is represent by keys[]. Each key ki represents a data record that is accessed during a seach operation. For all the keys, you are also given a frequency array freq[], which denotes how many times key ki is searched for.
-The cost of accessing a key in a binary search tree is calculated by multiplying its access frequency by the level at which it appears in the tree. Therefore different arrangements of keys in the BST gives different total search costs.
-
-Your task is to calculate the minimum total search cost required to construct a binary search tree containing all the keys.
-
-Note: Consider the root of the BST is at level 1.
+You are given n walls arranged in a row, and each wall must be painted using one of the k available colors. The cost of painting ith wall with jth color is given by costs[i][j]. Your task is to determine the minimum total cost required to paint all the walls in such a way that no two adjacent walls share the same color. If it is impossible to paint the walls under this condition, you must return -1.
 
 Examples:
 
-Input: keys[] = [10, 12], freq[] = [34, 50]
-Output: 118
-Explaination: There can be following two possible BSTs
-                                
-The cost of tree I is 34*1 + 50*2 = 134
-The cost of tree II is 50*1 + 34*2 = 118
-Input: keys[] = [10, 12, 20], freq[] = [34, 8, 50]
-Output: 142
-Explaination: There can be many possible BSTs
- 
-Among all possible BSTs, 
-cost of the 5th BST is minimum.  
-Cost of this BST is 1*50 + 2*34 + 3*8 = 142
+Input: n = 4, k = 3,
+costs[][] = [[1, 5, 7],
+           [5, 8, 4],
+           [3, 2, 9],
+           [1, 2, 4]]
+
+Output: 8
+Explanation:
+Paint wall 0 with color 0. Cost = 1
+Paint wall 1 with color 2. Cost = 4
+Paint wall 2 with color 1. Cost = 2
+Paint wall 3 with color 0. Cost = 1
+Total Cost = 1 + 4 + 2 + 1 = 8
+Input: n = 5, k = 1,
+costs[][] = [[5],
+           [4],
+           [9],
+           [2],
+           [1]]
+Output: -1
+Explanation: It is not possible to color all the walls under the given conditions.
 Constraints:
-1 ≤ keys.size() = freq.size() ≤ 100
-1 ≤ keys[i], freq[i] ≤ 104
+0 ≤ n  ≤ 103
+0 ≤ k  ≤ 103
+1 ≤ costs[i][j]  ≤ 105
 
 
     
@@ -37,31 +41,38 @@ Constraints:
 ---
 ```
 class Solution:
-    def minCost(self, keys, freq):
-        n = len(keys)
-        dp = [[0]*n for _ in range(n)]
-        opt = [[0]*n for _ in range(n)]
-        pre = [0]*(n+1)
-
+    def minCost(self, costs : list[list[int]]) -> int:
+        # code here
+        if not costs:
+            return 0
+        n=len(costs)
+        k=len(costs[0])
+        if k==1 and n==1:
+            return costs[0][0]
+        if k<2:
+            return -1
+        
+        dp=[0]*k
+        m1=[0,0]
+        m2=[0,1]
         for i in range(n):
-            pre[i+1] = pre[i] + freq[i]
-            dp[i][i] = freq[i]
-            opt[i][i] = i
-
-        for length in range(2, n+1):
-            for i in range(n - length + 1):
-                j = i + length - 1
-                dp[i][j] = 10**18
-                L, R = opt[i][j-1], opt[i+1][j]
-                for k in range(L, R+1):
-                    left = dp[i][k-1] if k > i else 0
-                    right = dp[k+1][j] if k < j else 0
-                    cost = left + right + (pre[j+1] - pre[i])
-                    if cost < dp[i][j]:
-                        dp[i][j] = cost
-                        opt[i][j] = k
-
-        return dp[0][n-1]
+            temp=[0]*k
+            d1=[float('inf'),0]
+            d2=[float("inf"),0]
+            for j in range(k):
+                if j==m1[1]:
+                    temp[j]=m2[0]+costs[i][j]
+                else:
+                    temp[j]=m1[0]+costs[i][j]
+                if temp[j]<d1[0]:
+                    d2=d1
+                    d1=[temp[j],j]
+                elif temp[j]<d2[0]:
+                    d2=[temp[j],j]
+            m1=d1
+            m2=d2
+            dp=temp
+        return m1[0]
         
 ```
 ---
