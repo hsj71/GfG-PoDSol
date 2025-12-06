@@ -1,38 +1,26 @@
-# 5-12-25
+# 6-12-25
 ---
-## Walls Coloring II
-Difficulty: HardAccuracy: 50.15%Submissions: 32K+Points: 8
+## Optimal Strategy For A Game
+Difficulty: MediumAccuracy: 49.03%Submissions: 97K+Points: 4
+You are given an integer array arr[] of size n(even). The array elements represent n coins of values v1, v2, ....vn.
 <pre>
 
-You are given n walls arranged in a row, and each wall must be painted using one of the k available colors. The cost of painting ith wall with jth color is given by costs[i][j]. Your task is to determine the minimum total cost required to paint all the walls in such a way that no two adjacent walls share the same color. If it is impossible to paint the walls under this condition, you must return -1.
+
+You play against an opponent in an alternating way. In each turn, a player selects either the first or last coin from the row, removes it from the row permanently, and receives the coin's value.
+You need to determine the maximum possible amount of money you can win if you go first.
+Note: Both the players are playing optimally.
 
 Examples:
 
-Input: n = 4, k = 3,
-costs[][] = [[1, 5, 7],
-           [5, 8, 4],
-           [3, 2, 9],
-           [1, 2, 4]]
-
-Output: 8
-Explanation:
-Paint wall 0 with color 0. Cost = 1
-Paint wall 1 with color 2. Cost = 4
-Paint wall 2 with color 1. Cost = 2
-Paint wall 3 with color 0. Cost = 1
-Total Cost = 1 + 4 + 2 + 1 = 8
-Input: n = 5, k = 1,
-costs[][] = [[5],
-           [4],
-           [9],
-           [2],
-           [1]]
-Output: -1
-Explanation: It is not possible to color all the walls under the given conditions.
+Input: arr[] = [5, 3, 7, 10]
+Output: 15
+Explanation: The user collects the maximum value as 15(10 + 5). It is guaranteed that we cannot get more than 15 by any possible moves.
+Input: arr[] = [8, 15, 3, 7]
+Output: 22
+Explanation: The user collects the maximum value as 22(7 + 15). It is guaranteed that we cannot get more than 22 by any possible moves.
 Constraints:
-0 ≤ n  ≤ 103
-0 ≤ k  ≤ 103
-1 ≤ costs[i][j]  ≤ 105
+2 <= n <= 103
+1 <= arr[i] <= 106
 
 
     
@@ -40,39 +28,23 @@ Constraints:
 
 ---
 ```
+
 class Solution:
-    def minCost(self, costs : list[list[int]]) -> int:
+    def maximumAmount(self, arr):
         # code here
-        if not costs:
-            return 0
-        n=len(costs)
-        k=len(costs[0])
-        if k==1 and n==1:
-            return costs[0][0]
-        if k<2:
-            return -1
-        
-        dp=[0]*k
-        m1=[0,0]
-        m2=[0,1]
-        for i in range(n):
-            temp=[0]*k
-            d1=[float('inf'),0]
-            d2=[float("inf"),0]
-            for j in range(k):
-                if j==m1[1]:
-                    temp[j]=m2[0]+costs[i][j]
+        n = len(arr)
+        sum = 0
+        dp = [0] * n
+        for i in range(n - 1, -1, -1):
+
+            sum += arr[i]
+            for j in range(i, n):
+                if i == j:
+                    dp[j] = arr[j]
                 else:
-                    temp[j]=m1[0]+costs[i][j]
-                if temp[j]<d1[0]:
-                    d2=d1
-                    d1=[temp[j],j]
-                elif temp[j]<d2[0]:
-                    d2=[temp[j],j]
-            m1=d1
-            m2=d2
-            dp=temp
-        return m1[0]
+                    dp[j] = max(arr[i] - dp[j], arr[j] - dp[j - 1])
+
+        return (sum + dp[n - 1]) // 2
         
 ```
 ---
