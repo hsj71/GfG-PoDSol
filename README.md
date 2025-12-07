@@ -1,26 +1,26 @@
-# 6-12-25
+# 7-12-25
 ---
-## Optimal Strategy For A Game
-Difficulty: MediumAccuracy: 49.03%Submissions: 97K+Points: 4
-You are given an integer array arr[] of size n(even). The array elements represent n coins of values v1, v2, ....vn.
+## Number of distinct subsequences
+Difficulty: HardAccuracy: 30.43%Submissions: 75K+Points: 8
 <pre>
 
 
-You play against an opponent in an alternating way. In each turn, a player selects either the first or last coin from the row, removes it from the row permanently, and receives the coin's value.
-You need to determine the maximum possible amount of money you can win if you go first.
-Note: Both the players are playing optimally.
+Given a string str consisting of lowercase english alphabets, the task is to find the number of distinct subsequences of the string
+Note: Answer can be very large, so, ouput will be answer modulo 109+7.
 
 Examples:
 
-Input: arr[] = [5, 3, 7, 10]
-Output: 15
-Explanation: The user collects the maximum value as 15(10 + 5). It is guaranteed that we cannot get more than 15 by any possible moves.
-Input: arr[] = [8, 15, 3, 7]
-Output: 22
-Explanation: The user collects the maximum value as 22(7 + 15). It is guaranteed that we cannot get more than 22 by any possible moves.
+Input: str = "gfg"
+Output: 7
+Explanation: 
+The seven distinct subsequences are "", "g", "f", "gf", "fg", "gg" and "gfg" .
+Input: str = "ggg"
+Output: 4
+Explanation: 
+The four distinct subsequences are "", "g", "gg", "ggg".
 Constraints:
-2 <= n <= 103
-1 <= arr[i] <= 106
+1 ≤ |str| ≤ 105
+str contains lower case English alphabets
 
 
     
@@ -30,21 +30,23 @@ Constraints:
 ```
 
 class Solution:
-    def maximumAmount(self, arr):
-        # code here
-        n = len(arr)
-        sum = 0
-        dp = [0] * n
-        for i in range(n - 1, -1, -1):
-
-            sum += arr[i]
-            for j in range(i, n):
-                if i == j:
-                    dp[j] = arr[j]
-                else:
-                    dp[j] = max(arr[i] - dp[j], arr[j] - dp[j - 1])
-
-        return (sum + dp[n - 1]) // 2
+	def distinctSubseq(self, str):
+		# code here
+		mod = 10**9 + 7
+        n = len(s)
+        dp = [0] * (n + 1)
+        last = [-1] * 26
+        
+        dp[0] = 1
+        
+        for i in range(1, n + 1):
+            dp[i] = (dp[i - 1] * 2) % mod
+            c = ord(s[i - 1]) - 97
+            if last[c] != -1:
+                dp[i] = (dp[i] - dp[last[c] - 1] + mod) % mod
+            last[c] = i
+        
+        return dp[n]
         
 ```
 ---
