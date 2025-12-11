@@ -1,25 +1,25 @@
-# 10-12-25
+# 11-12-25
 ---
-## Missing And Repeating
-Difficulty: EasyAccuracy: 24.83%Submissions: 664K+Points: 2Average Time: 30m
+## Construct an array from its pair-sum array
+Difficulty: EasyAccuracy: 56.62%Submissions: 9K+Points: 2Average Time: 10m
 <pre>
 
-Given an unsorted array arr[] of size n, containing elements from the range 1 to n, it is known that one number in this range is missing, and another number occurs twice in the array, find both the duplicate number and the missing number.
+Given a pair-sum array arr[] construct the original array. A pair-sum array for an array is the array that contains sum of all pairs in ordered form, i.e., arr[0] is sum of res[0] and res[1], arr[1] is sum of res[0] and res[2] and so on.
+
+Note: If the size of original array res[] is n, then the size of pair-sum array arr[] would be n * (n -1) /2. We may assume that the pair-sum array arr[] is appropriate in size.
+Note that, if the original array is correct then the driver code will print true, else false;
 
 Examples:
 
-Input: arr[] = [2, 2]
-Output: [2, 1]
-Explanation: Repeating number is 2 and the missing number is 1.
-Input: arr[] = [1, 3, 3] 
-Output: [3, 2]
-Explanation: Repeating number is 3 and the missing number is 2.
-Input: arr[] = [4, 3, 6, 2, 1, 1]
-Output: [1, 5]
-Explanation: Repeating number is 1 and the missing number is 5.
-Constraints:
-2 ≤ n ≤ 106
-1 ≤ arr[i] ≤ n
+Input: arr[] = [4, 5, 3]
+Output: true
+Explanation: A valid original array is [3, 1, 2], pairwise sums are (3 + 1), (3 + 2) and (1 + 2).
+Input: arr[] = [3]
+Output: true
+Explanation: One of the valid original array is [1, 2].
+Constraints: 
+1 ≤ n ≤ 103
+1 ≤ arr[i] ≤ 109
 
 
 
@@ -30,17 +30,27 @@ Constraints:
 ```
 
 class Solution:
-    def findTwoElement(self, arr):
+    def constructArr(self, arr):
         # code here
-        from collections import Counter
-        d=Counter(arr)
-        res=[0,0]
-        l=len(arr)
-        for i in range(1,l+1):
-            if i in d and d[i]==2:
-                res[0]=i
-            elif i not in d:
-                res[1]=i
+        m = len(arr)
+        disc = 1 + 8 * m
+        r = int(disc**0.5)
+        while (r+1)*(r+1) <= disc:
+            r += 1
+        while r*r > disc:
+            r -= 1
+        n = (1 + r) // 2
+
+        if n == 2:
+            return [0, arr[0]]
+       
+        a0 = (arr[0] + arr[1] - arr[n-1]) // 2
+        res = [0] * n
+        res[0] = a0
+
+        for i in range(1, n):
+            res[i] = arr[i-1] - a0
+
         return res
         
 ```
