@@ -1,32 +1,30 @@
-# 12-12-25
+# 13-12-25
 ---
-## Transpose of Matrix
-Difficulty: EasyAccuracy: 66.5%Submissions: 122K+Points: 2Average Time: 20m
+## Swap diagonals
+Difficulty: EasyAccuracy: 82.28%Submissions: 6K+Points: 2Average Time: 9m
 <pre>
 
-You are given a square matrix of size n x n. Your task is to find the transpose of the given matrix.
-The transpose of a matrix is obtained by converting all the rows to columns and all the columns to rows.
+Given a square matrix mat[][], the task is to swap the elements of the major and minor diagonals.
 
-Examples :
+Major Diagonal: Elements that lie from the top-left corner to the bottom-right corner of the matrix (i.e., where row index equals column index).
+Minor Diagonal: Elements that lie from the top-right corner to the bottom-left corner (i.e., where the sum of row and column indices equals n - 1).
+Examples:
 
-Input: mat[][] = [[1, 1, 1, 1],
-                [2, 2, 2, 2],
-                [3, 3, 3, 3],
-                [4, 4, 4, 4]]
-Output: [[1, 2, 3, 4],
-       [1, 2, 3, 4],
-       [1, 2, 3, 4],
-       [1, 2, 3, 4]]
-Explanation: Converting rows into columns and columns into rows.
-Input: mat[][] =  [[1, 2],
-                 [9, -2]]
-Output: [[1, 9],
-        [2, -2]]
-Explanation: Converting rows into columns and columns into rows.
+Input: mat[][] = [[0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8]]
+Output: [[2, 1, 0],
+        [3, 4, 5],
+        [8, 7, 6]]
+Explanation: Major Diagonal = [0, 4, 8], Minor Diagonal = [2, 4, 6]. We are required to swap the diagonal elements of same row, thus after doing so, major diagonal will become minor and vice-versa. 
+Input: mat[][] = [[2, 3],
+                [5, 4]]
+Output: [[3, 2],
+         [4, 5]] 
+Explanation: Major Diagonal = [2, 4], Minor Diagonal = [3, 5]. We are required to swap the diagonal elements of same row, thus after doing so, major diagonal will become minor and vice-versa. 
 Constraints:
-1 ≤ n ≤ 103
--109 ≤ mat[i][j] ≤109
-
+1 ≤ mat.size() ≤ 500
+1 ≤ mat[i][j] ≤ 106
 
 
     
@@ -36,10 +34,11 @@ Constraints:
 ```
 
 class Solution:
-    def transpose(self, mat):
-        # code here
-        r=[[mat[j][i] for j in range(len(mat))]for i in range(len(mat[0]))]
-        return r
+    def swapDiagonal(self, mat):
+      # code here
+      for i in range(len(mat)):
+          mat[i][i],mat[i][n-i-1]=mat[i][n-i-1],mat[i][i]
+      return mat
         
 ```
 ---
