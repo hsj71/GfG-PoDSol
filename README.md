@@ -1,31 +1,40 @@
-# 13-12-25
+# 14-12-25
 ---
-## Swap diagonals
-Difficulty: EasyAccuracy: 82.28%Submissions: 6K+Points: 2Average Time: 9m
+## 2D Submatrix Sum Queries
+Difficulty: MediumAccuracy: 69.18%Submissions: 7K+Points: 4Average Time: 20m
 <pre>
 
-Given a square matrix mat[][], the task is to swap the elements of the major and minor diagonals.
 
-Major Diagonal: Elements that lie from the top-left corner to the bottom-right corner of the matrix (i.e., where row index equals column index).
-Minor Diagonal: Elements that lie from the top-right corner to the bottom-left corner (i.e., where the sum of row and column indices equals n - 1).
-Examples:
+Given a 2D integer matrix mat[][] and a list of queries queries[][], your task is to answer a series of submatrix sum queries.
 
-Input: mat[][] = [[0, 1, 2],
-                [3, 4, 5],
-                [6, 7, 8]]
-Output: [[2, 1, 0],
-        [3, 4, 5],
-        [8, 7, 6]]
-Explanation: Major Diagonal = [0, 4, 8], Minor Diagonal = [2, 4, 6]. We are required to swap the diagonal elements of same row, thus after doing so, major diagonal will become minor and vice-versa. 
-Input: mat[][] = [[2, 3],
-                [5, 4]]
-Output: [[3, 2],
-         [4, 5]] 
-Explanation: Major Diagonal = [2, 4], Minor Diagonal = [3, 5]. We are required to swap the diagonal elements of same row, thus after doing so, major diagonal will become minor and vice-versa. 
+Each query is represented as a list [r1, c1, r2, c2], where:
+
+(r1, c1) is the top-left coordinate of the submatrix
+(r2, c2) is the bottom-right coordinate of the submatrix (both inclusive)
+Your task is to return a list of integers, the sum of elements within the specified submatrix for each query.
+
+Examples: 
+
+Input: mat[][] = [[1, 2, 3], queries[][] = [[0, 0, 1, 1], [1, 0, 2, 2]]
+                [1, 1, 0],
+                [4, 2, 2]]
+Output: [5, 10]
+Explanation: 
+Query 1 selects submatrix [[1, 2], [1, 1]] → sum = 5.
+Query 2 selects submatrix [[1, 1, 0], [4, 2, 2]] → sum = 10.
+Input: mat[][] = [[1, 1, 1], queries[][] = [[1, 1, 2, 2], [0, 0, 2, 2], [0, 2, 2, 2]]
+                [1, 1, 1],
+                [1, 1, 1]]
+Output: [4, 9, 3]
+Explanation: 
+Query 1 selects submatrix [[1, 1], [1, 1]] → sum = 4.
+Query 2 selects submatrix [[1, 1, 1], [1, 1, 1], [1, 1, 1]] → sum = 9.
+Query 3 selects submatrix [[1], [1], [1]] → sum = 3.
 Constraints:
-1 ≤ mat.size() ≤ 500
-1 ≤ mat[i][j] ≤ 106
-
+1 ≤ n × m, q ≤ 105
+0 ≤ mat[i][j] ≤ 104
+0 ≤ r1 ≤ r2 ≤ n - 1
+0 ≤ c1 ≤ c2 ≤ m - 1
 
     
 </pre>
@@ -34,11 +43,21 @@ Constraints:
 ```
 
 class Solution:
-    def swapDiagonal(self, mat):
-      # code here
-      for i in range(len(mat)):
-          mat[i][i],mat[i][n-i-1]=mat[i][n-i-1],mat[i][i]
-      return mat
+    def prefixSum2D(self, mat, queries):
+        # code here 
+        m, n = len(mat), len(mat[0])
+        dp = [[0]*(n+1) for _ in range(m+1)]
+        
+        for r in range(m):
+            for c in range(n):
+                dp[r+1][c+1] = dp[r+1][c] + dp[r][c+1] - dp[r][c] + mat[r][c]
+        
+        ans = []
+        for r1, c1, r2, c2 in queries:
+            v = dp[r2+1][c2+1] - dp[r2+1][c1] - dp[r1][c2+1] + dp[r1][c1]
+            ans.append(v)
+        return ans
+
         
 ```
 ---
