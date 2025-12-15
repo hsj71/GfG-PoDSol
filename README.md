@@ -1,40 +1,22 @@
-# 14-12-25
+# 15-12-25
 ---
-## 2D Submatrix Sum Queries
-Difficulty: MediumAccuracy: 69.18%Submissions: 7K+Points: 4Average Time: 20m
+## Count Indices to Balance Even and Odd Sums
+Difficulty: MediumAccuracy: 75.22%Submissions: 6K+Points: 4
 <pre>
 
+Given an array arr[], count the number of indices such that deleting the element at that index and shifting all elements after it one position left results in an array where the sum of elements at even indices equals the sum at odd indices.
 
-Given a 2D integer matrix mat[][] and a list of queries queries[][], your task is to answer a series of submatrix sum queries.
+Examples:
 
-Each query is represented as a list [r1, c1, r2, c2], where:
-
-(r1, c1) is the top-left coordinate of the submatrix
-(r2, c2) is the bottom-right coordinate of the submatrix (both inclusive)
-Your task is to return a list of integers, the sum of elements within the specified submatrix for each query.
-
-Examples: 
-
-Input: mat[][] = [[1, 2, 3], queries[][] = [[0, 0, 1, 1], [1, 0, 2, 2]]
-                [1, 1, 0],
-                [4, 2, 2]]
-Output: [5, 10]
-Explanation: 
-Query 1 selects submatrix [[1, 2], [1, 1]] → sum = 5.
-Query 2 selects submatrix [[1, 1, 0], [4, 2, 2]] → sum = 10.
-Input: mat[][] = [[1, 1, 1], queries[][] = [[1, 1, 2, 2], [0, 0, 2, 2], [0, 2, 2, 2]]
-                [1, 1, 1],
-                [1, 1, 1]]
-Output: [4, 9, 3]
-Explanation: 
-Query 1 selects submatrix [[1, 1], [1, 1]] → sum = 4.
-Query 2 selects submatrix [[1, 1, 1], [1, 1, 1], [1, 1, 1]] → sum = 9.
-Query 3 selects submatrix [[1], [1], [1]] → sum = 3.
+Input: arr[] = [2, 1, 6, 4]
+Output: 1
+Explaination: After removing arr[1], the resulting array will be [2, 6, 4] the sums of elements at odd index is arr[1] = 6 and the sum of elements at even index is arr[0] + arr[2] = 6.
+Input: arr[] = [1, 1, 1]
+Output: 3
+Explaination: Removing any element makes the sum of odd and even indexed elements equal.
 Constraints:
-1 ≤ n × m, q ≤ 105
-0 ≤ mat[i][j] ≤ 104
-0 ≤ r1 ≤ r2 ≤ n - 1
-0 ≤ c1 ≤ c2 ≤ m - 1
+1 ≤ arr.size() ≤ 105
+0 ≤ arr[i] ≤ 104
 
     
 </pre>
@@ -43,20 +25,22 @@ Constraints:
 ```
 
 class Solution:
-    def prefixSum2D(self, mat, queries):
-        # code here 
-        m, n = len(mat), len(mat[0])
-        dp = [[0]*(n+1) for _ in range(m+1)]
+    def cntWays(self, arr):
+        # code here
+        arr = [arr[i] if i%2 == 0 else -arr[i] for i in range(len(arr))]
         
-        for r in range(m):
-            for c in range(n):
-                dp[r+1][c+1] = dp[r+1][c] + dp[r][c+1] - dp[r][c] + mat[r][c]
+        sols = []
+        ls = 0
+        s = sum(arr)
+        for i in range(len(arr)):
+            s = s - arr[i]
         
-        ans = []
-        for r1, c1, r2, c2 in queries:
-            v = dp[r2+1][c2+1] - dp[r2+1][c1] - dp[r1][c2+1] + dp[r1][c1]
-            ans.append(v)
-        return ans
+            if  ls - s == 0:
+                sols.append(i)
+        
+            ls = ls + arr[i]
+            
+        return len(sols)
 
         
 ```
