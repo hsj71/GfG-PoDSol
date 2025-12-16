@@ -1,22 +1,27 @@
-# 15-12-25
+# 16-12-25
 ---
-## Count Indices to Balance Even and Odd Sums
-Difficulty: MediumAccuracy: 75.22%Submissions: 6K+Points: 4
+## Strings Rotations of Each Other
+Difficulty: MediumAccuracy: 43.83%Submissions: 333K+Points: 4Average Time: 15m
 <pre>
 
-Given an array arr[], count the number of indices such that deleting the element at that index and shifting all elements after it one position left results in an array where the sum of elements at even indices equals the sum at odd indices.
+You are given two strings s1 and s2, of equal lengths. The task is to check if s2 is a rotated version of the string s1.
 
-Examples:
+Note: A string is a rotation of another if it can be formed by moving characters from the start to the end (or vice versa) without rearranging them.
 
-Input: arr[] = [2, 1, 6, 4]
-Output: 1
-Explaination: After removing arr[1], the resulting array will be [2, 6, 4] the sums of elements at odd index is arr[1] = 6 and the sum of elements at even index is arr[0] + arr[2] = 6.
-Input: arr[] = [1, 1, 1]
-Output: 3
-Explaination: Removing any element makes the sum of odd and even indexed elements equal.
+Examples :
+
+Input: s1 = "abcd", s2 = "cdab"
+Output: true
+Explanation: After 2 right rotations, s1 will become equal to s2.
+Input: s1 = "aab", s2 = "aba"
+Output: true
+Explanation: After 1 left rotation, s1 will become equal to s2.
+Input: s1 = "abcd", s2 = "acbd"
+Output: false
+Explanation: Strings are not rotations of each other.
 Constraints:
-1 ≤ arr.size() ≤ 105
-0 ≤ arr[i] ≤ 104
+1 ≤ s1.size(), s2.size() ≤ 105
+s1, s2 consists of lowercase English alphabets.
 
     
 </pre>
@@ -25,22 +30,9 @@ Constraints:
 ```
 
 class Solution:
-    def cntWays(self, arr):
+    def areRotations(self, s1, s2):
         # code here
-        arr = [arr[i] if i%2 == 0 else -arr[i] for i in range(len(arr))]
-        
-        sols = []
-        ls = 0
-        s = sum(arr)
-        for i in range(len(arr)):
-            s = s - arr[i]
-        
-            if  ls - s == 0:
-                sols.append(i)
-        
-            ls = ls + arr[i]
-            
-        return len(sols)
+        return s1 in s2+s2
 
         
 ```
