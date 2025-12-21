@@ -1,36 +1,30 @@
-# 19-12-25
+# 21-12-25
 ---
-## Bus Conductor
-Difficulty: EasyAccuracy: 75.3%Submissions: 29K+Points: 2
+## Count X in Range of a Sorted Array
+Difficulty: MediumAccuracy: 52.96%Submissions: 10K+Points: 4
 <pre>
 
-You are conductor of a bus. You are given two arrays chairs[] and passengers[] of equal length, where chairs[i] is the position of the ith chair and passengers[j] is the position of the jth passenger. You may perform the following move any number of times:
-
-Increase or decrease the position of the ith passenger by 1 (i.e., moving the ith passenger from position x to x+1 or x-1)
-Return the minimum number of moves required to move each passenger to get a chair.
-Note: Although multiple chairs can occupy the same position, each passenger must be assigned to exactly one unique chair.
+You are given a sorted array arr[] and a 2D array queries[][], where queries[i] represents a query in the form [l, r, x]. For each query, count how many times the number x appears in the subarray arr[l...r] (inclusive).
 
 Examples:
 
-Input: chairs[] = [3, 1, 5], passengers[] = [2, 7, 4]
-Output: 4
-Explanation: The passengers are moved as follows:
-- The first passenger is moved from position 2 to position 1 using 1 move.
-- The second passenger is moved from position 7 to position 5 using 2 moves.
-- The third passenger is moved from position 4 to position 3 using 1 move.
-In total, 1 + 2 + 1 = 4 moves were used.
-Input: chairs[] = [2, 2, 6, 6], passengers[] = [1, 3, 2, 6]
-Output: 4
-Explanation: Note that there are two chairs at position 2 and two chairs at position 6.
-The passangers are moved as follows:
-- The first passenger is moved from position 1 to position 2 using 1 move.
-- The second passenger is moved from position 3 to position 6 using 3 moves.
-- The third passenger is not moved.
-- The fourth passenger is not moved.
-In total, 1 + 3 + 0 + 0 = 4 moves were used.
+Input: arr[] = [1, 2, 2, 4, 5, 5, 5, 8], queries[][] = [[0, 7, 5], [1, 2, 2], [0, 3, 7]]
+Output: [3, 2, 0]
+Explanation:
+Query [0, 7, 5] → elements from index 0 to 7 are [1, 2, 2, 4, 5, 5, 5, 8].
+Number 5 occurs 3 times.
+Query [1, 2, 2] → subarray is [2, 2], and 2 occurs 2 times.
+Query [0, 3, 7] → subarray is [1, 2, 2, 4], and 7 is not present.
+Input: arr[] = [1, 3, 3, 3, 6, 7, 8], queries[][] = [[0, 3, 3], [4, 6, 3], [1, 5, 6]]
+Output: [3, 0, 1]
+Explanation:
+Query [0, 3, 3] → subarray [1, 3, 3, 3], and 3 appears 3 times.
+Query [4, 6, 3] → subarray [6, 7, 8], 3 not found.
+Query [1, 5, 6] → subarray [3, 3, 3, 6, 7], and 6 occurs 1 time.
 Constraints:
-1 ≤ n ≤ 105
-1 ≤ chairs[i], passengers[j] ≤ 104
+1 ≤ arr.size(), queries.size() ≤ 105
+1 ≤ arr[i], x ≤ 106
+0 ≤ l ≤ r < arr.size()
 	
 </pre>
 
@@ -38,14 +32,17 @@ Constraints:
 ```
 
 class Solution:
-    def findMoves(self, chairs, passengers):
+    def countXInRange(self, arr, queries):
         # code here
-        chairs.sort()
-        passengers.sort()
-        moves = 0
-        for c,p in zip(chairs, passengers):
-            moves += abs(c -p)
-        return moves
+        from bisect import bisect_left,bisect_right
+        l1=[]
+        for l,r,x in queries:
+            i=bisect_left(arr,x,l,r+1)
+            j=bisect_right(arr,x,l,r+1)
+            l1.append(j-i)
+        return l1
+
+
 
 
         
