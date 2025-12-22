@@ -1,30 +1,30 @@
-# 21-12-25
+# 22-12-25
 ---
-## Count X in Range of a Sorted Array
-Difficulty: MediumAccuracy: 52.96%Submissions: 10K+Points: 4
+## Row with max 1s
+Difficulty: MediumAccuracy: 33.09%Submissions: 370K+Points: 4
 <pre>
 
-You are given a sorted array arr[] and a 2D array queries[][], where queries[i] represents a query in the form [l, r, x]. For each query, count how many times the number x appears in the subarray arr[l...r] (inclusive).
 
+You are given a 2D binary array arr[][] consisting of only 1s and 0s. Each row of the array is sorted in non-decreasing order. Your task is to find and return the index of the first row that contains the maximum number of 1s. If no such row exists, return -1.
+
+Note:
+
+The array follows 0-based indexing.
+The number of rows and columns in the array are denoted by n and m respectively.
 Examples:
 
-Input: arr[] = [1, 2, 2, 4, 5, 5, 5, 8], queries[][] = [[0, 7, 5], [1, 2, 2], [0, 3, 7]]
-Output: [3, 2, 0]
-Explanation:
-Query [0, 7, 5] → elements from index 0 to 7 are [1, 2, 2, 4, 5, 5, 5, 8].
-Number 5 occurs 3 times.
-Query [1, 2, 2] → subarray is [2, 2], and 2 occurs 2 times.
-Query [0, 3, 7] → subarray is [1, 2, 2, 4], and 7 is not present.
-Input: arr[] = [1, 3, 3, 3, 6, 7, 8], queries[][] = [[0, 3, 3], [4, 6, 3], [1, 5, 6]]
-Output: [3, 0, 1]
-Explanation:
-Query [0, 3, 3] → subarray [1, 3, 3, 3], and 3 appears 3 times.
-Query [4, 6, 3] → subarray [6, 7, 8], 3 not found.
-Query [1, 5, 6] → subarray [3, 3, 3, 6, 7], and 6 occurs 1 time.
+Input: arr[][] = [[0,1,1,1], [0,0,1,1], [1,1,1,1], [0,0,0,0]]
+Output: 2
+Explanation: Row 2 contains the most number of 1s (4 1s). Hence, the output is 2.
+Input: arr[][] = [[0,0], [1,1]]
+Output: 1
+Explanation: Row 1 contains the most number of 1s (2 1s). Hence, the output is 1.
+Input: arr[][] = [[0,0], [0,0]]
+Output: -1
+Explanation: No row contains any 1s, so the output is -1.
 Constraints:
-1 ≤ arr.size(), queries.size() ≤ 105
-1 ≤ arr[i], x ≤ 106
-0 ≤ l ≤ r < arr.size()
+1 ≤ arr.size(), arr[i].size() ≤ 103
+0 ≤ arr[i][j] ≤ 1 
 	
 </pre>
 
@@ -32,18 +32,22 @@ Constraints:
 ```
 
 class Solution:
-    def countXInRange(self, arr, queries):
-        # code here
-        from bisect import bisect_left,bisect_right
-        l1=[]
-        for l,r,x in queries:
-            i=bisect_left(arr,x,l,r+1)
-            j=bisect_right(arr,x,l,r+1)
-            l1.append(j-i)
-        return l1
+     def rowWithMax1s(self, arr):
+          # code here
+          maxi = 0
+          index = 0
+          n = len(arr)
 
-
-
+          for i in range(n):
+               total = sum(arr[i])               
+               if total > maxi:
+                    maxi = total
+                    index = i
+          
+          if maxi == 0:
+               return -1
+          
+          return index
 
         
 ```
