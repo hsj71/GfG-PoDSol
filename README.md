@@ -1,22 +1,31 @@
-# 24-12-25
+# 25-12-25
 ---
-## Count elements less than or equal to k in a sorted rotated array
-Difficulty: MediumAccuracy: 58.52%Submissions: 10K+Points: 4Average Time: 15m
+## Find the Peak Element in a 2D Matrix
+Difficulty: MediumAccuracy: 57.85%Submissions: 9K+Points: 4
 <pre>
 
-Given a sorted array arr[] containing distinct positive integers that has been rotated at some unknown pivot, and a value x. Your task is to count the number of elements in the array that are less than or equal to x.
+
+Given a 2D matrix mat[][], identify any peak element within the matrix.
+
+An element is considered a peak if it is greater than or equal to its four immediate neighbors: top, bottom, left, and right. For corner and edge elements, any missing neighbors are treated as having a value of negative infinity.
+
+Note: A peak element is not necessarily the global maximum, it only needs to satisfy the condition relative to its adjacent elements. Multiple peak elements may exist, return any one of them.
+Note that the driver code will print true if you return the correct position of peak element, else it will print false.
 
 Examples:
 
-Input: arr[] = [4, 5, 8, 1, 3], x = 6
-Output: 4
-Explanation: 1, 3, 4 and 5 are less than 6, so the count of all elements less than 6 is 4.
-Input: arr[] = [6, 10, 12, 15, 2, 4, 5], x = 14
-Output: 6
-Explanation: All elements except 15 are less than 14, so the count of all elements less than 14 is 6.
-Constraints:
-1 ≤ arr.size() ≤ 105
-0 ≤ arr[i], x ≤ 109
+Input: mat[][] = [[10, 20, 15],           
+                [21, 30, 14],
+                 [7, 16, 32]]
+Output: true
+Explanation: One of the peak element is 30 at index (1, 1), which is greater than or equal to all its valid neighbors: Left = 21, Right = 14, Top = 20, Bottom = 16. So, it satisfies the peak condition. Alternatively, (2, 2) with value 32 also qualifies as a peak.
+Input: mat[][] = [[17, 7],
+                [11, 10]]
+Output: true
+Explanation: 17 is the only peak element at index (0, 0). Its neighbors are: Right= 7, Bottom = 11. Since 17 is greater than or equal to both (and top/left are out of bounds), it qualifies as a peak element.
+Constraint:
+1 ≤ n × m ≤ 106
+-106 ≤ mat[i][j] ≤ 106
 
 
 	
@@ -26,18 +35,19 @@ Constraints:
 ```
 
 class Solution:
-    def countLessEqual(self, arr, x):
-        #code here
-        arr.sort()
-        n = len(arr)
-        count = 0
-    
-        for i in range(n):
-             if arr[i] > x:
-                  break
-             count += 1
-    
-        return count
+    def findPeakGrid(self, mat):
+        # code here
+        n = len(mat)
+        m = len(mat[0])
+        arr = []
+        for row in mat:
+            arr.extend(row)
+            
+        maxi = max(arr)
+        idx = arr.index(maxi)
+        c = idx % m
+        r = idx // m
+        return [r, c]
 
         
 ```
