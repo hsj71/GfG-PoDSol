@@ -1,33 +1,27 @@
-# 25-12-25
+# 26-12-25
 ---
-## Find the Peak Element in a 2D Matrix
-Difficulty: MediumAccuracy: 57.85%Submissions: 9K+Points: 4
+## Kth Missing Positive Number in a Sorted Array
+Difficulty: MediumAccuracy: 53.02%Submissions: 49K+Points: 4
+
 <pre>
 
-
-Given a 2D matrix mat[][], identify any peak element within the matrix.
-
-An element is considered a peak if it is greater than or equal to its four immediate neighbors: top, bottom, left, and right. For corner and edge elements, any missing neighbors are treated as having a value of negative infinity.
-
-Note: A peak element is not necessarily the global maximum, it only needs to satisfy the condition relative to its adjacent elements. Multiple peak elements may exist, return any one of them.
-Note that the driver code will print true if you return the correct position of peak element, else it will print false.
+Given a sorted array of distinct positive integers arr[], You need to find the kth positive number that is missing from the arr[].
 
 Examples:
 
-Input: mat[][] = [[10, 20, 15],           
-                [21, 30, 14],
-                 [7, 16, 32]]
-Output: true
-Explanation: One of the peak element is 30 at index (1, 1), which is greater than or equal to all its valid neighbors: Left = 21, Right = 14, Top = 20, Bottom = 16. So, it satisfies the peak condition. Alternatively, (2, 2) with value 32 also qualifies as a peak.
-Input: mat[][] = [[17, 7],
-                [11, 10]]
-Output: true
-Explanation: 17 is the only peak element at index (0, 0). Its neighbors are: Right= 7, Bottom = 11. Since 17 is greater than or equal to both (and top/left are out of bounds), it qualifies as a peak element.
-Constraint:
-1 ≤ n × m ≤ 106
--106 ≤ mat[i][j] ≤ 106
-
-
+Input: arr[] = [2, 3, 4, 7, 11], k = 5
+Output: 9
+Explanation: Missing are 1, 5, 6, 8, 9, 10… and 5th missing number is 9.
+Input: arr[] = [1, 2, 3], k = 2
+Output: 5
+Explanation: Missing are 4, 5, 6… and 2nd missing number is 5.
+Input: arr[] = [3, 5, 9, 10, 11, 12], k = 2
+Output: 2
+Explanation: Missing are 1, 2, 4, 6… and 2nd missing number is 2.
+Constraints:
+1 ≤ arr.size() ≤ 105
+1 ≤ k ≤ 105
+1 ≤ arr[i] ≤ 106
 	
 </pre>
 
@@ -35,19 +29,19 @@ Constraint:
 ```
 
 class Solution:
-    def findPeakGrid(self, mat):
+    def kthMissing(self, arr, k):
         # code here
-        n = len(mat)
-        m = len(mat[0])
-        arr = []
-        for row in mat:
-            arr.extend(row)
-            
-        maxi = max(arr)
-        idx = arr.index(maxi)
-        c = idx % m
-        r = idx // m
-        return [r, c]
+        left=0
+        right=len(arr)
+        while left<right:
+            mid=left+(right-left)//2
+            if k>arr[mid]-mid-1:
+                left=mid+1
+            else:
+                right=mid
+        return k+left
+
+
 
         
 ```
