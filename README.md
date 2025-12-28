@@ -1,30 +1,36 @@
-# 27-12-25
+# 28-12-25
 ---
-## Kth smallest element in a Matrix
-Difficulty: MediumAccuracy: 61.42%Submissions: 82K+Points: 4Average Time: 35m
+## Minimum time to fulfil all orders
+Difficulty: HardAccuracy: 63.04%Submissions: 15K+Points: 8
 
 <pre>
 
 
-Given a matrix mat[][] of size n*n, where each row and column is sorted in non-decreasing order. Find the kth smallest element in the matrix.
+Minimum time to fulfil all orders
+Difficulty: HardAccuracy: 63.04%Submissions: 15K+Points: 8
+Geek is organizing a party at his house. For the party, he needs exactly n donuts for the guests. Geek decides to order the donuts from a nearby restaurant, which has m chefs and each chef has a rank r.
+A chef with rank r can make 1 donut in the first r minutes, 1 more donut in the next 2r minutes, 1 more donut in the next 3r minutes, and so on.
+For example, a chef with rank 2, can make one donut in 2 minutes, one more donut in the next 4 minutes, and one more in the next 6 minutes. So, it take 2 + 4 + 6 = 12 minutes to make 3 donuts. A chef can move on to making the next donut only after completing the previous one. All the chefs can work simultaneously.
+Since, it's time for the party, Geek wants to know the minimum time required in completing n donuts. Return an integer denoting the minimum time.
 
 Examples:
-Input: mat[][] = [[16, 28, 60, 64], k = 3
-                [22, 41, 63, 91],
-                [27, 50, 87, 93],
-                [36, 78, 87, 94]]
-Output: 27
-Explanation: 27 is the 3rd smallest element.
-Input: mat[][] = [[10, 20, 30, 40], k = 7
-                [15, 25, 35, 45],
-                [24, 29, 37, 48],
-                [32, 33, 39, 50]] 
-Output: 30
-Explanation: 30 is the 7th smallest element.
+
+Input: n = 10, rank[] = [1, 2, 3, 4]
+Output: 12
+Explanation: 
+Chef with rank 1, can make 4 donuts in time 1 + 2 + 3 + 4 = 10 mins
+Chef with rank 2, can make 3 donuts in time 2 + 4 + 6 = 12 mins
+Chef with rank 3, can make 2 donuts in time 3 + 6 = 9 mins
+Chef with rank 4, can make 1 donuts in time = 4 minutes
+Total donuts = 4 + 3 + 2 + 1 = 10 and total time = 12 minutes.
+Input: n = 8, rank[] = [1, 1, 1, 1, 1, 1, 1, 1]
+Output: 1
+Explanation: As all chefs are ranked 1, so each chef can make 1 donuts in 1 min.
+Total donuts = 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 = 8 and total time = 1 minute.
 Constraints:
-1 ≤ n ≤ 500
-1 ≤ mat[i][j] ≤ 104
-1 ≤ k ≤ n*n
+1 ≤ n ≤ 103
+1 ≤ m ≤ 104
+1 ≤ rank[i] ≤ 100
 	
 </pre>
 
@@ -32,30 +38,15 @@ Constraints:
 ```
 
 class Solution:
-    def kthSmallest(self, mat, k):
-        # code here
-        def help(mat,x):
-            n=len(mat)
-            i,j=0,n-1
-            ans=0
-            while j>=0 and i<=n-1:
-                if mat[i][j]>x:
-                    j-=1
-                else:
-                    i+=1
-                    ans+=(j+1)
-            return ans
-            
-        n=len(mat)
-        l,h=mat[0][0],mat[n-1][n-1]
-        while l<=h:
-            mid=(l+h)//2
-            if help(mat,mid)>=k:
-                h=mid-1
-            else:
-                l=mid+1
-        return h+1
-
+    def minTime(self, ranks, n):
+        from heapq import heapify, heapreplace
+        h = [(r, 1, r) for r in ranks]
+        heapify(h)
+        for _ in range(n - 1):
+            total_time, donut_count, rank = h[0]
+            heapreplace(h, (total_time + (donut_count + 1) * rank, donut_count + 1, rank))
+        return h[0][0]
+        
 
         
 ```
