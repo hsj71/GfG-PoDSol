@@ -1,36 +1,27 @@
-# 28-12-25
+# 29-12-25
 ---
-## Minimum time to fulfil all orders
-Difficulty: HardAccuracy: 63.04%Submissions: 15K+Points: 8
+## K-th element of two Arrays
+Difficulty: MediumAccuracy: 37.4%Submissions: 386K+Points: 4Average Time: 15m
 
 <pre>
 
 
-Minimum time to fulfil all orders
-Difficulty: HardAccuracy: 63.04%Submissions: 15K+Points: 8
-Geek is organizing a party at his house. For the party, he needs exactly n donuts for the guests. Geek decides to order the donuts from a nearby restaurant, which has m chefs and each chef has a rank r.
-A chef with rank r can make 1 donut in the first r minutes, 1 more donut in the next 2r minutes, 1 more donut in the next 3r minutes, and so on.
-For example, a chef with rank 2, can make one donut in 2 minutes, one more donut in the next 4 minutes, and one more in the next 6 minutes. So, it take 2 + 4 + 6 = 12 minutes to make 3 donuts. A chef can move on to making the next donut only after completing the previous one. All the chefs can work simultaneously.
-Since, it's time for the party, Geek wants to know the minimum time required in completing n donuts. Return an integer denoting the minimum time.
+Given two sorted arrays a[] and b[] and an element k, the task is to find the element that would be at the kth position of the combined sorted array.
 
-Examples:
+Examples :
 
-Input: n = 10, rank[] = [1, 2, 3, 4]
-Output: 12
-Explanation: 
-Chef with rank 1, can make 4 donuts in time 1 + 2 + 3 + 4 = 10 mins
-Chef with rank 2, can make 3 donuts in time 2 + 4 + 6 = 12 mins
-Chef with rank 3, can make 2 donuts in time 3 + 6 = 9 mins
-Chef with rank 4, can make 1 donuts in time = 4 minutes
-Total donuts = 4 + 3 + 2 + 1 = 10 and total time = 12 minutes.
-Input: n = 8, rank[] = [1, 1, 1, 1, 1, 1, 1, 1]
-Output: 1
-Explanation: As all chefs are ranked 1, so each chef can make 1 donuts in 1 min.
-Total donuts = 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 = 8 and total time = 1 minute.
+Input: a[] = [2, 3, 6, 7, 9], b[] = [1, 4, 8, 10], k = 5
+Output: 6
+Explanation: The final combined sorted array would be [1, 2, 3, 4, 6, 7, 8, 9, 10]. The 5th element of this array is 6.
+Input: a[] = [1, 4, 8, 10, 12], b[] = [5, 7, 11, 15, 17], k = 6
+Output: 10
+Explanation: Combined sorted array is [1, 4, 5, 7, 8, 10, 11, 12, 15, 17]. The 6th element of this array is 10.
 Constraints:
-1 ≤ n ≤ 103
-1 ≤ m ≤ 104
-1 ≤ rank[i] ≤ 100
+1 ≤ a.size(), b.size() ≤ 106
+1 ≤ k ≤ a.size() + b.size()
+0 ≤ a[i], b[i] ≤ 108
+
+
 	
 </pre>
 
@@ -38,14 +29,12 @@ Constraints:
 ```
 
 class Solution:
-    def minTime(self, ranks, n):
-        from heapq import heapify, heapreplace
-        h = [(r, 1, r) for r in ranks]
-        heapify(h)
-        for _ in range(n - 1):
-            total_time, donut_count, rank = h[0]
-            heapreplace(h, (total_time + (donut_count + 1) * rank, donut_count + 1, rank))
-        return h[0][0]
+    def kthElement(self, a, b, k):
+        # code here
+        arr=a+b
+        arr.sort()
+        return arr[k-1]
+        
         
 
         
