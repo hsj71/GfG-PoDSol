@@ -1,39 +1,82 @@
-# 29-12-25
+# 30-12-25
 ---
-## K-th element of two Arrays
-Difficulty: MediumAccuracy: 37.4%Submissions: 386K+Points: 4Average Time: 15m
+## Add Number Linked Lists
+Difficulty: MediumAccuracy: 34.52%Submissions: 371K+Points: 4Average Time: 30m
 
 <pre>
 
 
-Given two sorted arrays a[] and b[] and an element k, the task is to find the element that would be at the kth position of the combined sorted array.
+You are given the head of two singly linked lists head1 and head2 representing two non-negative integers. You have to return the head of the linked list representing the sum of these two numbers.
 
-Examples :
+Note: There can be leading zeros in the input lists, but there should not be any leading zeros in the output list.
 
-Input: a[] = [2, 3, 6, 7, 9], b[] = [1, 4, 8, 10], k = 5
-Output: 6
-Explanation: The final combined sorted array would be [1, 2, 3, 4, 6, 7, 8, 9, 10]. The 5th element of this array is 6.
-Input: a[] = [1, 4, 8, 10, 12], b[] = [5, 7, 11, 15, 17], k = 6
-Output: 10
-Explanation: Combined sorted array is [1, 4, 5, 7, 8, 10, 11, 12, 15, 17]. The 6th element of this array is 10.
+Examples:
+
+Input: 
+    
+Output:  1 -> 1 -> 2 -> 2
+Explanation: Given numbers are 123 and 999. There sum is 1122.
+    
+Input: 
+    
+Output: 7 -> 0 
+Explanation: Given numbers are 63 and 7. There sum is 70.
+    
 Constraints:
-1 ≤ a.size(), b.size() ≤ 106
-1 ≤ k ≤ a.size() + b.size()
-0 ≤ a[i], b[i] ≤ 108
-
-
+1 ≤ Number of nodes in head1, head2 ≤ 105
+0 ≤ node->data ≤ 9
 	
 </pre>
 
 ---
 ```
 
+'''
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+'''
+
 class Solution:
-    def kthElement(self, a, b, k):
+    def find(self, head):
+        if head.next == None:
+            return 1
+        return 1 + self.find(head.next)
+    
+    def generate(self, head1, head2, skip):
+        if head1 == None and head2 == None:
+            return None, 0
+        val = head1.data
+        if skip <= 0:
+            val += head2.data
+        node_next, rem = self.generate(
+            head1.next,
+            head2 if skip > 0 else head2.next,
+            skip - 1
+        )
+        val += rem
+        node = Node(val%10)
+        node.next = node_next
+        return node, val//10
+        
+    def addTwoLists(self, head1, head2):
         # code here
-        arr=a+b
-        arr.sort()
-        return arr[k-1]
+        len_1 = self.find(head1)
+        len_2 = self.find(head2)
+        out = []
+        if len_1 > len_2:
+            out, car = self.generate(head1, head2, len_1 - len_2)
+        else:
+            out, car = self.generate(head2, head1, len_2 - len_1)
+        if car:
+            node = Node(car)
+            node.next = out
+            return node
+        while out.data == 0:
+            out = out.next
+        return out
+        
         
         
 
