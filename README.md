@@ -1,30 +1,25 @@
-# 30-12-25
+# 31-12-25
 ---
-## Add Number Linked Lists
-Difficulty: MediumAccuracy: 34.52%Submissions: 371K+Points: 4Average Time: 30m
-
+## Palindrome Linked List
+Difficulty: MediumAccuracy: 41.48%Submissions: 382K+Points: 4Average Time: 20m
 <pre>
 
 
-You are given the head of two singly linked lists head1 and head2 representing two non-negative integers. You have to return the head of the linked list representing the sum of these two numbers.
-
-Note: There can be leading zeros in the input lists, but there should not be any leading zeros in the output list.
+You are given the head of a singly linked list of positive integers. You have to check if the given linked list is palindrome or not.
 
 Examples:
 
-Input: 
-    
-Output:  1 -> 1 -> 2 -> 2
-Explanation: Given numbers are 123 and 999. There sum is 1122.
-    
-Input: 
-    
-Output: 7 -> 0 
-Explanation: Given numbers are 63 and 7. There sum is 70.
-    
+Input:
+   
+Output: true
+Explanation: The given linked list is 1 -> 2 -> 1 -> 1 -> 2 -> 1, which is a palindrome.
+Input:
+   
+Output: false
+Explanation: The given linked list is 10 -> 20 -> 30 -> 40 -> 50, which is not a palindrome.
 Constraints:
-1 ≤ Number of nodes in head1, head2 ≤ 105
-0 ≤ node->data ≤ 9
+1 ≤ number of nodes ≤ 105
+0 ≤ node->data ≤ 103
 	
 </pre>
 
@@ -36,46 +31,18 @@ class Node:
     def __init__(self, data):
         self.data = data
         self.next = None
+
 '''
 
 class Solution:
-    def find(self, head):
-        if head.next == None:
-            return 1
-        return 1 + self.find(head.next)
-    
-    def generate(self, head1, head2, skip):
-        if head1 == None and head2 == None:
-            return None, 0
-        val = head1.data
-        if skip <= 0:
-            val += head2.data
-        node_next, rem = self.generate(
-            head1.next,
-            head2 if skip > 0 else head2.next,
-            skip - 1
-        )
-        val += rem
-        node = Node(val%10)
-        node.next = node_next
-        return node, val//10
-        
-    def addTwoLists(self, head1, head2):
+    def isPalindrome(self, head):
         # code here
-        len_1 = self.find(head1)
-        len_2 = self.find(head2)
-        out = []
-        if len_1 > len_2:
-            out, car = self.generate(head1, head2, len_1 - len_2)
-        else:
-            out, car = self.generate(head2, head1, len_2 - len_1)
-        if car:
-            node = Node(car)
-            node.next = out
-            return node
-        while out.data == 0:
-            out = out.next
-        return out
+        s=[]
+        while head:
+            s.append(str(head.data))
+            head = head.next
+        return all(s[i] == s[len(s) - i - 1] for i in range(len(s) // 2))
+        
         
         
         
