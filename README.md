@@ -1,52 +1,47 @@
-# 31-12-25
+# 01-12-26
 ---
-## Palindrome Linked List
-Difficulty: MediumAccuracy: 41.48%Submissions: 382K+Points: 4Average Time: 20m
+## Intersection in Y Shaped Lists
+Difficulty: MediumAccuracy: 44.67%Submissions: 318K+Points: 4Average Time: 45m
 <pre>
 
 
-You are given the head of a singly linked list of positive integers. You have to check if the given linked list is palindrome or not.
+You are given the heads of two non-empty singly linked lists, head1 and head2, that intersect at a certain point. Return that Node where these two linked lists intersect.
 
+Note: It is guaranteed that the intersected node always exists.
+
+In the custom input you have to give input for CommonList which pointed at the end of both head1 and head2 to form a Y-shaped linked list.
 Examples:
 
-Input:
-   
-Output: true
-Explanation: The given linked list is 1 -> 2 -> 1 -> 1 -> 2 -> 1, which is a palindrome.
-Input:
-   
-Output: false
-Explanation: The given linked list is 10 -> 20 -> 30 -> 40 -> 50, which is not a palindrome.
+Input: head1: 10 -> 15 -> 30, head2: 3 -> 6 -> 9 -> 15 -> 30
+Output: 15
+Explanation: From the above image, it is clearly seen that the common part is 15 -> 30, whose starting point is 15.
+    
+Input: head1: 4 -> 1 -> 8 -> 5, head2: 5 -> 6 -> 1 -> 8 -> 5
+Output: 1
+Explanation: From the above image, it is clearly seen that the common part is 1 -> 8 -> 5, whose starting point is 1.
+    
 Constraints:
-1 ≤ number of nodes ≤ 105
-0 ≤ node->data ≤ 103
+2 ≤ total number of nodes ≤ 2*105
+-104 ≤ node->data ≤ 104
 	
 </pre>
 
 ---
 ```
-
 '''
 class Node:
     def __init__(self, data):
         self.data = data
         self.next = None
-
 '''
-
 class Solution:
-    def isPalindrome(self, head):
+    def intersectPoint(self, head1, head2):
         # code here
-        s=[]
-        while head:
-            s.append(str(head.data))
-            head = head.next
-        return all(s[i] == s[len(s) - i - 1] for i in range(len(s) // 2))
-        
-        
-        
-        
-
+        p1, p2 = head1, head2
+        while p1 is not p2:
+            p1 = p1.next if p1 else head2
+            p2 = p2.next if p2 else head1
+        return p1
         
 ```
 ---
