@@ -1,47 +1,49 @@
-# 01-12-26
+# 02-12-26
 ---
-## Intersection in Y Shaped Lists
-Difficulty: MediumAccuracy: 44.67%Submissions: 318K+Points: 4Average Time: 45m
+## Sort 0s, 1s and 2s
+Difficulty: MediumAccuracy: 50.58%Submissions: 833K+Points: 4Average Time: 10m
 <pre>
 
+Given an array arr[] containing only 0s, 1s, and 2s. Sort the array in ascending order.
+Note: You need to solve this problem without utilizing the built-in sort function.
 
-You are given the heads of two non-empty singly linked lists, head1 and head2, that intersect at a certain point. Return that Node where these two linked lists intersect.
-
-Note: It is guaranteed that the intersected node always exists.
-
-In the custom input you have to give input for CommonList which pointed at the end of both head1 and head2 to form a Y-shaped linked list.
 Examples:
 
-Input: head1: 10 -> 15 -> 30, head2: 3 -> 6 -> 9 -> 15 -> 30
-Output: 15
-Explanation: From the above image, it is clearly seen that the common part is 15 -> 30, whose starting point is 15.
-    
-Input: head1: 4 -> 1 -> 8 -> 5, head2: 5 -> 6 -> 1 -> 8 -> 5
-Output: 1
-Explanation: From the above image, it is clearly seen that the common part is 1 -> 8 -> 5, whose starting point is 1.
-    
+Input: arr[] = [0, 1, 2, 0, 1, 2]
+Output: [0, 0, 1, 1, 2, 2]
+Explanation: 0s, 1s and 2s are segregated into ascending order.
+Input: arr[] = [0, 1, 1, 0, 1, 2, 1, 2, 0, 0, 0, 1]
+Output: [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2]
+Explanation: 0s, 1s and 2s are segregated into ascending order.
+Follow up: Could you come up with a one-pass algorithm using only constant extra space?
+
 Constraints:
-2 ≤ total number of nodes ≤ 2*105
--104 ≤ node->data ≤ 104
+1 ≤ arr.size() ≤ 106
+0 ≤ arr[i] ≤ 2
+
+
 	
 </pre>
 
 ---
 ```
-'''
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
-'''
 class Solution:
-    def intersectPoint(self, head1, head2):
-        # code here
-        p1, p2 = head1, head2
-        while p1 is not p2:
-            p1 = p1.next if p1 else head2
-            p2 = p2.next if p2 else head1
-        return p1
+    def sort012(self, arr):
+        low = 0
+        mid = 0
+        high = len(arr) - 1
+        while mid <= high:
+            if arr[mid] == 0:
+                arr[low] , arr[mid] = arr[mid], arr[low]
+                low += 1
+                mid += 1
+                
+            elif arr[mid] == 1:
+                mid += 1
+                
+            else:
+                arr[mid], arr[high] = arr[high], arr[mid]
+                high -= 1
         
 ```
 ---
