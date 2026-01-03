@@ -1,4 +1,4 @@
-# 03-12-26
+# 03-01-26
 ---
 ## Flattening a Linked List
 Difficulty: MediumAccuracy: 51.53%Submissions: 205K+Points: 4Average Time: 40m
