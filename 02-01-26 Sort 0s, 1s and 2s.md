@@ -1,4 +1,4 @@
-# 02-12-26
+# 02-01-26
 ---
 ## Sort 0s, 1s and 2s
 Difficulty: MediumAccuracy: 50.58%Submissions: 833K+Points: 4Average Time: 10m
