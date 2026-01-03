@@ -1,49 +1,75 @@
-# 02-12-26
+# 03-12-26
 ---
-## Sort 0s, 1s and 2s
-Difficulty: MediumAccuracy: 50.58%Submissions: 833K+Points: 4Average Time: 10m
+## Flattening a Linked List
+Difficulty: MediumAccuracy: 51.53%Submissions: 205K+Points: 4Average Time: 40m
 <pre>
 
-Given an array arr[] containing only 0s, 1s, and 2s. Sort the array in ascending order.
-Note: You need to solve this problem without utilizing the built-in sort function.
+Given a linked list containing n head nodes where every node in the linked list contains two pointers:
+(i) next points to the next node in the list.
+(ii) bottom points to a sub-linked list where the current node is the head.
+Each of the sub-linked lists nodes and the head nodes are sorted in ascending order based on their data. Flatten the linked list such that all the nodes appear in a single level while maintaining the sorted order.
+
+Note:
+1. ↓ represents the bottom pointer and → represents the next pointer.
+2. The flattened list will be printed using the bottom pointer instead of the next pointer.
 
 Examples:
 
-Input: arr[] = [0, 1, 2, 0, 1, 2]
-Output: [0, 0, 1, 1, 2, 2]
-Explanation: 0s, 1s and 2s are segregated into ascending order.
-Input: arr[] = [0, 1, 1, 0, 1, 2, 1, 2, 0, 0, 0, 1]
-Output: [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2]
-Explanation: 0s, 1s and 2s are segregated into ascending order.
-Follow up: Could you come up with a one-pass algorithm using only constant extra space?
+Input:
 
+Output: 5 -> 7 -> 8 -> 10 -> 19 -> 20 -> 22 -> 28 -> 40 -> 45.
+Explanation: 
+Bottom pointer of 5 is pointing to 7.
+Bottom pointer of 7 is pointing to 8.
+Bottom pointer of 10 is pointing to 20 and so on.
+So, after flattening the linked list the sorted list will be 
+5 -> 7 -> 8 -> 10 -> 19 -> 20 -> 22 -> 28 -> 40 -> 45.
+Input:
+
+Output: 5 -> 7 -> 8 -> 10 -> 19 -> 22 -> 28 -> 30 -> 50
+Explanation:
+Bottom pointer of 5 is pointing to 7.
+Bottom pointer of 7 is pointing to 8.
+Bottom pointer of 8 is pointing to 30 and so on.
+So, after flattening the linked list the sorted list will be 
+5 -> 7 -> 8 -> 10 -> 19 -> 22 -> 28 -> 30 -> 50.
 Constraints:
-1 ≤ arr.size() ≤ 106
-0 ≤ arr[i] ≤ 2
-
-
-	
+0 ≤ n ≤ 100
+1 ≤ number of nodes in sub-linked list(mi) ≤ 50
+1 ≤ node->data ≤ 104
 </pre>
 
 ---
 ```
+'''
+class Node:
+    def __init__(self, d):
+        self.data=d
+        self.next=None
+        self.bottom=None
+        
+'''
+
 class Solution:
-    def sort012(self, arr):
-        low = 0
-        mid = 0
-        high = len(arr) - 1
-        while mid <= high:
-            if arr[mid] == 0:
-                arr[low] , arr[mid] = arr[mid], arr[low]
-                low += 1
-                mid += 1
-                
-            elif arr[mid] == 1:
-                mid += 1
-                
+    def flatten(self, root):
+        from heapq import heapify, heapreplace, heappop
+        h = []
+        head, order = root, 0
+        while head:
+            h.append((head.data, order, head))
+            head.next, head = None, head.next
+            order += 1
+        dummy = tail = Node(-1)
+        while h:
+            _, order, node = h[0]
+            tail.bottom = tail = node
+            if node.bottom:
+                heapreplace(h, (node.bottom.data, order, node.bottom))
             else:
-                arr[mid], arr[high] = arr[high], arr[mid]
-                high -= 1
+                heappop(h)
+        tail.bottom = None
+        return dummy.bottom
+ 
         
 ```
 ---
