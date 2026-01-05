@@ -1,48 +1,42 @@
-# 04-01-26
+# 05-01-26
 ---
-## Sort 0s, 1s and 2s
-Difficulty: MediumAccuracy: 50.58%Submissions: 835K+Points: 4Average Time: 10m
+## Max Sum Subarray of size K
+Difficulty: EasyAccuracy: 49.6%Submissions: 239K+Points: 2
 <pre>
 
+Given an array of integers arr[]  and a number k. Return the maximum sum of a subarray of size k.
 
-Given an array arr[] containing only 0s, 1s, and 2s. Sort the array in ascending order.
-Note: You need to solve this problem without utilizing the built-in sort function.
+Note: A subarray is a contiguous part of any given array.
 
 Examples:
 
-Input: arr[] = [0, 1, 2, 0, 1, 2]
-Output: [0, 0, 1, 1, 2, 2]
-Explanation: 0s, 1s and 2s are segregated into ascending order.
-Input: arr[] = [0, 1, 1, 0, 1, 2, 1, 2, 0, 0, 0, 1]
-Output: [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2]
-Explanation: 0s, 1s and 2s are segregated into ascending order.
-Follow up: Could you come up with a one-pass algorithm using only constant extra space?
-
+Input: arr[] = [100, 200, 300, 400], k = 2
+Output: 700
+Explanation: arr2 + arr3 = 700, which is maximum.
+Input: arr[] = [1, 4, 2, 10, 23, 3, 1, 0, 20], k = 4
+Output: 39
+Explanation: arr1 + arr2 + arr3 + arr4 = 39, which is maximum.
+Input: arr[] = [100, 200, 300, 400], k = 1
+Output: 400
+Explanation: arr3 = 400, which is maximum.
 Constraints:
 1 ≤ arr.size() ≤ 106
-0 ≤ arr[i] ≤ 2
+1 ≤ arr[i] ≤ 106
+1 ≤ k ≤ arr.size()
     
 </pre>
 
 ---
 ```
 class Solution:
-    def sort012(self, arr):
-        low = 0
-        mid = 0
-        high = len(arr) - 1
-        while mid <= high:
-            if arr[mid] == 0:
-                arr[low] , arr[mid] = arr[mid], arr[low]
-                low += 1
-                mid += 1
-                
-            elif arr[mid] == 1:
-                mid += 1
-                
-            else:
-                arr[mid], arr[high] = arr[high], arr[mid]
-                high -= 1
+    def maxSubarraySum(self, arr, k):
+        res = curr_sum = sum(arr[:k])
+        pos = 0
+        for i in arr[k:]:
+            curr_sum += (arr[k+pos]-arr[pos])
+            res = max(res, curr_sum)
+            pos+=1
+        return res
  
         
 ```
