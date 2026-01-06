@@ -1,27 +1,25 @@
-# 05-01-26
+# 06-01-26
 ---
-## Max Sum Subarray of size K
-Difficulty: EasyAccuracy: 49.6%Submissions: 239K+Points: 2
+## Max Xor Subarray of size K
+Difficulty: MediumAccuracy: 55.63%Submissions: 13K+Points: 4Average Time: 15m
 <pre>
 
-Given an array of integers arr[]  and a number k. Return the maximum sum of a subarray of size k.
+
+Given an array of integers arr[]  and a number k. Return the maximum xor of a subarray of size k.
 
 Note: A subarray is a contiguous part of any given array.
 
 Examples:
 
-Input: arr[] = [100, 200, 300, 400], k = 2
-Output: 700
-Explanation: arr2 + arr3 = 700, which is maximum.
-Input: arr[] = [1, 4, 2, 10, 23, 3, 1, 0, 20], k = 4
-Output: 39
-Explanation: arr1 + arr2 + arr3 + arr4 = 39, which is maximum.
-Input: arr[] = [100, 200, 300, 400], k = 1
-Output: 400
-Explanation: arr3 = 400, which is maximum.
+Input: arr[] = [2, 5, 8, 1, 1, 3], k = 3
+Output: 15
+Explanation: arr[0] ^ arr[1] ^ arr[2] = 15, which is maximum.
+Input: arr[] = [1, 2, 4, 5, 6] , k = 2
+Output: 6
+Explanation: arr[1] ^ arr[2] = 6, which is maximum.
 Constraints:
 1 ≤ arr.size() ≤ 106
-1 ≤ arr[i] ≤ 106
+0 ≤ arr[i] ≤ 106
 1 ≤ k ≤ arr.size()
     
 </pre>
@@ -29,14 +27,16 @@ Constraints:
 ---
 ```
 class Solution:
-    def maxSubarraySum(self, arr, k):
-        res = curr_sum = sum(arr[:k])
-        pos = 0
-        for i in arr[k:]:
-            curr_sum += (arr[k+pos]-arr[pos])
-            res = max(res, curr_sum)
-            pos+=1
-        return res
+    def maxSubarrayXOR(self, arr, k):
+        sub = 0
+        for i in range(k):
+            sub ^= arr[i]
+        ans = sub
+        for i in range(k,len(arr)):
+            sub ^= arr[i-k]
+            sub ^= arr[i]
+            ans = max(ans,sub)
+        return ans
  
         
 ```
