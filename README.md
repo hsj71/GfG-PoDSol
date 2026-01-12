@@ -1,31 +1,33 @@
-# 11-01-26
+# 12-01-26
 ---
-## Minimum Window Subsequence
-Difficulty: MediumAccuracy: 49.43%Submissions: 23K+Points: 4Average Time: 45m
+## K Sized Subarray Maximum
+Difficulty: MediumAccuracy: 26.04%Submissions: 423K+Points: 4
 <pre>
 
 
-You are given two strings, s1 and s2. Your task is to find the smallest substring in s1 such that s2 appears as a subsequence within that substring.
-
-The characters of s2 must appear in the same sequence within the substring of s1.
-If there are multiple valid substrings of the same minimum length, return the one that appears first in s1.
-If no such substring exists, return an empty string.
-Note: Both the strings contain only lowercase english letters.
+Given an array arr[] of positive integers and an integer k. You have to find the maximum value for each contiguous subarray of size k. Return an array of maximum values corresponding to each contiguous subarray.
 
 Examples:
 
-Input: s1 = "geeksforgeeks", s2 = "eksrg"
-Output: "eksforg"
-Explanation: "eksforg" satisfies all required conditions. s2 is its subsequence and it is smallest and leftmost among all possible valid substrings of s1.
-Input: s1 = "abcdebdde", s2 = "bde" 
-Output: "bcde"
-Explanation:  "bcde" and "bdde" are two substring of s1 where s2 occurs as subsequence but "bcde" occur first so we return that.
-Input: s1 = "ad", s2 = "b" 
-Output: ""
-Explanation: There is no substring exists.
+Input: arr[] = [1, 2, 3, 1, 4, 5, 2, 3, 6], k = 3
+Output: [3, 3, 4, 5, 5, 5, 6]
+Explanation: 
+1st contiguous subarray [1, 2, 3], max = 3
+2nd contiguous subarray [2, 3, 1], max = 3
+3rd contiguous subarray [3, 1, 4], max = 4
+4th contiguous subarray [1, 4, 5], max = 5
+5th contiguous subarray [4, 5, 2], max = 5
+6th contiguous subarray [5, 2, 3], max = 5
+7th contiguous subarray [2, 3, 6], max = 6
+Input: arr[] = [5, 1, 3, 4, 2], k = 1
+Output: [5, 1, 3, 4, 2]
+Explanation: When k = 1, each element in the array is its own subarray, so the output is simply the same array
 Constraints:
-1 ≤ s1.length ≤ 104
-1 ≤ s2.length ≤ 50
+1 ≤ arr.size() ≤ 106
+1 ≤ k ≤ arr.size()
+0 ≤ arr[i] ≤ 109
+
+
 
 
 </pre>
@@ -33,38 +35,28 @@ Constraints:
 ---
 ```
 class Solution:
-    def minWindow(self, s1, s2):
-        n,m=len(s1),len(s2)
-        inf = 10**9
-        dp = {}
-        
-        def solve(i,j):
-            if j==m:
-                return i
+    def maxOfSubarrays(self, arr, k):
+        # code here
+        st=[]
+        l=len(arr)
+        ans=[0 for _ in range(l-k+1)]
+        def pus(st,ele):
+            while st and st[-1]<ele:
+                st.pop()
+            st.append(ele)
             
-            if i==n:
-                return inf
+        def po(st,ele):
+            if st and st[0]==ele:
+                st.pop(0)
+                
+        for i in range(k-1):
+            pus(st,arr[i])
             
-            if (i,j) in dp:
-                return dp[(i,j)]
-            
-            if s1[i]==s2[j]:
-                dp[(i,j)] = solve(i+1,j+1)
-            else:
-                dp[(i,j)] = solve(i+1,j)
-            return dp[(i,j)]
-        
-        start=-1
-        min_ = inf
-        
-        for i in range(n):
-            if s1[i]==s2[0]:
-                end = solve(i,0)
-                if end!=inf and end-i<min_:
-                    min_ = end-i
-                    start = i
-        
-        return "" if start==-1 else s1[start:start+min_]
+        for i in range(k-1,l):
+            pus(st,arr[i])
+            ans[i-k+1]=st[0]
+            po(st,arr[i-k+1])
+        return ans
         
 ```
 ---
