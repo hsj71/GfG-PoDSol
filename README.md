@@ -1,33 +1,25 @@
-# 12-01-26
+# 13-01-26
 ---
-## K Sized Subarray Maximum
-Difficulty: MediumAccuracy: 26.04%Submissions: 423K+Points: 4
+## Bus Ticket Change
+Difficulty: EasyAccuracy: 52.02%Submissions: 59K+Points: 2
 <pre>
 
-
-Given an array arr[] of positive integers and an integer k. You have to find the maximum value for each contiguous subarray of size k. Return an array of maximum values corresponding to each contiguous subarray.
+You are given an array arr[] representing passengers in a queue. Each bus ticket costs 5 coins, and arr[i] denotes the note a passenger uses to pay (which can be 5, 10, or 20). You must serve the passengers in the given order and always provide the correct change so that each passenger effectively pays exactly 5 coins. Your task is to determine whether it is possible to serve all passengers in the queue without ever running out of change.
 
 Examples:
 
-Input: arr[] = [1, 2, 3, 1, 4, 5, 2, 3, 6], k = 3
-Output: [3, 3, 4, 5, 5, 5, 6]
-Explanation: 
-1st contiguous subarray [1, 2, 3], max = 3
-2nd contiguous subarray [2, 3, 1], max = 3
-3rd contiguous subarray [3, 1, 4], max = 4
-4th contiguous subarray [1, 4, 5], max = 5
-5th contiguous subarray [4, 5, 2], max = 5
-6th contiguous subarray [5, 2, 3], max = 5
-7th contiguous subarray [2, 3, 6], max = 6
-Input: arr[] = [5, 1, 3, 4, 2], k = 1
-Output: [5, 1, 3, 4, 2]
-Explanation: When k = 1, each element in the array is its own subarray, so the output is simply the same array
+Input: arr[] = [5, 5, 5, 10, 20]
+Output: true
+Explanation: From the first 3 customers, we collect three $5 bills in order.
+From the fourth customer, we collect a $10 bill and give back a $5.
+From the fifth customer, we give a $10 bill and a $5 bill.
+Since all customers got correct change we return true.
+Input: arr[] = [5, 5, 10, 10, 20]
+Output: false
+Explanation: From the first two customers in order, we collect two $5 bills. For the next two customers in order, we collect a $10 bill and give back a $5 bill. For the last customer, we can not give the change of $15 back because we only have two $10 bills. Since not every customer received the correct change, the answer is false.
 Constraints:
-1 ≤ arr.size() ≤ 106
-1 ≤ k ≤ arr.size()
-0 ≤ arr[i] ≤ 109
-
-
+1 ≤ arr.size() ≤ 105
+arr[i] contains only [5, 10, 20]
 
 
 </pre>
@@ -35,28 +27,28 @@ Constraints:
 ---
 ```
 class Solution:
-    def maxOfSubarrays(self, arr, k):
-        # code here
-        st=[]
-        l=len(arr)
-        ans=[0 for _ in range(l-k+1)]
-        def pus(st,ele):
-            while st and st[-1]<ele:
-                st.pop()
-            st.append(ele)
-            
-        def po(st,ele):
-            if st and st[0]==ele:
-                st.pop(0)
-                
-        for i in range(k-1):
-            pus(st,arr[i])
-            
-        for i in range(k-1,l):
-            pus(st,arr[i])
-            ans[i-k+1]=st[0]
-            po(st,arr[i-k+1])
-        return ans
+    def canServe(self, arr):
+        five = 0
+        ten = 0
+
+        for note in arr:
+            if note == 5:
+                five += 1
+            elif note == 10:
+                if five == 0:
+                    return False
+                five -= 1
+                ten += 1
+            else:  # note == 20
+                if ten > 0 and five > 0:
+                    ten -= 1
+                    five -= 1
+                elif five >= 3:
+                    five -= 3
+                else:
+                    return False
+
+        return True
         
 ```
 ---
