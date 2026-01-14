@@ -1,54 +1,58 @@
-# 13-01-26
+# 14-01-26
 ---
-## Bus Ticket Change
-Difficulty: EasyAccuracy: 52.02%Submissions: 59K+Points: 2
+## Police and Thieves
+Difficulty: MediumAccuracy: 34.03%Submissions: 54K+Points: 4
 <pre>
 
-You are given an array arr[] representing passengers in a queue. Each bus ticket costs 5 coins, and arr[i] denotes the note a passenger uses to pay (which can be 5, 10, or 20). You must serve the passengers in the given order and always provide the correct change so that each passenger effectively pays exactly 5 coins. Your task is to determine whether it is possible to serve all passengers in the queue without ever running out of change.
+Given an array arr[], where each element contains either a 'P' for policeman or a 'T' for thief. Find the maximum number of thieves that can be caught by the police. 
+Keep in mind the following conditions :
 
+Each policeman can catch only one thief.
+A policeman cannot catch a thief who is more than k units away from him.
 Examples:
 
-Input: arr[] = [5, 5, 5, 10, 20]
-Output: true
-Explanation: From the first 3 customers, we collect three $5 bills in order.
-From the fourth customer, we collect a $10 bill and give back a $5.
-From the fifth customer, we give a $10 bill and a $5 bill.
-Since all customers got correct change we return true.
-Input: arr[] = [5, 5, 10, 10, 20]
-Output: false
-Explanation: From the first two customers in order, we collect two $5 bills. For the next two customers in order, we collect a $10 bill and give back a $5 bill. For the last customer, we can not give the change of $15 back because we only have two $10 bills. Since not every customer received the correct change, the answer is false.
+Input: arr[] = ['P', 'T', 'T', 'P', 'T'], k = 1
+Output: 2
+Explanation: Maximum 2 thieves can be caught. First policeman catches first thief and second police man can catch either second or third thief.
+Input: arr[] = ['T', 'T', 'P', 'P', 'T', 'P'], k = 2
+Output: 3
+Explanation: Maximum 3 thieves can be caught.
 Constraints:
 1 ≤ arr.size() ≤ 105
-arr[i] contains only [5, 10, 20]
-
-
+1 ≤ k ≤ 1000
+arr[i] = 'P' or 'T'
 </pre>
 
 ---
 ```
 class Solution:
-    def canServe(self, arr):
-        five = 0
-        ten = 0
-
-        for note in arr:
-            if note == 5:
-                five += 1
-            elif note == 10:
-                if five == 0:
-                    return False
-                five -= 1
-                ten += 1
-            else:  # note == 20
-                if ten > 0 and five > 0:
-                    ten -= 1
-                    five -= 1
-                elif five >= 3:
-                    five -= 3
-                else:
-                    return False
-
-        return True
+    def catchThieves(self, arr, k):
+        #code here
+        if arr.count("P") == 0 or arr.count("T")== 0:
+            return 0
+        police = []
+        thief = []
+    
+        for i in range(len(arr)):
+            if arr[i] == 'P':
+                police.append(i)
+            else:
+                thief.append(i)
+        
+        i = j = 0
+        caught = 0
+        
+        while i < len(police) and j < len(thief):
+            if abs(police[i] - thief[j]) <= k:
+                caught += 1
+                i += 1
+                j += 1
+            elif police[i] < thief[j]:
+                i += 1
+            else:
+                j += 1
+        
+        return caught
         
 ```
 ---
