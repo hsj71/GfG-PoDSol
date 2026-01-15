@@ -1,58 +1,43 @@
-# 14-01-26
+# 15-01-26
 ---
-## Police and Thieves
-Difficulty: MediumAccuracy: 34.03%Submissions: 54K+Points: 4
+## Candy
+Difficulty: HardAccuracy: 55.27%Submissions: 48K+Points: 8Average Time: 45m
 <pre>
 
-Given an array arr[], where each element contains either a 'P' for policeman or a 'T' for thief. Find the maximum number of thieves that can be caught by the police. 
-Keep in mind the following conditions :
+There are n children standing in a line. Each child is assigned a rating value given in the integer array arr[]. You are giving candies to these children subjected to the following requirements:
 
-Each policeman can catch only one thief.
-A policeman cannot catch a thief who is more than k units away from him.
+Each child must have at least one candy.
+Children with a higher rating than their neighbors get more candies than their neighbors.
+Return the minimum number of candies you need to have to distribute.
+
+Note: The answer will always fit into a 32-bit integer.
+
 Examples:
 
-Input: arr[] = ['P', 'T', 'T', 'P', 'T'], k = 1
-Output: 2
-Explanation: Maximum 2 thieves can be caught. First policeman catches first thief and second police man can catch either second or third thief.
-Input: arr[] = ['T', 'T', 'P', 'P', 'T', 'P'], k = 2
-Output: 3
-Explanation: Maximum 3 thieves can be caught.
+Input: arr[] = [1, 0, 2]
+Output: 5
+Explanation: Children at index 0 and 2 will get 2 candies each as their rating is higher than index 1, and index 1 will get 1 candy. Thus total candies = 2 + 1 + 2 = 5.
+Input: arr[] = [1, 2, 2]
+Output: 4
+Explanation: You can allocate to the first, second and third child with 1, 2, 1 candies respectively. The third child gets 1 candy because it satisfies the above two conditions.
 Constraints:
 1 ≤ arr.size() ≤ 105
-1 ≤ k ≤ 1000
-arr[i] = 'P' or 'T'
+0 ≤ arr[i] ≤ 109
 </pre>
 
 ---
 ```
 class Solution:
-    def catchThieves(self, arr, k):
-        #code here
-        if arr.count("P") == 0 or arr.count("T")== 0:
-            return 0
-        police = []
-        thief = []
-    
-        for i in range(len(arr)):
-            if arr[i] == 'P':
-                police.append(i)
-            else:
-                thief.append(i)
-        
-        i = j = 0
-        caught = 0
-        
-        while i < len(police) and j < len(thief):
-            if abs(police[i] - thief[j]) <= k:
-                caught += 1
-                i += 1
-                j += 1
-            elif police[i] < thief[j]:
-                i += 1
-            else:
-                j += 1
-        
-        return caught
+    def minCandy(self, arr):
+        lth=len(arr)
+        c=[1]*lth
+        for ix in range(1,lth):
+            if arr[ix]>arr[ix-1] and c[ix]<=c[ix-1]:
+                c[ix]=c[ix-1]+1
+        for ix in range(lth-2,-1,-1):
+            if arr[ix]>arr[ix+1] and c[ix]<=c[ix+1]:
+                c[ix]=c[ix+1]+1
+        return sum(c)
         
 ```
 ---
