@@ -1,43 +1,55 @@
-# 15-01-26
+# 16-01-26
 ---
 ## Candy
 Difficulty: HardAccuracy: 55.27%Submissions: 48K+Points: 8Average Time: 45m
 <pre>
 
-There are n children standing in a line. Each child is assigned a rating value given in the integer array arr[]. You are giving candies to these children subjected to the following requirements:
+Minimum Number of Workers
+Difficulty: MediumAccuracy: 64.13%Submissions: 8K+Points: 4
+You are given an array arr[], where arr[i] denotes the range of working hours a person at position i can cover.
 
-Each child must have at least one candy.
-Children with a higher rating than their neighbors get more candies than their neighbors.
-Return the minimum number of candies you need to have to distribute.
-
-Note: The answer will always fit into a 32-bit integer.
+If arr[i] ≠ -1, the person at index i can work and cover the time interval [i - arr[i], i + arr[i]].
+If arr[i] = -1, the person is unavailable and cannot cover any time.
+The task is to find the minimum number of people required to cover the entire working day from 0 to n - 1. If it is not possible to fully cover the day, return -1.
 
 Examples:
 
-Input: arr[] = [1, 0, 2]
-Output: 5
-Explanation: Children at index 0 and 2 will get 2 candies each as their rating is higher than index 1, and index 1 will get 1 candy. Thus total candies = 2 + 1 + 2 = 5.
-Input: arr[] = [1, 2, 2]
-Output: 4
-Explanation: You can allocate to the first, second and third child with 1, 2, 1 candies respectively. The third child gets 1 candy because it satisfies the above two conditions.
+Input: arr[] = [1, 2, 1, 0]
+Output: 1
+Explanation: The person at index 1 can cover the interval [-1, 3]. After adjusting to valid bounds, this becomes [0, 3], which fully covers the entire working day 0 to n -1. Therefore, only 1 person is required to cover the whole day.
+Input: arr[] = [2, 3, 4, -1, 2, 0, 0, -1, 0]
+Output: -1
+Explanation: Persons up to index 2 cover interval [0…6], but working hour 7 cannot be cover as arr[7] = -1, Since the 7th hour cannot be covered by any person, it is impossible to cover the full working day.
+Input: arr[] = [0, 1, 0, -1]
+Output: -1
+Explanation: The last hour cannot be covered by any person, so it is impossible to cover the full working day.
 Constraints:
-1 ≤ arr.size() ≤ 105
-0 ≤ arr[i] ≤ 109
+1 ≤ arr.size() ≤105
+-1 ≤ arr[i] ≤ arr.size()
+    
 </pre>
 
 ---
 ```
 class Solution:
-    def minCandy(self, arr):
-        lth=len(arr)
-        c=[1]*lth
-        for ix in range(1,lth):
-            if arr[ix]>arr[ix-1] and c[ix]<=c[ix-1]:
-                c[ix]=c[ix-1]+1
-        for ix in range(lth-2,-1,-1):
-            if arr[ix]>arr[ix+1] and c[ix]<=c[ix+1]:
-                c[ix]=c[ix+1]+1
-        return sum(c)
+    def minMen(self, arr):
+        #code here 
+        stack = []
+        for i in range(len(arr)):
+            left = max(0, i - arr[i])
+            right = min(len(arr) - 1, i + arr[i])
+            while stack and stack[-1][0] >= left and stack[-1][1] <= right:
+                stack.pop()
+            if len(stack) == 0:
+                stack.append([left, right])
+            elif stack[-1][1] < right:
+                stack.append([max(stack[-1][1] + 1, left), right])
+        if stack[0][0] == 0 and stack[-1][1] == len(arr) - 1:
+            for i in range(1, len(stack)):
+                if stack[i][0] - stack[i - 1][1] > 1:
+                    return -1
+            return len(stack)
+        return -1
         
 ```
 ---
