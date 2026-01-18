@@ -1,55 +1,53 @@
-# 16-01-26
+# 18-01-26
 ---
-## Candy
-Difficulty: HardAccuracy: 55.27%Submissions: 48K+Points: 8Average Time: 45m
+## Next element with greater frequency
+Difficulty: MediumAccuracy: 60.4%Submissions: 29K+Points: 4
 <pre>
 
-Minimum Number of Workers
-Difficulty: MediumAccuracy: 64.13%Submissions: 8K+Points: 4
-You are given an array arr[], where arr[i] denotes the range of working hours a person at position i can cover.
 
-If arr[i] ≠ -1, the person at index i can work and cover the time interval [i - arr[i], i + arr[i]].
-If arr[i] = -1, the person is unavailable and cannot cover any time.
-The task is to find the minimum number of people required to cover the entire working day from 0 to n - 1. If it is not possible to fully cover the day, return -1.
+Given an array arr[] of integers, for each element, find the first element to its right that has a higher frequency than the current element.
+If no such element exists, return -1 for that position.
 
 Examples:
 
-Input: arr[] = [1, 2, 1, 0]
-Output: 1
-Explanation: The person at index 1 can cover the interval [-1, 3]. After adjusting to valid bounds, this becomes [0, 3], which fully covers the entire working day 0 to n -1. Therefore, only 1 person is required to cover the whole day.
-Input: arr[] = [2, 3, 4, -1, 2, 0, 0, -1, 0]
-Output: -1
-Explanation: Persons up to index 2 cover interval [0…6], but working hour 7 cannot be cover as arr[7] = -1, Since the 7th hour cannot be covered by any person, it is impossible to cover the full working day.
-Input: arr[] = [0, 1, 0, -1]
-Output: -1
-Explanation: The last hour cannot be covered by any person, so it is impossible to cover the full working day.
+Input: arr[] = [2, 1, 1, 3, 2, 1]
+Output: [1, -1, -1, 2, 1, -1]
+Explanation: Frequencies: 1 → 3 times, 2 → 2 times, 3 → 1 time.
+For arr[0] = 2, the next element 1 has a higher frequency → 1.
+For arr[1] and arr[2], no element to the right has a higher frequency → -1.
+For arr[3] = 3, the next element 2 has a higher frequency → 2.
+For arr[4] = 2, the next element 1 has a higher frequency → 1.
+For arr[5] = 1, no elements to the right → -1.
+Input: arr[] = [5, 1, 5, 6, 6]
+Output: [-1, 5, -1, -1, -1]
+Explanation: Frequencies: 1 → 1 time, 5 → 2 times, 6 → 2 times.
+For arr[0] and arr[2], no element to the right has a higher frequency → -1.
+For arr[1] = 1, the next element 5 has a higher frequency → 5.
+For arr[3] and arr[4], no element to the right has a higher frequency → -1.
 Constraints:
-1 ≤ arr.size() ≤105
--1 ≤ arr[i] ≤ arr.size()
+1 ≤ arr.size() ≤ 105
+1 ≤ arr[i] ≤ 105
     
 </pre>
 
 ---
 ```
+from collections import Counter
 class Solution:
-    def minMen(self, arr):
-        #code here 
-        stack = []
-        for i in range(len(arr)):
-            left = max(0, i - arr[i])
-            right = min(len(arr) - 1, i + arr[i])
-            while stack and stack[-1][0] >= left and stack[-1][1] <= right:
+    def nextFreqGreater(self, arr):
+        dic=Counter(arr)
+        ans=[]
+        stack=[]
+        for i in arr[::-1]:
+            while stack and stack[-1][0]<=dic[i]:
                 stack.pop()
-            if len(stack) == 0:
-                stack.append([left, right])
-            elif stack[-1][1] < right:
-                stack.append([max(stack[-1][1] + 1, left), right])
-        if stack[0][0] == 0 and stack[-1][1] == len(arr) - 1:
-            for i in range(1, len(stack)):
-                if stack[i][0] - stack[i - 1][1] > 1:
-                    return -1
-            return len(stack)
-        return -1
+            if stack:
+                ans.append(stack[-1][1])
+            else:
+                ans.append(-1)
+            stack.append([dic[i],i])
+        return ans[::-1]
+        
         
 ```
 ---
