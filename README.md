@@ -1,53 +1,44 @@
-# 18-01-26
+# 19-01-26
 ---
-## Next element with greater frequency
-Difficulty: MediumAccuracy: 60.4%Submissions: 29K+Points: 4
+## Remove K Digits
+Difficulty: MediumAccuracy: 26.8%Submissions: 84K+Points: 4
 <pre>
 
+Given a non-negative integer s represented as a string and an integer k, remove exactly k digits from the string so that the resulting number is the smallest possible, while maintaining the relative order of the remaining digits.
 
-Given an array arr[] of integers, for each element, find the first element to its right that has a higher frequency than the current element.
-If no such element exists, return -1 for that position.
+Note : The resulting number must not contain any leading zeros.
+If the resulting number is an empty string after the removal, return "0".
 
 Examples:
 
-Input: arr[] = [2, 1, 1, 3, 2, 1]
-Output: [1, -1, -1, 2, 1, -1]
-Explanation: Frequencies: 1 → 3 times, 2 → 2 times, 3 → 1 time.
-For arr[0] = 2, the next element 1 has a higher frequency → 1.
-For arr[1] and arr[2], no element to the right has a higher frequency → -1.
-For arr[3] = 3, the next element 2 has a higher frequency → 2.
-For arr[4] = 2, the next element 1 has a higher frequency → 1.
-For arr[5] = 1, no elements to the right → -1.
-Input: arr[] = [5, 1, 5, 6, 6]
-Output: [-1, 5, -1, -1, -1]
-Explanation: Frequencies: 1 → 1 time, 5 → 2 times, 6 → 2 times.
-For arr[0] and arr[2], no element to the right has a higher frequency → -1.
-For arr[1] = 1, the next element 5 has a higher frequency → 5.
-For arr[3] and arr[4], no element to the right has a higher frequency → -1.
+Input: s = "4325043", k = 3
+Output: 2043
+Explanation: Remove the three digits 4, 3, and 5 to form the new number "2043" which is smallest among all possible removal.
+Input: s = "765028321", k = 5
+Output: 221
+Explanation: Remove the five digits 7, 6, 5, 8 and 3 to form the new number "0221". Since we are not supposed to keep leading 0s, we get "221".
 Constraints:
-1 ≤ arr.size() ≤ 105
-1 ≤ arr[i] ≤ 105
+1 ≤ k ≤ |s| ≤ 106
     
 </pre>
 
 ---
 ```
-from collections import Counter
+from collections import deque
 class Solution:
-    def nextFreqGreater(self, arr):
-        dic=Counter(arr)
-        ans=[]
-        stack=[]
-        for i in arr[::-1]:
-            while stack and stack[-1][0]<=dic[i]:
-                stack.pop()
-            if stack:
-                ans.append(stack[-1][1])
-            else:
-                ans.append(-1)
-            stack.append([dic[i],i])
-        return ans[::-1]
-        
+    def removeKdig(self, s, k):
+        dq=deque()
+        for digit in s:
+            while dq and k>0 and digit<dq[-1]:
+                dq.pop()
+                k-=1
+            dq.append(digit)
+        while k:
+            dq.pop()
+            k-=1
+        while dq and dq[0]=="0":
+            dq.popleft()
+        return "".join(dq) if dq else 0
         
 ```
 ---
