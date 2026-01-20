@@ -1,44 +1,65 @@
-# 19-01-26
+# 20-01-26
 ---
-## Remove K Digits
-Difficulty: MediumAccuracy: 26.8%Submissions: 84K+Points: 4
+## Implement UNDO & REDO
+Difficulty: MediumAccuracy: 68.15%Submissions: 9K+Points: 4
 <pre>
 
-Given a non-negative integer s represented as a string and an integer k, remove exactly k digits from the string so that the resulting number is the smallest possible, while maintaining the relative order of the remaining digits.
+You are given a text document that is initially empty. You need to complete the following functions:
 
-Note : The resulting number must not contain any leading zeros.
-If the resulting number is an empty string after the removal, return "0".
+void append(char x) - Append the character x to the end of the document.
+void undo() - Undo the most recent APPEND operation (remove the last appended character).
+void redo() - Reapply the most recent undone operation (restore the last character removed by UNDO).
+string read() - Return the current content of the document as a string.
+There will be a sequence of q queries arr[] on the document. The queries are represented in numeric form:
+
+1 x - Call append(x)
+2 - Call undo()
+3 - Call redo()
+4 - Call read()
+The driver code will process the queries, call the corresponding functions, and finally print the outputs of all READ() operations.
+You only need to implement the above four functions.
 
 Examples:
 
-Input: s = "4325043", k = 3
-Output: 2043
-Explanation: Remove the three digits 4, 3, and 5 to form the new number "2043" which is smallest among all possible removal.
-Input: s = "765028321", k = 5
-Output: 221
-Explanation: Remove the five digits 7, 6, 5, 8 and 3 to form the new number "0221". Since we are not supposed to keep leading 0s, we get "221".
+Input: arr[] = [[1 'A'], [1 'B'], [1 'C'], [2], [4], [3], [4]]
+Output: ["AB", "ABC"]
+Explanation: For each query following changes are made into the document.
+1st query: Append('A'), Document contains "A".
+2nd query: Append('B'), Document contains "AB".
+3rd query: Append('C'), Document contains "ABC".
+4rth query: UNDO(), Last character is removed, Document contains "AB".
+5th query: READ(), Document content will be printed.
+6th query: REDO(), Document contains "ABC".
+7th query: READ(), Document content will be printed.
+Input: arr[] = [[1 'D'], [2], [4]]
+Output: [""]
+Explanation: Queries will be processed as:
+1st query: Append('D'), Document contains "D".
+2nd query: UNDO(), Last character is removed, Document becomes empty.
+3rd query: READ(), Empty Document will be printed.
 Constraints:
-1 ≤ k ≤ |s| ≤ 106
+1 ≤ q ≤ 104
     
 </pre>
 
 ---
 ```
-from collections import deque
 class Solution:
-    def removeKdig(self, s, k):
-        dq=deque()
-        for digit in s:
-            while dq and k>0 and digit<dq[-1]:
-                dq.pop()
-                k-=1
-            dq.append(digit)
-        while k:
-            dq.pop()
-            k-=1
-        while dq and dq[0]=="0":
-            dq.popleft()
-        return "".join(dq) if dq else 0
+    def __init__(self):
+        self.curr = []
+        self.buffer = []
+        
+    def append(self, x):
+        self.curr.append(x)
+
+    def undo(self):
+        self.buffer.append(self.curr.pop())
+
+    def redo(self):
+        self.curr.append(self.buffer.pop())
+
+    def read(self):
+        return ''.join(self.curr)
         
 ```
 ---
