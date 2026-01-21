@@ -1,65 +1,41 @@
-# 20-01-26
+# 21-01-26
 ---
-## Implement UNDO & REDO
-Difficulty: MediumAccuracy: 68.15%Submissions: 9K+Points: 4
+## Stock span problem
+Difficulty: MediumAccuracy: 43.56%Submissions: 255K+Points: 4
 <pre>
 
-You are given a text document that is initially empty. You need to complete the following functions:
 
-void append(char x) - Append the character x to the end of the document.
-void undo() - Undo the most recent APPEND operation (remove the last appended character).
-void redo() - Reapply the most recent undone operation (restore the last character removed by UNDO).
-string read() - Return the current content of the document as a string.
-There will be a sequence of q queries arr[] on the document. The queries are represented in numeric form:
-
-1 x - Call append(x)
-2 - Call undo()
-3 - Call redo()
-4 - Call read()
-The driver code will process the queries, call the corresponding functions, and finally print the outputs of all READ() operations.
-You only need to implement the above four functions.
+The stock span problem is a financial problem where we have a series of daily price quotes for a stock and we need to calculate the span of stock price for all days.
+You are given an array arr[] representing daily stock prices, the stock span for the i-th day is the number of consecutive days up to day i (including day i itself) for which the price of the stock is less than or equal to the price on day i. Return the span of stock prices for each day in the given sequence.
 
 Examples:
 
-Input: arr[] = [[1 'A'], [1 'B'], [1 'C'], [2], [4], [3], [4]]
-Output: ["AB", "ABC"]
-Explanation: For each query following changes are made into the document.
-1st query: Append('A'), Document contains "A".
-2nd query: Append('B'), Document contains "AB".
-3rd query: Append('C'), Document contains "ABC".
-4rth query: UNDO(), Last character is removed, Document contains "AB".
-5th query: READ(), Document content will be printed.
-6th query: REDO(), Document contains "ABC".
-7th query: READ(), Document content will be printed.
-Input: arr[] = [[1 'D'], [2], [4]]
-Output: [""]
-Explanation: Queries will be processed as:
-1st query: Append('D'), Document contains "D".
-2nd query: UNDO(), Last character is removed, Document becomes empty.
-3rd query: READ(), Empty Document will be printed.
+Input: arr[] = [100, 80, 90, 120]
+Output: [1, 1, 2, 4]
+Explanation: Traversing the given input span 100 is greater than equal to 100 and there are no more days behind it so the span is 1, 80 is greater than equal to 80 and smaller than 100 so the span is 1, 90 is greater than equal to 90 and 80 so the span is 2, 120 is greater than 90, 80 and 100 so the span is 4. So the output will be [1, 1, 2, 4].
+Input: arr[] = [10, 4, 5, 90, 120, 80]
+Output: [1, 1, 2, 4, 5, 1]
+Explanation: Traversing the given input span 10 is greater than equal to 10 and there are no more days behind it so the span is 1, 4 is greater than equal to 4 and smaller than 10 so the span is 1, 5 is greater than equal to 4 and 5 and smaller than 10 so the span is 2, and so on. Hence the output will be [1, 1, 2, 4, 5, 1].
 Constraints:
-1 ≤ q ≤ 104
+1 ≤ arr.size() ≤ 105
+1 ≤ arr[i] ≤ 105
+
+
     
 </pre>
 
 ---
 ```
 class Solution:
-    def __init__(self):
-        self.curr = []
-        self.buffer = []
-        
-    def append(self, x):
-        self.curr.append(x)
-
-    def undo(self):
-        self.buffer.append(self.curr.pop())
-
-    def redo(self):
-        self.curr.append(self.buffer.pop())
-
-    def read(self):
-        return ''.join(self.curr)
+    def calculateSpan(self, arr):
+        l=len(arr)
+        ans=[1]*l
+        for i in range(l):
+            prev=i-ans[i]
+            while prev>-1 and arr[prev]<=arr[i]:
+                ans[i]+=ans[prev]
+                prev-=ans[prev]
+        return ans
         
 ```
 ---
