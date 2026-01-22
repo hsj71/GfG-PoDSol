@@ -1,41 +1,105 @@
-# 21-01-26
+# 22-01-26
 ---
-## Stock span problem
-Difficulty: MediumAccuracy: 43.56%Submissions: 255K+Points: 4
+## Sum of subarray ranges
+Difficulty: MediumAccuracy: 50.82%Submissions: 14K+Points: 4Average Time: 30m
 <pre>
 
 
-The stock span problem is a financial problem where we have a series of daily price quotes for a stock and we need to calculate the span of stock price for all days.
-You are given an array arr[] representing daily stock prices, the stock span for the i-th day is the number of consecutive days up to day i (including day i itself) for which the price of the stock is less than or equal to the price on day i. Return the span of stock prices for each day in the given sequence.
+Given an integer array arr[], the range of a subarray is defined as the difference between the largest and smallest elements within that subarray. Your task is to return the sum of the ranges of all possible subarrays in the array.
+
+Note: It is guaranteed that the result will fit within a 32-bit integer.
 
 Examples:
 
-Input: arr[] = [100, 80, 90, 120]
-Output: [1, 1, 2, 4]
-Explanation: Traversing the given input span 100 is greater than equal to 100 and there are no more days behind it so the span is 1, 80 is greater than equal to 80 and smaller than 100 so the span is 1, 90 is greater than equal to 90 and 80 so the span is 2, 120 is greater than 90, 80 and 100 so the span is 4. So the output will be [1, 1, 2, 4].
-Input: arr[] = [10, 4, 5, 90, 120, 80]
-Output: [1, 1, 2, 4, 5, 1]
-Explanation: Traversing the given input span 10 is greater than equal to 10 and there are no more days behind it so the span is 1, 4 is greater than equal to 4 and smaller than 10 so the span is 1, 5 is greater than equal to 4 and 5 and smaller than 10 so the span is 2, and so on. Hence the output will be [1, 1, 2, 4, 5, 1].
+Input: arr[] = [1, 2, 3]
+Output: 4
+Explanation: The 6 subarray of arr are the following :
+[1], range = largest - smallest = 1 - 1 = 0
+[2], range = largest - smallest = 2 - 2 = 0
+[3], range = largest - smallest = 3 - 3 = 0
+[1, 2], range = largest - smallest = 2 - 1 = 1
+[2, 3], range = largest - smallest = 3 - 2 = 1
+[1, 2, 3], range = largest - smallest = 3 - 1 = 2
+Sum of all ranges is 0 + 0 + 0 + 1 + 1 + 2 = 4
+Input: arr[] = [-32, 0, -2, 72]
+Output: 318
+Explanation: 
+[-32], range = largest - smallest = -32 - (-32) = 0
+[-32, 0], range = largest - smallest = 0 - (-32) = 32
+[-32, 0, -2], range = largest - smallest = 0 - (-32) = 32
+[-32, 0, -2, 72], range= largest - smallest = 72 - (-32) = 104
+[0], range = largest - smallest = 0 - 0 = 0
+[0, -2], range = largest - smallest = 0 - (-2) = 2
+[0, -2, 72], range = largest - smallest = 72 - (-2) = 74
+[-2], range = largest - smallest = -2 - (-2) = 0
+[-2, 72], range = largest - smallest = 72 - (-2) = 74
+[72], range = largest - smallest = 72 - 72 = 0
+Sum of all ranges is 0 + 32 + 32 + 104 + 0 + 2 + 74 + 0 + 74 + 0 = 318
 Constraints:
-1 ≤ arr.size() ≤ 105
-1 ≤ arr[i] ≤ 105
-
-
+1 ≤ arr.size() ≤ 106
+10-9 ≤ arr[i]  ≤ 109
     
 </pre>
 
 ---
 ```
 class Solution:
-    def calculateSpan(self, arr):
-        l=len(arr)
-        ans=[1]*l
-        for i in range(l):
-            prev=i-ans[i]
-            while prev>-1 and arr[prev]<=arr[i]:
-                ans[i]+=ans[prev]
-                prev-=ans[prev]
-        return ans
+    def subarrayRanges(self, arr):
+        # Code here
+        n = len(arr)
+        def sumSubarrayMins():
+            stack = []
+            prev_less = [-1] * n
+            next_less = [n] * n
+
+            # Previous Less
+            for i in range(n):
+                while stack and arr[stack[-1]] > arr[i]:
+                    stack.pop()
+                prev_less[i] = stack[-1] if stack else -1
+                stack.append(i)
+
+            stack.clear()
+
+            # Next Less or Equal
+            for i in range(n - 1, -1, -1):
+                while stack and arr[stack[-1]] >= arr[i]:
+                    stack.pop()
+                next_less[i] = stack[-1] if stack else n
+                stack.append(i)
+
+            total = 0
+            for i in range(n):
+                total += arr[i] * (i - prev_less[i]) * (next_less[i] - i)
+            return total
+
+        def sumSubarrayMaxs():
+            stack = []
+            prev_greater = [-1] * n
+            next_greater = [n] * n
+
+            # Previous Greater
+            for i in range(n):
+                while stack and arr[stack[-1]] < arr[i]:
+                    stack.pop()
+                prev_greater[i] = stack[-1] if stack else -1
+                stack.append(i)
+
+            stack.clear()
+
+            # Next Greater or Equal
+            for i in range(n - 1, -1, -1):
+                while stack and arr[stack[-1]] <= arr[i]:
+                    stack.pop()
+                next_greater[i] = stack[-1] if stack else n
+                stack.append(i)
+
+            total = 0
+            for i in range(n):
+                total += arr[i] * (i - prev_greater[i]) * (next_greater[i] - i)
+            return total
+
+        return sumSubarrayMaxs() - sumSubarrayMins()
         
 ```
 ---
