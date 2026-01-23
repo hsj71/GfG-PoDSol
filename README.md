@@ -1,105 +1,66 @@
-# 22-01-26
+# 23-01-26
 ---
-## Sum of subarray ranges
-Difficulty: MediumAccuracy: 50.82%Submissions: 14K+Points: 4Average Time: 30m
+## Maximum People Visible in a Line
+Difficulty: MediumAccuracy: 50.11%Submissions: 12K+Points: 4
 <pre>
 
 
-Given an integer array arr[], the range of a subarray is defined as the difference between the largest and smallest elements within that subarray. Your task is to return the sum of the ranges of all possible subarrays in the array.
+You are given an array arr[ ], where arr[i] represents the height of the ith person standing in a line.
+A person i can see another person j if:
 
-Note: It is guaranteed that the result will fit within a 32-bit integer.
+
+height[j] < height[i],
+There is no person k standing between them such that height[k] ≥ height[i].
+
+
+Each person can see in both directions (front and back).
+Your task is to find the maximum number of people that any person can see (including themselves).
 
 Examples:
 
-Input: arr[] = [1, 2, 3]
+Input: arr[] = [6, 2, 5, 4, 5, 1, 6 ]
+Output: 6
+Explanation:
+Person 1 (height = 6) can see five other people at following positions (2, 3, 4, 5. 6) in addition to himself, i.e. total 6.
+Person 2 (height: 2) can see only himself.
+Person 3 (height = 5) is able to see people 2nd, 3rd, and 4th person.
+Person 4 (height = 4) can see himself.
+Person 5 (height = 5) can see people 4th, 5th, and 6th.
+Person 6 (height =1) can only see himself.
+Person 7 (height = 6) can see 2nd, 3rd, 4th, 5th, 6th, and 7th people.
+A maximum of six people can be seen by Person 1, 7th
+Input: arr[] = [1, 3, 6, 4]
 Output: 4
-Explanation: The 6 subarray of arr are the following :
-[1], range = largest - smallest = 1 - 1 = 0
-[2], range = largest - smallest = 2 - 2 = 0
-[3], range = largest - smallest = 3 - 3 = 0
-[1, 2], range = largest - smallest = 2 - 1 = 1
-[2, 3], range = largest - smallest = 3 - 2 = 1
-[1, 2, 3], range = largest - smallest = 3 - 1 = 2
-Sum of all ranges is 0 + 0 + 0 + 1 + 1 + 2 = 4
-Input: arr[] = [-32, 0, -2, 72]
-Output: 318
 Explanation: 
-[-32], range = largest - smallest = -32 - (-32) = 0
-[-32, 0], range = largest - smallest = 0 - (-32) = 32
-[-32, 0, -2], range = largest - smallest = 0 - (-32) = 32
-[-32, 0, -2, 72], range= largest - smallest = 72 - (-32) = 104
-[0], range = largest - smallest = 0 - 0 = 0
-[0, -2], range = largest - smallest = 0 - (-2) = 2
-[0, -2, 72], range = largest - smallest = 72 - (-2) = 74
-[-2], range = largest - smallest = -2 - (-2) = 0
-[-2, 72], range = largest - smallest = 72 - (-2) = 74
-[72], range = largest - smallest = 72 - 72 = 0
-Sum of all ranges is 0 + 32 + 32 + 104 + 0 + 2 + 74 + 0 + 74 + 0 = 318
+Person with height 6 can see persons with heights 1, 3 on the left and 4 on the right, along with himself, giving a total of 4.
 Constraints:
-1 ≤ arr.size() ≤ 106
-10-9 ≤ arr[i]  ≤ 109
+1 ≤ arr.size() ≤ 104
+1 ≤ arr[i] ≤ 105
     
 </pre>
 
 ---
 ```
 class Solution:
-    def subarrayRanges(self, arr):
-        # Code here
-        n = len(arr)
-        def sumSubarrayMins():
-            stack = []
-            prev_less = [-1] * n
-            next_less = [n] * n
-
-            # Previous Less
-            for i in range(n):
-                while stack and arr[stack[-1]] > arr[i]:
-                    stack.pop()
-                prev_less[i] = stack[-1] if stack else -1
-                stack.append(i)
-
-            stack.clear()
-
-            # Next Less or Equal
-            for i in range(n - 1, -1, -1):
-                while stack and arr[stack[-1]] >= arr[i]:
-                    stack.pop()
-                next_less[i] = stack[-1] if stack else n
-                stack.append(i)
-
-            total = 0
-            for i in range(n):
-                total += arr[i] * (i - prev_less[i]) * (next_less[i] - i)
-            return total
-
-        def sumSubarrayMaxs():
-            stack = []
-            prev_greater = [-1] * n
-            next_greater = [n] * n
-
-            # Previous Greater
-            for i in range(n):
-                while stack and arr[stack[-1]] < arr[i]:
-                    stack.pop()
-                prev_greater[i] = stack[-1] if stack else -1
-                stack.append(i)
-
-            stack.clear()
-
-            # Next Greater or Equal
-            for i in range(n - 1, -1, -1):
-                while stack and arr[stack[-1]] <= arr[i]:
-                    stack.pop()
-                next_greater[i] = stack[-1] if stack else n
-                stack.append(i)
-
-            total = 0
-            for i in range(n):
-                total += arr[i] * (i - prev_greater[i]) * (next_greater[i] - i)
-            return total
-
-        return sumSubarrayMaxs() - sumSubarrayMins()
+    def maxPeople(self, arr):
+        n=len(arr)
+        prev_larg=[-1]*n
+        next_larg=[n]*n
+        stack1=[]
+        stack2=[]
+        for i in range(n):
+            while stack1 and arr[stack1[-1]]<arr[i]:
+                stack1.pop()
+            prev_larg[i]=stack1[-1] if stack1 else -1
+            stack1.append(i)
+            while stack2 and arr[stack2[-1]]<arr[n-1-i]:
+                stack2.pop()
+            next_larg[n-1-i]=stack2[-1] if stack2 else n
+            stack2.append(n-1-i)
+        ans=0
+        for i in range(n):
+            ans=max(ans,next_larg[i]-prev_larg[i]-1)
+        return ans
         
 ```
 ---
