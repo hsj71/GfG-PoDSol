@@ -1,66 +1,40 @@
-# 23-01-26
+# 24-01-26
 ---
-## Maximum People Visible in a Line
-Difficulty: MediumAccuracy: 50.11%Submissions: 12K+Points: 4
+## Josephus problem
+Difficulty: EasyAccuracy: 57.26%Submissions: 128K+Points: 2
 <pre>
 
 
-You are given an array arr[ ], where arr[i] represents the height of the ith person standing in a line.
-A person i can see another person j if:
+You are playing a game with n people standing in a circle, numbered from 1 to n. Starting from person 1, every kth person is eliminated in a circular fashion. The process continues until only one person remains.
+Given integers n and k, return the position (1-based index) of the person who will survive.
 
+Examples :
 
-height[j] < height[i],
-There is no person k standing between them such that height[k] ≥ height[i].
-
-
-Each person can see in both directions (front and back).
-Your task is to find the maximum number of people that any person can see (including themselves).
-
-Examples:
-
-Input: arr[] = [6, 2, 5, 4, 5, 1, 6 ]
-Output: 6
-Explanation:
-Person 1 (height = 6) can see five other people at following positions (2, 3, 4, 5. 6) in addition to himself, i.e. total 6.
-Person 2 (height: 2) can see only himself.
-Person 3 (height = 5) is able to see people 2nd, 3rd, and 4th person.
-Person 4 (height = 4) can see himself.
-Person 5 (height = 5) can see people 4th, 5th, and 6th.
-Person 6 (height =1) can only see himself.
-Person 7 (height = 6) can see 2nd, 3rd, 4th, 5th, 6th, and 7th people.
-A maximum of six people can be seen by Person 1, 7th
-Input: arr[] = [1, 3, 6, 4]
+Input: n = 5, k = 2
+Output: 3
+Explanation: Firstly, the person at position 2 is killed, then the person at position 4 is killed, then the person at position 1 is killed. 
+Finally, the person at position 5 is killed. So the person at position 3 survives. 
+Input: n = 7, k = 3
 Output: 4
-Explanation: 
-Person with height 6 can see persons with heights 1, 3 on the left and 4 on the right, along with himself, giving a total of 4.
+Explanation: The elimination order is 3 → 6 → 2 → 7 → 5 → 1, and the person at position 4 survives.
 Constraints:
-1 ≤ arr.size() ≤ 104
-1 ≤ arr[i] ≤ 105
+1 ≤ n, k ≤ 500
     
 </pre>
 
 ---
 ```
 class Solution:
-    def maxPeople(self, arr):
-        n=len(arr)
-        prev_larg=[-1]*n
-        next_larg=[n]*n
-        stack1=[]
-        stack2=[]
-        for i in range(n):
-            while stack1 and arr[stack1[-1]]<arr[i]:
-                stack1.pop()
-            prev_larg[i]=stack1[-1] if stack1 else -1
-            stack1.append(i)
-            while stack2 and arr[stack2[-1]]<arr[n-1-i]:
-                stack2.pop()
-            next_larg[n-1-i]=stack2[-1] if stack2 else n
-            stack2.append(n-1-i)
-        ans=0
-        for i in range(n):
-            ans=max(ans,next_larg[i]-prev_larg[i]-1)
-        return ans
+    def josephus(self, n, k):
+        nxt=[*range(1,n)]+[0]
+        prv=[n-1]+[*range(n-1)]
+        cur=-1
+        while nxt[cur]!=cur:
+            for _ in range(k):
+                cur=nxt[cur]
+            nxt[prv[cur]]=nxt[cur]
+            prv[nxt[cur]]=prv[cur]
+        return cur+1
         
 ```
 ---
