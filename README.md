@@ -1,40 +1,48 @@
-# 24-01-26
+# 25-01-26
 ---
-## Josephus problem
-Difficulty: EasyAccuracy: 57.26%Submissions: 128K+Points: 2
+## Number of Valid Parentheses
+Difficulty: MediumAccuracy: 66.08%Submissions: 9K+Points: 4Average Time: 30m
 <pre>
 
+You are given a number n, your task is to find the number of all the valid parentheses expressions of that length using only "(" and ")" brackets.
 
-You are playing a game with n people standing in a circle, numbered from 1 to n. Starting from person 1, every kth person is eliminated in a circular fashion. The process continues until only one person remains.
-Given integers n and k, return the position (1-based index) of the person who will survive.
+An input string of parentheses is valid if :
 
-Examples :
+Open brackets must be closed in correct order.
+Every close bracket has a corresponding open bracket.
+For example - "()()" or "(())" are valid while ")()(" or "))((" are invalid parentheses expressions.
 
-Input: n = 5, k = 2
-Output: 3
-Explanation: Firstly, the person at position 2 is killed, then the person at position 4 is killed, then the person at position 1 is killed. 
-Finally, the person at position 5 is killed. So the person at position 3 survives. 
-Input: n = 7, k = 3
-Output: 4
-Explanation: The elimination order is 3 → 6 → 2 → 7 → 5 → 1, and the person at position 4 survives.
+Examples:
+
+Input: n = 2
+Output: 1
+Explanation: There is only one possibe valid expressions of length 2 i.e., "()".
+Input: n = 4
+Output: 2
+Explanation: Possibe valid expressions of length 4 are "(())" and "()()".
+Input: n = 6
+Output: 5
+Explanation: Possibe valid expressions of length 6 are "((()))", "(())()", "()(())", "()()()" and "(()())".
 Constraints:
-1 ≤ n, k ≤ 500
+1 ≤ n ≤ 20
     
 </pre>
 
 ---
 ```
 class Solution:
-    def josephus(self, n, k):
-        nxt=[*range(1,n)]+[0]
-        prv=[n-1]+[*range(n-1)]
-        cur=-1
-        while nxt[cur]!=cur:
-            for _ in range(k):
-                cur=nxt[cur]
-            nxt[prv[cur]]=nxt[cur]
-            prv[nxt[cur]]=prv[cur]
-        return cur+1
+    def findWays(self, n):
+        # code here
+        if n==0 or n&1:
+            return 0
+        def dp(n):
+            if n<=1:
+                return 1
+            ret=0
+            for nn in range(n):
+                ret+=dp(nn)*dp(n-1-nn)
+            return ret
+        return dp(n//2)
         
 ```
 ---
