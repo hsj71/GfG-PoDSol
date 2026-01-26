@@ -1,48 +1,33 @@
-# 25-01-26
+# 26-01-26
 ---
-## Number of Valid Parentheses
-Difficulty: MediumAccuracy: 66.08%Submissions: 9K+Points: 4Average Time: 30m
+## Generate Permutations of an array
+Difficulty: MediumAccuracy: 82.08%Submissions: 8K+Points: 4
 <pre>
 
-You are given a number n, your task is to find the number of all the valid parentheses expressions of that length using only "(" and ")" brackets.
 
-An input string of parentheses is valid if :
-
-Open brackets must be closed in correct order.
-Every close bracket has a corresponding open bracket.
-For example - "()()" or "(())" are valid while ")()(" or "))((" are invalid parentheses expressions.
+Given an array arr[] of unique elements. Generate all possible permutations of the elements in the array.
+Note: You can return the permutations in any order, the driver code will print them in sorted order.
 
 Examples:
 
-Input: n = 2
-Output: 1
-Explanation: There is only one possibe valid expressions of length 2 i.e., "()".
-Input: n = 4
-Output: 2
-Explanation: Possibe valid expressions of length 4 are "(())" and "()()".
-Input: n = 6
-Output: 5
-Explanation: Possibe valid expressions of length 6 are "((()))", "(())()", "()(())", "()()()" and "(()())".
+Input: arr[] = [1, 2, 3]
+Output: [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
+Explanation: There are 6 possible permutations (3! = 6) of the array.
+Input: arr[] = [1, 3]
+Output: [[1, 3], [3, 1]]
+Explanation: There are 2 possible permutations (2! = 2) of the array.
 Constraints:
-1 ≤ n ≤ 20
+1 ≤ arr.size() ≤ 9
     
 </pre>
 
 ---
 ```
+from itertools import permutations as pr
 class Solution:
-    def findWays(self, n):
+    def permuteDist(self, arr):
         # code here
-        if n==0 or n&1:
-            return 0
-        def dp(n):
-            if n<=1:
-                return 1
-            ret=0
-            for nn in range(n):
-                ret+=dp(nn)*dp(n-1-nn)
-            return ret
-        return dp(n//2)
+        return list(pr(arr))
         
 ```
 ---
